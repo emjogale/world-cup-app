@@ -13,12 +13,14 @@ const Match = ({ team1, team2 }) => {
 			<input
 				data-testid={`score-${team1}`}
 				type="number"
+				min="0"
 				value={score1}
 				onChange={(e) => setScore1(e.target.value)}
 			/>
 			<input
 				data-testid={`score-${team2}`}
 				type="number"
+				min="0"
 				value={score2}
 				onChange={(e) => setScore2(e.target.value)}
 			/>
