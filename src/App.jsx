@@ -1,7 +1,10 @@
+import Match from './components/Match';
+
 const App = () => {
 	return (
 		<div>
-			<p>Hello world</p>
+			<h1>The Amazing World Cup Game</h1>
+			<Match />
 		</div>
 	);
 };
