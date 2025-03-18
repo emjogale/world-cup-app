@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Match from './Match';
 
 const Tournament = ({ teams }) => {
@@ -7,7 +7,9 @@ const Tournament = ({ teams }) => {
 	const handleResult = (team1, score1, team2, score2) => {
 		setResults([...results, { team1, score1, team2, score2 }]);
 	};
-
+	useEffect(() => {
+		console.log('winners are: ', results);
+	}, [results]);
 	return (
 		<div>
 			{teams.map((team, index) =>

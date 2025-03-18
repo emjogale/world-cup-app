@@ -1,14 +1,16 @@
 import { describe, it, expect } from 'vitest';
 import { Tournament } from '../src/models/Tournament';
 
-describe('Tournament', () => {
+describe('Tournament class', () => {
 	it('should advance winners to the next round', () => {
-		const teams = ['Brazil', 'Germany', 'France', 'Spain'];
-		const tournament = new Tournament(teams);
+		const matches = [
+			{ team1: 'Brazil', team2: 'Germany', score1: 3, score2: 1 },
+			{ team1: 'France', team2: 'Argentina', score1: 2, score2: 1 }
+		];
+		const tournament = new Tournament(matches);
+		const winners = tournament.getWinners();
+		console.log('winners from matches are', winners);
 
-		tournament.setMatchResult('Brazil', 2, 'Germany', 1);
-		tournament.setMatchResult('France', 3, 'Spain', 0);
-
-		// expect(tournament.getWinners()).toEqual(['Brazil', 'France']);
+		expect(winners).toEqual(['Brazil', 'France']);
 	});
 });

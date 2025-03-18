@@ -1,18 +1,21 @@
-import React from 'react';
-
 export class Tournament {
-	constructor(teams) {
-		this.teams = teams.map((name) => ({ name, score: 0 }));
-		this.results = [];
-	}
-
-	setMatchResult(team1, score1, team2, score2) {
-		this.results.push({ team1, score1, team2, score2 });
+	constructor(matches) {
+		console.log('constructor received these matches', matches);
+		this.matches = matches || [];
 	}
 
 	getWinners() {
-		return this.results.map((match) => {
-			match.score1 > match.score2 ? match.team1 : match.team2;
+		console.log(
+			'getWinners called with the following matches',
+			this.matches
+		);
+		return this.matches.map((match, index) => {
+			console.log(`processing match ${index}:`, match);
+			if (match.score1 === undefined || match.score2 === undefined) {
+				console.error('⚠️ Missing scores!', match);
+				return undefined;
+			}
+			return match.score1 > match.score2 ? match.team1 : match.team2;
 		});
 	}
 }
