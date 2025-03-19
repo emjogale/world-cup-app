@@ -20,18 +20,15 @@ describe('Random Team Draw', () => {
 	});
 });
 
-// test for create matches round using shuffled teams
-describe('Create Matches', () => {
-	it('should pair teams into matches', () => {
-		const teams = ['Brazil', 'Germany', 'France', 'Argentina'];
-		console.log(' teams are: ', teams);
-		const matches = createRoundMatches(teams);
-		console.log('matches are: ', matches);
+it('should pair teams into matches', () => {
+	const teams = ['Brazil', 'Germany', 'France', 'Argentina'];
+	// console.log('the teams in the test are: ', teams);
+	const matches = createRoundMatches([...teams]);
+	// console.log('matches in this test are: ', matches);
 
-		expect(matches.length).toBe(2);
-		expect(matches[0].team1).toBe('Brazil');
-		expect(matches[0].team2).toBe('Germany');
-		expect(matches[1].team1).toBe('France');
-		expect(matches[1].team2).toBe('Argentina');
-	});
+	expect(matches.length).toBe(2);
+	expect(matches[0].team1).toBe('Brazil');
+	expect(matches[0].team2).toBe('Germany');
+	expect(matches[1].team1).toBe('France');
+	expect(matches[1].team2).toBe('Argentina');
 });

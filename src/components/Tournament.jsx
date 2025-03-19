@@ -8,7 +8,7 @@ const Tournament = ({ teams }) => {
 		setResults([...results, { team1, score1, team2, score2 }]);
 	};
 	useEffect(() => {
-		console.log('winners are: ', results);
+		// console.log('winners are: ', results);
 	}, [results]);
 	return (
 		<div>
