@@ -30,8 +30,8 @@ describe('Tournament class with fixed seed for randomness', () => {
 
 	it('should advance winners to the next round', () => {
 		// // assinging scores to matches
-		tournament.updateMatchScores(0, 3, 1); // Brazil vs Germany
-		tournament.updateMatchScores(1, 2, 1); // France vs Argentina
+		tournament.updateMatchScores(0, 3, 1); // Brazil vs France
+		tournament.updateMatchScores(1, 2, 1); // Argentina vs Germany
 
 		const winners = tournament.getWinners();
 		console.log('winners from matches are', winners);
