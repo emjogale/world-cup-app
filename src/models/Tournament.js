@@ -10,7 +10,6 @@ export class Tournament {
 		}
 		this.teams = this.shuffleTeams(teams);
 		this.matches = this.createRoundMatches(this.teams);
-		console.log('Matches stored in Tournament:', this.matches);
 	}
 
 	shuffleTeams(teams) {
@@ -59,7 +58,6 @@ export class Tournament {
 		}
 	}
 
-	// refactor to add in shuffling teams and pairing into matches
 	getWinners() {
 		return this.matches
 			.map((match, index) => {

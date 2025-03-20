@@ -22,9 +22,7 @@ describe('Random Team Draw', () => {
 
 it('should pair teams into matches', () => {
 	const teams = ['Brazil', 'Germany', 'France', 'Argentina'];
-	// console.log('the teams in the test are: ', teams);
 	const matches = createRoundMatches([...teams]);
-	// console.log('matches in this test are: ', matches);
 
 	expect(matches.length).toBe(2);
 	expect(matches[0].team1).toBe('Brazil');

@@ -8,8 +8,6 @@ describe('Tournament class with fixed seed for randomness', () => {
 	// pass fixed seed to the Tournament instance
 	beforeEach(() => {
 		tournament = new Tournament(teams, 'test-seed');
-		const shuffledTeams = tournament.teams;
-		console.log('shuffled teams are: ', shuffledTeams);
 	});
 	it('should shuffle teams predictably', () => {
 		const expectedShuffledTeams = [
@@ -34,7 +32,7 @@ describe('Tournament class with fixed seed for randomness', () => {
 		tournament.updateMatchScores(1, 2, 1); // Argentina vs Germany
 
 		const winners = tournament.getWinners();
-		console.log('winners from matches are', winners);
+
 		expect(winners).toStrictEqual(['Brazil', 'Argentina']);
 	});
 });
