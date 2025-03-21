@@ -11,7 +11,7 @@ const Teams = () => {
 					throw new Error('Network response was not ok');
 				}
 				const data = await res.json();
-				console.log('data is', data);
+
 				setTeams(data);
 			} catch (error) {
 				console.error('Fetch error:', error);
@@ -24,7 +24,8 @@ const Teams = () => {
 	return (
 		<div className="teams-container">
 			<h2>here are the teams</h2>
-			{teams.map((team) => {
+
+			{teams.map((team) => (
 				<div key={team.name} className="team-card">
 					<img
 						src={team.flag}
@@ -32,8 +33,8 @@ const Teams = () => {
 						className="team-flag"
 					/>
 					<p className="team-name">{team.name}</p>
-				</div>;
-			})}
+				</div>
+			))}
 		</div>
 	);
 };
