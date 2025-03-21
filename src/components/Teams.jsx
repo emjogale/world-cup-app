@@ -6,12 +6,12 @@ const Teams = () => {
 	useEffect(() => {
 		const fetchTeams = async () => {
 			try {
-				const res = await fetch('../../teams.json');
+				const res = await fetch('/teams.json');
 				if (!res.ok) {
 					throw new Error('Network response was not ok');
 				}
 				const data = await res.json();
-
+				console.log('data is', data);
 				setTeams(data);
 			} catch (error) {
 				console.error('Fetch error:', error);
@@ -31,7 +31,7 @@ const Teams = () => {
 						alt={team.name}
 						className="team-flag"
 					/>
-					{/* <p className="team-name">{team.name}</p> */}
+					<p className="team-name">{team.name}</p>
 				</div>;
 			})}
 		</div>

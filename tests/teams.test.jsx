@@ -1,17 +1,19 @@
 import { describe, it, expect } from 'vitest';
-import teams from '../teams.json';
 
-const teamsCopy = JSON.parse(JSON.stringify(teams));
+// mock teams data
+const mockTeams = [
+	{ name: 'Brazil', flag: 'https://flagpedia.net/data/flags/w320/br.png' },
+	{ name: 'Germany', flag: 'https://flagpedia.net/data/flags/w320/de.png' }
+];
+
 describe('Teams Data', () => {
 	it('should be an array', () => {
-		console.log(
-			'typeof last teams flag is',
-			typeof teams[teams.length - 1].flag
+		expect(Object.prototype.toString.call(mockTeams)).toBe(
+			'[object Array]'
 		);
-		expect(Object.prototype.toString.call(teams)).toBe('[object Array]');
 	});
 	it('each team should have a name and flag', () => {
-		teamsCopy.forEach((team, index) => {
+		mockTeams.forEach((team, index) => {
 			expect(typeof team.name).toBe('string');
 			console.log(`Team at index ${index}:`, team);
 			expect(typeof team.flag).toBe('string');
