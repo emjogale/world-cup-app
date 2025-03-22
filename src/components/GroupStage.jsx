@@ -33,3 +33,8 @@ const GroupStage = ({ teams }) => {
 };
 
 export default GroupStage;
+
+// Notes:
+// We use useMemo() to group teams once per teams prop change
+// We use 'test-seed' for consistent groupings in tests
+// In the future, we can update it to receive the seed as a prop or context

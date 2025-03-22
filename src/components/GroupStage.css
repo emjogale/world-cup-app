@@ -1,0 +1,44 @@
+.group-stage {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 1.5rem;
+	padding: 1rem;
+}
+
+.group-card {
+	border: 1px solid #ccc;
+	border-radius: 12px;
+	padding: 1rem;
+	background-color: #fafafa;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.group-card h2 {
+	margin-top: 0;
+	text-align: center;
+	font-size: 1.2rem;
+}
+
+.group-card ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.group-card li {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.3rem 0;
+	border-bottom: 1px solid #eee;
+}
+
+.group-card li:last-child {
+	border-bottom: none;
+}
+
+.group-card img {
+	width: 24px;
+	height: auto;
+	border-radius: 3px;
+}
