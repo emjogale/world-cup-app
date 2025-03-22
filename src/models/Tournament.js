@@ -1,7 +1,7 @@
 // import { shuffleTeams, createRoundMatches } from '../utils/createMatches';
 import seedrandom from 'seedrandom';
 
-export class Tournament {
+export default class Tournament {
 	constructor(teams, seed = null) {
 		if (seed) {
 			this.rng = seedrandom(seed); // random number generator uses seed if provided

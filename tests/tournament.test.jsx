@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Tournament } from '../src/models/Tournament';
+import Tournament from '../src/models/Tournament';
 
 describe('Tournament class with fixed seed for randomness', () => {
 	let tournament;

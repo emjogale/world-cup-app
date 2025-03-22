@@ -5,8 +5,8 @@ import { beforeEach, afterEach } from 'vitest';
 
 // mock teams data
 const mockTeams = [
-	{ name: 'Brazil', flag: 'https://flagcdn.com/w320/br.png' },
-	{ name: 'Germany', flag: 'https://flagcdn.com/w320/de.png' }
+	{ name: 'Brazil', flag: 'https://flagpedia.net/data/flags/w320/br.png' },
+	{ name: 'Germany', flag: 'https://flagpedia.net/data/flags/w320/de.png' }
 ];
 
 beforeEach(() => {

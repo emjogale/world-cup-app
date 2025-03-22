@@ -17,4 +17,9 @@ describe('groupTeams', () => {
 		expect(grouped.A).toHaveLength(4);
 		expect(grouped.B).toHaveLength(4);
 	});
+
+	it('should assign correct group names (A, B, C...', () => {
+		const names = Object.keys(groupTeams(mockTeams));
+		expect(names).toEqual(['A', 'B']);
+	});
 });

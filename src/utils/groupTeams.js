@@ -18,3 +18,8 @@ export const groupTeams = (teams) => {
 	});
 	return grouped;
 };
+
+// works out how many groups there are by dividing total teams by teamsPerGroup
+// initialize an empty group object
+// assigns each group a name (A-Z) and puts in an array - groupNames ['A', 'B', ...]
+// loops through list of teams and assigns them to a groupName until that group is full then fills the next
