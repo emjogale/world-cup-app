@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { shuffleTeams, createRoundMatches } from '../src/utils/createMatches';
+import { shuffleTeams, createRoundMatches } from './createMatches';
 
 describe('Random Team Draw', () => {
 	it('should shuffle teams randomly for putting into matches', () => {

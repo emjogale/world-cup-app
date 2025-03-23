@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { Team } from '../src/models/Team';
+import { Team } from './Team';
 
 describe('Team model', () => {
 	it('should create a team with a name and a score', () => {

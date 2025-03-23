@@ -1,0 +1,56 @@
+.group-stage {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 2rem;
+	padding: 2rem;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.group-card {
+	background: #ffffff;
+	border-radius: 16px;
+	padding: 1rem 1.2rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+	transition: transform 0.2s ease;
+}
+
+.group-card:hover {
+	transform: translateY(-4px);
+}
+
+.group-card h2 {
+	text-align: center;
+	font-size: 1.2rem;
+	margin-bottom: 1rem;
+	color: #333;
+	font-weight: 600;
+}
+
+.group-card ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.group-card li {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+	padding: 0.4rem 0;
+	border-bottom: 1px solid #eee;
+	font-size: 0.95rem;
+	color: #444;
+}
+
+.group-card li:last-child {
+	border-bottom: none;
+}
+
+.group-card img {
+	width: 26px;
+	height: 18px;
+	border-radius: 2px;
+	object-fit: cover;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}

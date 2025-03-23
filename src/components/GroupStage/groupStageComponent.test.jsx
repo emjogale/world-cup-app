@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import GroupStage from '../src/components/GroupStage';
-import Tournament from '../src/models/Tournament';
-import { groupTeams } from '../src/utils/groupTeams';
+import GroupStage from './GroupStage';
+import Tournament from '../../logic/Tournament';
+import { groupTeams } from '../../utils/groupTeams';
 
 // mock teams data
 const mockTeams = [

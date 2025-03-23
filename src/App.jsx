@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import GroupStage from './components/GroupStage';
-import Teams from './components/Teams';
+import GroupStage from './components/GroupStage/GroupStage';
+import './index.css';
 
 const App = () => {
 	const [teams, setTeams] = useState([]);

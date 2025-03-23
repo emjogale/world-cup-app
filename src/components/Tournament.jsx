@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Match from './Match';
+import Match from './Match/Match';
 
 const Tournament = ({ teams }) => {
 	const [results, setResults] = useState([]);

@@ -1,3 +1,6 @@
+// This view shows all qualified teams before the tournament begins.
+// Useful for previewing entries or editing before grouping.
+
 import React, { useEffect, useState } from 'react';
 
 const Teams = () => {
