@@ -1,12 +1,92 @@
-# React + Vite
+# 🧭 Tournament App Overview
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🎮 1. UI Flow
 
-Currently, two official plugins are available:
+```
+[Qualifiers View]
+   ↓ Start Tournament
+[Group Stage View]
+   ↓ Advance winners
+[Knockout Stage View]
+   ↓ Repeat
+[Final Winner]
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## 🧩 2. Component Structure
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```jsx
+<App>
+├── <Qualifiers />        // shows all teams with flags
+├── <GroupStage />        // shows grouped teams in tables
+│   └── <GroupTable />    // optional: renders each group
+├── <Tournament />        // knockout stage matches
+│   └── <Match />         // 1 vs 1 match with score input
+```
+
+---
+
+## ⚙️ 3. Logic Flow
+
+```
+1. App fetches /teams.json
+2. Shuffle teams → save in state
+
+3. QUALIFIERS STAGE
+   • Show all teams
+   • Button: Start Tournament
+
+4. GROUP STAGE
+   • Use shuffled teams → groupTeams()
+   • Generate group fixtures
+   • User enters results
+   • Call getWinners() for each group
+
+5. TOURNAMENT (KNOCKOUTS)
+   • createRoundMatches(winners)
+   • User enters results
+   • Repeat until 1 team left
+```
+
+---
+
+## 🧾 4. Data Shapes
+
+### ✅ Team
+
+```js
+{
+  name: 'Brazil',
+  flag: 'https://flagcdn.com/w320/br.png'
+}
+```
+
+### ✅ Match
+
+```js
+{
+  team1: 'Brazil',
+  team2: 'Germany',
+  score1: 2,
+  score2: 1
+}
+```
+
+### ✅ Group
+
+```js
+{
+  groupName: 'A',
+  teams: ['Brazil', 'Germany', 'France', 'Japan']
+}
+```
+
+---
+
+## ✅ TDD Strategy Per Stage
+
+-   Qualifiers: fetch test, display test, error fallback test
+-   GroupStage: test group logic, test match rendering
+-   Tournament: test match results, advancing rounds
+-   Utility Functions: pure unit tests for shuffle, group, match creation

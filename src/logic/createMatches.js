@@ -4,6 +4,7 @@ export const shuffleTeams = (teams) => {
 
 export const createRoundMatches = (teams) => {
 	const matches = [];
+
 	for (let i = 0; i < teams.length; i += 2) {
 		if (teams[i + 1]) {
 			matches.push({
@@ -16,6 +17,6 @@ export const createRoundMatches = (teams) => {
 			console.warn(`Odd number of teams; ${teams[i]} has no opponent.`);
 		}
 	}
-	'Matches created:', matches;
+
 	return matches;
 };
