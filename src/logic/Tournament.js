@@ -49,10 +49,6 @@ export default class Tournament {
 			// Update the scores
 			match.score1 = score1;
 			match.score2 = score2;
-
-			console.log(
-				`Updated match: ${match.team1} vs ${match.team2} - Score: ${score1}-${score2}`
-			);
 		} else {
 			console.error('Invalid match index');
 		}
@@ -61,14 +57,14 @@ export default class Tournament {
 	getWinners() {
 		return this.matches
 			.map((match, index) => {
-				console.log(`Processing match ${index}:`, match);
+				`Processing match ${index}:`, match;
 				if (match.score1 === undefined || match.score2 === undefined) {
 					console.error('⚠️ Missing scores!', match);
 					return null;
 				}
 				const winner =
 					match.score1 > match.score2 ? match.team1 : match.team2;
-				console.log(`Winner of match ${index}:`, winner);
+				`Winner of match ${index}:`, winner;
 				return winner;
 			})
 			.filter((winner) => winner !== null);

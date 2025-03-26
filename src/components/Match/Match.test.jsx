@@ -15,7 +15,7 @@ describe('Match component', () => {
 	// 	it('renders without errors', () => {
 	// 		render(<Match team1="England" team2="Germany" />);
 
-	// 		// console.log(document.body.innerHTML); // 🛠️ Debug: See what's rendered
+	// 		// (document.body.innerHTML); // 🛠️ Debug: See what's rendered
 
 	// 		const heading = screen.getByRole('heading', { level: 3 }); // 🔍 Find <h3>
 	// 		expect(heading).toHaveTextContent('England vs Germany');

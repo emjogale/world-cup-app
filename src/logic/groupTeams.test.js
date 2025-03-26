@@ -11,7 +11,7 @@ describe('groupTeams', () => {
 	it('should divide teams into groups of 4', () => {
 		const grouped = groupTeams(mockTeams);
 
-		console.log(grouped);
+		grouped;
 
 		expect(Object.keys(grouped)).toHaveLength(2);
 		expect(grouped.A).toHaveLength(4);

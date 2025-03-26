@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import Tournament from '../../logic/Tournament';
 import './GroupStage.css';
-import { groupTeams } from '../../utils/groupTeams';
+import { groupTeams } from '../../logic/groupTeams';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {

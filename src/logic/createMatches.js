@@ -16,6 +16,6 @@ export const createRoundMatches = (teams) => {
 			console.warn(`Odd number of teams; ${teams[i]} has no opponent.`);
 		}
 	}
-	console.log('Matches created:', matches);
+	'Matches created:', matches;
 	return matches;
 };

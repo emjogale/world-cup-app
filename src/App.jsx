@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import Qualifiers from './components/Qualifiers/Qualifiers';
 import GroupStage from './components/GroupStage/GroupStage';
 import './index.css';
 
 const App = () => {
 	const [teams, setTeams] = useState([]);
+	const [tournamentStarted, setTournamentStarted] = useState(false);
 
 	useEffect(() => {
 		fetch('/teams.json')
@@ -13,9 +15,22 @@ const App = () => {
 	}, []);
 
 	return (
-		<div>
+		<div className="app-container">
 			<h1>🌍 World Cup Group Stage</h1>
-			<GroupStage teams={teams} />
+
+			{!tournamentStarted ? (
+				<>
+					<Qualifiers />
+					<button
+						onClick={() => setTournamentStarted(true)}
+						className="start-btn"
+					>
+						Start Tournament
+					</button>
+				</>
+			) : (
+				<GroupStage teams={teams} />
+			)}
 		</div>
 	);
 };
