@@ -1,9 +1,13 @@
-export const groupTeams = (teams) => {
-	const teamsPerGroup = 4;
+export const groupTeams = (teams, teamsPerGroup = 4) => {
+	if (teams.length % teamsPerGroup !== 0) {
+		console.warn(
+			`⚠️ Team count (${teams.length}) is not divisible by ${teamsPerGroup}. Some groups may be incomplete.`
+		);
+	}
 	const numGroups = Math.ceil(teams.length / teamsPerGroup);
 	const groupNames = Array.from({ length: numGroups }, (_, i) =>
 		String.fromCharCode(65 + i)
-	); // A, B, C...
+	); // 'A', 'B', 'C'... etc
 
 	const grouped = {};
 

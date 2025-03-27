@@ -2,6 +2,7 @@
 // Useful for previewing entries or editing before grouping.
 
 import React, { useEffect, useState } from 'react';
+import './Qualifiers.css';
 
 const Teams = () => {
 	const [teams, setTeams] = useState([]);
@@ -28,7 +29,7 @@ const Teams = () => {
 
 	return (
 		<div className="teams-container">
-			<h2>here are the teams</h2>
+			<h2>The Qualifiers are:</h2>
 			{error && (
 				<p className="error-message">
 					⚠️ Error loading teams. Please try again.

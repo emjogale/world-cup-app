@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Match from '../Match/Match';
 
-const Tournament = ({ teams }) => {
+const KnockoutStage = ({ teams }) => {
 	const [results, setResults] = useState([]);
 
 	const handleResult = (team1, score1, team2, score2) => {
@@ -24,4 +24,4 @@ const Tournament = ({ teams }) => {
 	);
 };
 
-export default Tournament;
+export default KnockoutStage;

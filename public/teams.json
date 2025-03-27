@@ -40,6 +40,10 @@
 		"flag": "https://flagpedia.net/data/flags/w320/cr.png"
 	},
 	{
+		"name": "Côte d'Ivoire",
+		"flag": "https://flagcdn.com/w320/ci.png"
+	},
+	{
 		"name": "Croatia",
 		"flag": "https://flagpedia.net/data/flags/w320/hr.png"
 	},
@@ -86,6 +90,10 @@
 	{
 		"name": "Iran",
 		"flag": "https://flagpedia.net/data/flags/w320/ir.png"
+	},
+	{
+		"name": "Iraq",
+		"flag": "https://flagcdn.com/w320/iq.png"
 	},
 	{
 		"name": "Italy",
@@ -174,6 +182,10 @@
 	{
 		"name": "Uruguay",
 		"flag": "https://flagpedia.net/data/flags/w320/uy.png"
+	},
+	{
+		"name": "Uzbekistan",
+		"flag": "https://flagcdn.com/w320/uz.png"
 	},
 	{
 		"name": "Wales",

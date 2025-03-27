@@ -16,14 +16,14 @@ const App = () => {
 
 	return (
 		<div className="app-container">
-			<h1>🌍 World Cup Group Stage</h1>
+			<h1>🌍 World Cup</h1>
 
 			{!tournamentStarted ? (
 				<>
 					<Qualifiers />
 					<button
 						onClick={() => setTournamentStarted(true)}
-						className="start-btn"
+						className="start-button"
 					>
 						Start Tournament
 					</button>
