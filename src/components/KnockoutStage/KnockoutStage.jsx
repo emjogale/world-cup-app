@@ -6,6 +6,7 @@ const KnockoutStage = ({ teams }) => {
 
 	const handleResult = (team1, score1, team2, score2) => {
 		setResults([...results, { team1, score1, team2, score2 }]);
+		console.log('the results are:', results);
 	};
 
 	return (

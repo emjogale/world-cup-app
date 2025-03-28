@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Qualifiers from './components/Qualifiers/Qualifiers';
 import GroupStage from './components/GroupStage/GroupStage';
+import KnockoutStage from './components/KnockoutStage/KnockoutStage';
 import './index.css';
 
 const App = () => {
+	const [stage, setStage] = useState('qualifiers');
 	const [teams, setTeams] = useState([]);
-	const [tournamentStarted, setTournamentStarted] = useState(false);
+	const [winners, setWinners] = useState([]);
 
 	useEffect(() => {
 		fetch('/teams.json')
@@ -17,20 +19,27 @@ const App = () => {
 	return (
 		<div className="app-container">
 			<h1>🌍 World Cup</h1>
-
-			{!tournamentStarted ? (
+			{stage === 'qualifiers' && (
 				<>
 					<Qualifiers />
 					<button
-						onClick={() => setTournamentStarted(true)}
+						onClick={() => setStage('groups')}
 						className="start-button"
 					>
 						Start Tournament
 					</button>
 				</>
-			) : (
-				<GroupStage teams={teams} />
 			)}
+			{stage === 'groups' && (
+				<GroupStage
+					teams={teams}
+					onComplete={(groupWinners) => {
+						setWinners(groupWinners);
+						setStage('knockout');
+					}}
+				/>
+			)}
+			{stage === 'knockout' && <KnockoutStage teams={winners} />}
 		</div>
 	);
 };
