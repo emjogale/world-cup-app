@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createRoundMatches } from './createMatches';
+import { createGroupMatches } from './createMatches';
 
 describe('createMatches.js', () => {
 	describe('createRoundMatches', () => {

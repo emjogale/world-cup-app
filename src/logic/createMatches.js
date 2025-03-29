@@ -16,3 +16,13 @@ export const createRoundMatches = (teams) => {
 
 	return matches;
 };
+
+export const createGroupMatches = (teams) => {
+	const matches = [];
+	for (let i = 0; i < teams.length; i++) {
+		for (let j = i + 1; j < teams.length; j++) {
+			matches.push({ team1: teams[i], team2: teams[j] });
+		}
+	}
+	return matches;
+};

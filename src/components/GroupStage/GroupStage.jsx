@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import Tournament from '../../logic/Tournament';
 import './GroupStage.css';
 import { groupTeams } from '../../logic/groupTeams';
+import { createGroupMatches } from '../../logic/createMatches';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -27,6 +28,11 @@ const GroupStage = ({ teams }) => {
 							</li>
 						))}
 					</ul>
+					{createGroupMatches(group).map((match, index) => (
+						<h3 key={index}>
+							{match.team1.name} vs {match.team2.name}
+						</h3>
+					))}
 				</div>
 			))}
 		</div>

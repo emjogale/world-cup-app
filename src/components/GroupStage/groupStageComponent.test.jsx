@@ -30,4 +30,13 @@ describe('group stage component', () => {
 			expect(screen.getByText(team.name)).toBeInTheDocument();
 		});
 	});
+
+	it('renders match fixtures for each group', () => {
+		render(<GroupStage teams={mockTeams} />);
+
+		// for 2 groups of 4 teams each -> 6 matches per group = 12 in total
+		const matchHeadings = screen.getAllByRole('heading', { level: 3 });
+
+		expect(matchHeadings.length).toBe(12);
+	});
 });
