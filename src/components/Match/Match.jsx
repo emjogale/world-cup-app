@@ -1,5 +1,6 @@
 import React from 'react';
 import { useState } from 'react';
+import './Match.css';
 
 const Match = ({ team1, team2, onResult }) => {
 	const [score1, setScore1] = useState('');
@@ -12,24 +13,27 @@ const Match = ({ team1, team2, onResult }) => {
 	};
 
 	return (
-		<div>
-			<h3>
-				{team1} vs {team2}
-			</h3>
-			<input
-				data-testid={`score-${team1}`}
-				type="number"
-				min="0"
-				value={score1}
-				onChange={(e) => setScore1(e.target.value)}
-			/>
-			<input
-				data-testid={`score-${team2}`}
-				type="number"
-				min="0"
-				value={score2}
-				onChange={(e) => setScore2(e.target.value)}
-			/>
+		<div className="match-card vertical" data-testid="match">
+			<div className="team-row">
+				<span className="team-name">{team1}</span>
+				<input
+					data-testid={`score-${team1}`}
+					type="number"
+					min="0"
+					value={score1}
+					onChange={(e) => setScore1(e.target.value)}
+				/>
+			</div>
+			<div className="team-row">
+				<span className="team-name">{team2}</span>
+				<input
+					data-testid={`score-${team2}`}
+					type="number"
+					min="0"
+					value={score2}
+					onChange={(e) => setScore2(e.target.value)}
+				/>
+			</div>
 			<button onClick={handleSubmit}>Submit</button>
 		</div>
 	);

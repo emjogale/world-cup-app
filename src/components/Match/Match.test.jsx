@@ -17,11 +17,13 @@ describe('Match component', () => {
 	});
 	it('renders the match correctly', () => {
 		render(<Match team1="England" team2="Germany" />);
-		const heading = screen.getByRole('heading', { level: 3 });
-		expect(heading).toHaveTextContent('England vs Germany');
 	});
 	it('updates score inputs correctly', async () => {
 		render(<Match team1="England" team2="Germany" />);
+
+		expect(screen.getByText('England')).toBeInTheDocument();
+		expect(screen.getByText('Germany')).toBeInTheDocument();
+		expect(screen.getByTestId('match')).toBeInTheDocument();
 
 		const scoreInput1 = screen.getByTestId('score-England');
 		const scoreInput2 = screen.getByTestId('score-Germany');

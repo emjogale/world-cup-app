@@ -4,7 +4,7 @@ import { createGroupMatches } from './createMatches';
 
 describe('createMatches.js', () => {
 	describe('createRoundMatches', () => {
-		it('should create matches from an even number odf teams', () => {
+		it('should create matches from an even number of teams', () => {
 			const teams = ['Brazil', 'Germany', 'France', 'Argentina'];
 			const matches = createRoundMatches(teams);
 
@@ -29,5 +29,28 @@ describe('createMatches.js', () => {
 			);
 			warnSpy.mockRestore();
 		});
+	});
+});
+
+describe('createGroupMatches', () => {
+	it('generates all the unique match combinations for a group of 4 teams', () => {
+		const mockGroup = ['Brazil', 'Germany', 'France', 'Argentina'];
+		const matches = createGroupMatches(mockGroup.map((name) => ({ name })));
+
+		expect(matches).toHaveLength(6);
+		const matchStrings = matches.map(
+			(m) => `${m.team1.name} vs ${m.team2.name}`
+		);
+
+		expect(matchStrings).toEqual(
+			expect.arrayContaining([
+				'Brazil vs Germany',
+				'Brazil vs France',
+				'Brazil vs Argentina',
+				'Germany vs France',
+				'Germany vs Argentina',
+				'France vs Argentina'
+			])
+		);
 	});
 });

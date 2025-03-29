@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import GroupStage from './GroupStage';
 import { groupTeams } from '../../logic/groupTeams';
 
@@ -19,7 +20,9 @@ describe('group stage component', () => {
 		const grouped = groupTeams(mockTeams);
 		render(<GroupStage teams={mockTeams} />);
 		for (const groupName of Object.keys(grouped)) {
-			expect(screen.getByText(`Group ${groupName}`)).toBeInTheDocument();
+			expect(
+				screen.getAllByText(`Group ${groupName}`)
+			).not.toHaveLength();
 		}
 	});
 
@@ -27,7 +30,7 @@ describe('group stage component', () => {
 		render(<GroupStage teams={mockTeams} />);
 
 		mockTeams.forEach((team) => {
-			expect(screen.getByText(team.name)).toBeInTheDocument();
+			expect(screen.getAllByText(team.name)).not.toHaveLength();
 		});
 	});
 
@@ -35,8 +38,23 @@ describe('group stage component', () => {
 		render(<GroupStage teams={mockTeams} />);
 
 		// for 2 groups of 4 teams each -> 6 matches per group = 12 in total
-		const matchHeadings = screen.getAllByRole('heading', { level: 3 });
+		const scoreInputs = screen.getAllByRole('spinbutton');
 
-		expect(matchHeadings.length).toBe(12);
+		expect(scoreInputs.length).toBe(24);
 	});
+
+	// it('shows submitted result after a match is completed', async () => {
+	// 	render(<GroupStage teams={mockTeams} />);
+
+	// 	const scoreInput1 = screen.getByTestId('score-Brazil');
+	// 	const scoreInput2 = screen.getByTestId('score-Germany');
+
+	// 	await userEvent.clear(scoreInput1);
+	// 	await userEvent.type(scoreInput1, '2');
+
+	// 	await userEvent.clear(scoreInput2);
+	// 	await userEvent.type(scoreInput2, '1');
+
+	// expect ... not sure what I'm expecting!!;
+	//});
 });
