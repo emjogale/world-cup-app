@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { shuffleTeams } from './logic/shuffleTeams';
 import Qualifiers from './components/Qualifiers/Qualifiers';
 import GroupStage from './components/GroupStage/GroupStage';
 import KnockoutStage from './components/KnockoutStage/KnockoutStage';
@@ -7,6 +8,8 @@ import './index.css';
 const App = () => {
 	const [stage, setStage] = useState('qualifiers');
 	const [teams, setTeams] = useState([]);
+	const [seed, setSeed] = useState('');
+	const [shuffledTeams, setShuffledTeams] = useState([]);
 	const [winners, setWinners] = useState([]);
 
 	useEffect(() => {
@@ -19,20 +22,58 @@ const App = () => {
 	return (
 		<div className="app-container">
 			<h1>🌍 World Cup</h1>
+			{stage !== 'qualifiers' && seed && (
+				<>
+					<p
+						style={{
+							marginTop: '1rem',
+							fontStyle: 'italic',
+							color: '#666'
+						}}
+					>
+						Using seed: <strong>{seed}</strong>
+						<button
+							onClick={() => navigator.clipboard.writeText(seed)}
+							className="seed-copy"
+						>
+							Copy Seed
+						</button>
+					</p>
+				</>
+			)}
 			{stage === 'qualifiers' && (
 				<>
 					<Qualifiers />
+					<small style={{ display: 'block', marginBottom: '0.5rem' }}>
+						Enter a seed to repeat a specific tournament layout
+					</small>
+					<input
+						type="text"
+						placeholder="Optional seed"
+						value={seed}
+						onChange={(e) => setSeed(e.target.value)}
+						className="seed-input"
+					/>
 					<button
-						onClick={() => setStage('groups')}
+						onClick={() => {
+							const shuffled = shuffleTeams(
+								teams,
+								seed || undefined
+							);
+
+							setShuffledTeams(shuffled);
+							setStage('groups');
+						}}
 						className="start-button"
 					>
 						Start Tournament
 					</button>
 				</>
 			)}
+
 			{stage === 'groups' && (
 				<GroupStage
-					teams={teams}
+					teams={shuffledTeams}
 					onComplete={(groupWinners) => {
 						setWinners(groupWinners);
 						setStage('knockout');

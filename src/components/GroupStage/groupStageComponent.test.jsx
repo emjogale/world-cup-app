@@ -1,9 +1,10 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import GroupStage from './GroupStage';
-import Tournament from '../../logic/Tournament';
+import { groupTeams } from '../../logic/groupTeams';
+
 import { beforeEach, afterEach } from 'vitest';
-import { mockFetchTeams } from '../../test-utils/mockFetchTeams';
+
 import { groupTeams } from '../../logic/groupTeams';
 
 // mock teams data
@@ -41,10 +42,6 @@ import { groupTeams } from '../../logic/groupTeams';
 // 		flag: 'https://flagpedia.net/data/flags/w320/cn.png'
 // 	}
 // ];
-
-beforeEach(() => {
-	mockFetchTeams;
-});
 
 afterEach(() => {
 	vi.restoreAllMocks;

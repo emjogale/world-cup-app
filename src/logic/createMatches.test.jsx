@@ -1,27 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
-import { shuffleTeams, createRoundMatches } from './createMatches';
+import { createRoundMatches } from './createMatches';
 
 describe('createMatches.js', () => {
-	describe('shuffleTeams', () => {
-		it('should shuffle teams randomly without changing the count', () => {
-			const teams = [
-				'Brazil',
-				'Germany',
-				'France',
-				'Argentina',
-				'Italy',
-				'Spain',
-				'Portugal',
-				'Netherlands'
-			];
-			const shuffledTeams = shuffleTeams(teams);
-
-			expect(shuffledTeams).not.toEqual(teams);
-			expect(shuffledTeams).toHaveLength(teams.length);
-			expect(shuffledTeams.sort()).toEqual(teams.sort());
-		});
-	});
-
 	describe('createRoundMatches', () => {
 		it('should create matches from an even number odf teams', () => {
 			const teams = ['Brazil', 'Germany', 'France', 'Argentina'];

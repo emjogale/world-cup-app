@@ -1,24 +1,10 @@
-// import { shuffleTeams, createRoundMatches } from '../utils/createMatches';
-import seedrandom from 'seedrandom';
+import { shuffleTeams } from './shuffleTeams';
+import { createRoundMatches } from './createMatches';
 
 export default class Tournament {
 	constructor(teams, seed = null) {
-		if (seed) {
-			this.rng = seedrandom(seed); // random number generator uses seed if provided
-		} else {
-			this.rng = Math.random; // otherwise default to Math.random()
-		}
-		this.teams = this.shuffleTeams(teams);
-		this.matches = this.createRoundMatches(this.teams);
-	}
-
-	shuffleTeams(teams) {
-		const shuffled = [...teams];
-		for (let i = shuffled.length - 1; i > 0; i--) {
-			const j = Math.floor(this.rng() * (i + 1)); // Uses seeded random generator if provided
-			[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-		}
-		return shuffled;
+		this.teams = shuffleTeams(teams, seed);
+		this.matches = createRoundMatches(this.teams);
 	}
 
 	createRoundMatches(teams) {
