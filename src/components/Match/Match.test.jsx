@@ -23,7 +23,9 @@ describe('Match component', () => {
 
 		expect(screen.getByText('England')).toBeInTheDocument();
 		expect(screen.getByText('Germany')).toBeInTheDocument();
-		expect(screen.getByTestId('match')).toBeInTheDocument();
+		expect(
+			screen.getByTestId('match-England-vs-Germany')
+		).toBeInTheDocument();
 
 		const scoreInput1 = screen.getByTestId('score-England');
 		const scoreInput2 = screen.getByTestId('score-Germany');

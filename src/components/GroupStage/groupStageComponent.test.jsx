@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import GroupStage from './GroupStage';
@@ -43,18 +43,32 @@ describe('group stage component', () => {
 		expect(scoreInputs.length).toBe(24);
 	});
 
-	// it('shows submitted result after a match is completed', async () => {
-	// 	render(<GroupStage teams={mockTeams} />);
+	it('shows submitted result after a match is completed', async () => {
+		render(<GroupStage teams={mockTeams} />);
+		const matchCard = screen.getByTestId('match-Brazil-vs-Cameroon');
 
-	// 	const scoreInput1 = screen.getByTestId('score-Brazil');
-	// 	const scoreInput2 = screen.getByTestId('score-Germany');
+		console.log('\n\n🔍 MATCH DEBUG:\n\n');
+		screen.debug();
+		const scoreInput1 = within(matchCard).getByTestId('score-Brazil');
+		const scoreInput2 = within(matchCard).getByTestId('score-Cameroon');
+		console.log(
+			'Match card IDs:',
+			screen.getAllByTestId((_, node) => node?.dataset?.testid)
+		);
+		screen.debug();
 
-	// 	await userEvent.clear(scoreInput1);
-	// 	await userEvent.type(scoreInput1, '2');
+		await userEvent.clear(scoreInput1);
+		await userEvent.type(scoreInput1, '2');
 
-	// 	await userEvent.clear(scoreInput2);
-	// 	await userEvent.type(scoreInput2, '1');
+		await userEvent.clear(scoreInput2);
+		await userEvent.type(scoreInput2, '1');
 
-	// expect ... not sure what I'm expecting!!;
-	//});
+		await userEvent.click(
+			within(matchCard).getByRole('button', { name: /submit/i })
+		);
+
+		const result = await within(matchCard).findByTestId('result');
+
+		expect(result).toHaveTextContent('Brazil 2 - 1 Cameroon');
+	});
 });

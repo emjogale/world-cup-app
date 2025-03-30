@@ -13,7 +13,10 @@ const Match = ({ team1, team2, onResult }) => {
 	};
 
 	return (
-		<div className="match-card vertical" data-testid="match">
+		<div
+			className="match-card vertical"
+			data-testid={`match-${team1}-vs-${team2}`}
+		>
 			<div className="team-row">
 				<span className="team-name">{team1}</span>
 				<input
@@ -34,6 +37,11 @@ const Match = ({ team1, team2, onResult }) => {
 					onChange={(e) => setScore2(e.target.value)}
 				/>
 			</div>
+			{score1 !== '' && score2 !== '' && (
+				<p data-testid="result">
+					{team1} {score1} - {score2} {team2}
+				</p>
+			)}
 			<button onClick={handleSubmit}>Submit</button>
 		</div>
 	);

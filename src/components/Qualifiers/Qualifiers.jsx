@@ -29,7 +29,6 @@ const Teams = () => {
 
 	return (
 		<div className="teams-container">
-			<h2>The Qualifiers are:</h2>
 			{error && (
 				<p className="error-message">
 					⚠️ Error loading teams. Please try again.
