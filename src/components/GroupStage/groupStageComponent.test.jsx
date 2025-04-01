@@ -34,7 +34,7 @@ describe('group stage component', () => {
 		});
 	});
 
-	it('renders match fixtures for each group', () => {
+	it.skip('renders match fixtures for each group', () => {
 		render(<GroupStage teams={mockTeams} />);
 
 		// for 2 groups of 4 teams each -> 6 matches per group = 12 in total
@@ -43,14 +43,22 @@ describe('group stage component', () => {
 		expect(scoreInputs.length).toBe(24);
 	});
 
+	it('renders only the first two matches for each group initially', () => {
+		render(<GroupStage teams={mockTeams} />);
+
+		const matchCards = screen.getAllByTestId(/match-/);
+
+		expect(matchCards.length).toBe(4);
+	});
+
 	it('shows submitted result after a match is completed', async () => {
 		render(<GroupStage teams={mockTeams} />);
-		const matchCard = screen.getByTestId('match-Brazil-vs-Cameroon');
+		const matchCard = screen.getByTestId('match-Australia-vs-Cameroon');
 
 		console.log('\n\n🔍 MATCH DEBUG:\n\n');
 		screen.debug();
-		const scoreInput1 = within(matchCard).getByTestId('score-Brazil');
-		const scoreInput2 = within(matchCard).getByTestId('score-Cameroon');
+		const scoreInput1 = within(matchCard).getByTestId('score-Cameroon');
+		const scoreInput2 = within(matchCard).getByTestId('score-Australia');
 		console.log(
 			'Match card IDs:',
 			screen.getAllByTestId((_, node) => node?.dataset?.testid)
@@ -69,6 +77,6 @@ describe('group stage component', () => {
 
 		const result = await within(matchCard).findByTestId('result');
 
-		expect(result).toHaveTextContent('Brazil 2 - 1 Cameroon');
+		expect(result).toHaveTextContent('Australia 1 - 2 Cameroon');
 	});
 });
