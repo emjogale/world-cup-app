@@ -23,18 +23,51 @@ const GroupStage = ({ teams }) => {
 				return (
 					<div key={groupName} className="group-card">
 						<h2>Group {groupName}</h2>
-						<ul>
-							{group.map((team) => (
-								<li key={team.name}>
-									<img
-										src={team.flag}
-										alt={team.name}
-										width="24"
-									/>
-									{team.name}
-								</li>
-							))}
-						</ul>
+						<div className="group-table-wrapper">
+							<table className="group-table">
+								<thead>
+									<tr>
+										<th>Team</th>
+										<th>P</th>
+										<th>W</th>
+										<th>D</th>
+										<th>L</th>
+										<th>F</th>
+										<th>A</th>
+										<th>GD</th>
+										<th>Pts</th>
+									</tr>
+								</thead>
+								<tbody>
+									{group.map((team) => (
+										<tr
+											key={team.name}
+											data-testid={`row-${team.name}`}
+										>
+											<td className="team-cell">
+												<div className="team-info">
+													<img
+														src={team.flag}
+														alt={team.name}
+														width="24"
+														height="16"
+													/>
+													<span>{team.name}</span>
+												</div>
+											</td>
+											<td>0</td>
+											<td>0</td>
+											<td>0</td>
+											<td>0</td>
+											<td>0</td>
+											<td>0</td>
+											<td>0</td>
+											<td>0</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
 						{matchesToShow.map(({ team1, team2 }) => (
 							<Match
 								key={`${team1.name}-vs-${team2.name}`}

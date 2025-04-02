@@ -1,18 +1,22 @@
 .group-stage {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-	gap: 2rem;
-	padding: 2rem;
-	max-width: 1200px;
-	margin: 0 auto;
+	gap: 1rem;
+	grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
 }
 
 .group-card {
-	background: #ffffff;
-	border-radius: 16px;
-	padding: 1rem 1.2rem;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-	transition: transform 0.2s ease;
+	box-sizing: border-box;
+	border: 2px solid black;
+	padding: 1rem;
+	border-radius: 1rem;
+	background-color: #fff;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+	margin-bottom: 2rem;
+	overflow: hidden;
+	min-width: 0;
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .group-card:hover {
@@ -27,24 +31,18 @@
 	font-weight: 600;
 }
 
-.group-card ul {
-	list-style: none;
-	padding: 0;
-	margin: 0;
+.group-table-wrapper {
+	overflow-x: auto;
+	margin-top: 0.5rem;
 }
 
-.group-card li {
-	display: flex;
-	align-items: center;
-	gap: 0.75rem;
-	padding: 0.4rem 0;
-	border-bottom: 1px solid #eee;
-	font-size: 0.95rem;
-	color: #444;
-}
-
-.group-card li:last-child {
-	border-bottom: none;
+.group-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-bottom: 1rem;
+	text-align: center;
+	min-width: 500px;
+	outline: 1px solid red;
 }
 
 .group-card img {
@@ -53,4 +51,82 @@
 	border-radius: 2px;
 	object-fit: cover;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.team-cell {
+	padding: 0.5rem;
+	vertical-align: middle;
+}
+
+.team-info {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.group-table-wrapper {
+	overflow-x: auto;
+	width: 100%;
+}
+
+.group-table th:first-child,
+.group-table td:first-child {
+	text-align: left;
+	width: 1rem;
+}
+
+.group-table th,
+.group-table td {
+	padding: 0.4rem 0.6rem;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
+	border: 1px solid #ccc;
+}
+
+@media (max-width: 600px) {
+	.group-stage {
+		grid-template-columns: 1fr;
+		justify-items: center;
+		gap: 0.5rem;
+	}
+
+	.group-card {
+		border: 1px solid black;
+		padding: 0.75rem 0.5rem;
+		margin-bottom: 0.5rem;
+		box-sizing: border-box;
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.group-card h2 {
+		font-size: 1.1rem;
+		margin-bottom: 0.5rem;
+	}
+
+	.group-card::-webkit-scrollbar {
+		display: none; /* Hide scrollbar for cleaner look */
+	}
+
+	.group-card > * {
+		max-width: 100%;
+	}
+
+	.group-table {
+		width: 100%;
+		min-width: 500px;
+		display: table;
+		table-layout: auto;
+		font-size: 0.8rem;
+		overflow-x: auto;
+	}
+
+	.group-table th,
+	.group-table td {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 0.5rem;
+		padding: 0.3rem 0.4rem;
+	}
 }
