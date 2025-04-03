@@ -37,9 +37,6 @@
 }
 
 @media (max-width: 600px) {
-	.match-card {
-		outline: 1px dashed blue;
-	}
 	.match-card.horizontal {
 		display: flex;
 		align-items: center; /* Vertical alignment */

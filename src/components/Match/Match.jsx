@@ -1,17 +1,7 @@
 import React from 'react';
-import { useState } from 'react';
 import './Match.css';
 
-const Match = ({ team1, team2, onResult }) => {
-	const [score1, setScore1] = useState('');
-	const [score2, setScore2] = useState('');
-
-	const handleSubmit = () => {
-		if (onResult && score1 !== '' && score2 !== '') {
-			onResult(team1, Number(score1), team2, Number(score2));
-		}
-	};
-
+const Match = ({ team1, team2, score1, score2, onScoreChange }) => {
 	return (
 		<div
 			className="match-card horizontal"
@@ -23,7 +13,7 @@ const Match = ({ team1, team2, onResult }) => {
 				type="number"
 				min="0"
 				value={score1}
-				onChange={(e) => setScore1(e.target.value)}
+				onChange={(e) => onScoreChange(team1, e.target.value)}
 			/>
 			v
 			<input
@@ -31,10 +21,9 @@ const Match = ({ team1, team2, onResult }) => {
 				type="number"
 				min="0"
 				value={score2}
-				onChange={(e) => setScore2(e.target.value)}
+				onChange={(e) => onScoreChange(team2, e.target.value)}
 			/>
 			<span className="team-name">{team2}</span>
-			<button onClick={handleSubmit}>Submit</button>
 		</div>
 	);
 };

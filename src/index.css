@@ -69,3 +69,15 @@ body {
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 	transition: border 0.3s ease;
 }
+
+/* screen reader only styles */
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	padding: 0;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	border: 0;
+}

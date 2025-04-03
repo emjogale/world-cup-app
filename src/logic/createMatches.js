@@ -26,3 +26,20 @@ export const createGroupMatches = (teams) => {
 	}
 	return matches;
 };
+
+export const getFirstIndividualMatches = (matches) => {
+	const usedTeams = new Set();
+	const selected = [];
+
+	for (const match of matches) {
+		const { team1, team2 } = match;
+		if (!usedTeams.has(team1.name) && !usedTeams.has(team2.name)) {
+			selected.push(match);
+			usedTeams.add(team1.name);
+			usedTeams.add(team2.name);
+		}
+		if (selected.length === 2) break;
+	}
+
+	return selected;
+};

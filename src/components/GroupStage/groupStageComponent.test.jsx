@@ -44,13 +44,84 @@ describe('group stage component', () => {
 		});
 	});
 
-	it('renders only the first two matches for each group initially', () => {
+	it('ensures each team appears only once in the visible matches', () => {
+		render(<GroupStage teams={mockTeams} />);
+
+		// Find all match cards
+		const matchCards = screen.getAllByTestId(/match-/);
+
+		// Collect team names from data-testid
+		const teamCounts = new Map();
+
+		matchCards.forEach((card) => {
+			const testId = card.getAttribute('data-testid'); // e.g. "match-Brazil-vs-Germany"
+			const [team1, team2] = testId.replace('match-', '').split('-vs-');
+
+			[team1, team2].forEach((team) => {
+				teamCounts.set(team, (teamCounts.get(team) || 0) + 1);
+			});
+		});
+
+		// Assert each team only appears once
+		for (const [_team, count] of teamCounts) {
+			expect(count).toBeLessThanOrEqual(1);
+		}
+	});
+
+	it('ensures no team appears more than once in the visible matches per group', () => {
 		render(<GroupStage teams={mockTeams} />);
 
 		const matchCards = screen.getAllByTestId(/match-/);
+		const seenTeams = new Set();
 
-		expect(matchCards.length).toBe(4);
+		matchCards.forEach((card) => {
+			const testId = card.getAttribute('data-testid');
+			const [, matchStr] = testId.split('match-');
+			const [team1, , team2] = matchStr.split('-');
+
+			expect(seenTeams.has(team1)).toBe(false);
+			expect(seenTeams.has(team2)).toBe(false);
+
+			seenTeams.add(team1);
+			seenTeams.add(team2);
+		});
 	});
+
+	it('replaces previous matches with new ones after submission', async () => {
+		render(<GroupStage teams={mockTeams} />);
+
+		// Make sure specific initial match is on screen
+		expect(
+			screen.getByTestId('match-China-vs-Argentina')
+		).toBeInTheDocument();
+
+		// Submit Group A's matches (China, Argentina, Canada, Chile)
+		const inputs = screen.getAllByRole('spinbutton');
+		await userEvent.type(inputs[0], '1'); // China
+		await userEvent.type(inputs[1], '0'); // Argentina
+		await userEvent.type(inputs[2], '2'); // Canada
+		await userEvent.type(inputs[3], '1'); // Chile
+
+		const groupASubmit = screen.getByTestId('submit-group-A');
+		await userEvent.click(groupASubmit);
+
+		// After submission, that match should be gone
+		expect(
+			screen.queryByTestId('match-China-vs-Argentina')
+		).not.toBeInTheDocument();
+
+		// Still 4 matches total (2 from Group B, 2 new from Group A)
+		const updatedMatches = screen.getAllByTestId(/match-/);
+		expect(updatedMatches).toHaveLength(4);
+	});
+
+	it('shows one submit button for every 2 matches', () => {
+		render(<GroupStage teams={mockTeams} />);
+		const buttons = screen.getAllByRole('button', { name: /submit/i });
+		expect(buttons.length).toBe(2); // 1 per group
+	});
+
+	it('submits both matches at once when scores are entered for both');
 
 	it('updates the group table stats when a match is submitted', async () => {
 		render(<GroupStage teams={mockTeams} />);
@@ -63,9 +134,6 @@ describe('group stage component', () => {
 
 		await userEvent.type(score1, '3');
 		await userEvent.type(score2, '1');
-		await userEvent.click(
-			within(matchCard).getByRole('button', { name: /submit/i })
-		);
 
 		//check that the table updated for China
 		// const chinaRow = screen.getByTestId('row-China');
