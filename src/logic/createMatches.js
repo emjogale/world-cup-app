@@ -47,3 +47,11 @@ export const getFirstIndividualMatches = (matches) => {
 export function getNextAvailableMatches(allMatches, currentIndex) {
 	return getFirstIndividualMatches(allMatches.slice(currentIndex));
 }
+
+export const buildInitialProgress = (groups) => {
+	const initial = {};
+	for (const groupName of Object.keys(groups)) {
+		initial[groupName] = 0;
+	}
+	return initial;
+};

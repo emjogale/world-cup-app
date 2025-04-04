@@ -4,7 +4,8 @@ import './GroupStage.css';
 import { groupTeams } from '../../logic/groupTeams';
 import {
 	createGroupMatches,
-	getFirstIndividualMatches
+	getFirstIndividualMatches,
+	buildInitialProgress
 } from '../../logic/createMatches';
 import Match from '../Match/Match';
 import { upDateGroupStats } from '../../logic/updateGroupStats';
@@ -17,13 +18,9 @@ const GroupStage = ({ teams }) => {
 		return groupTeams(tournament.teams);
 	}, [teams]);
 
-	const [progress, setGroupProgress] = useState(() => {
-		const initial = {};
-		for (const groupName of Object.keys(groupedTeams)) {
-			initial[groupName] = 0; //starting at match 0
-		}
-		return initial;
-	});
+	const [progress, setGroupProgress] = useState(() =>
+		buildInitialProgress(groupedTeams)
+	);
 
 	const [scores, setScores] = useState({});
 	const [groupStats, setGroupStats] = useState(null);
@@ -34,7 +31,6 @@ const GroupStage = ({ teams }) => {
 	}, [groupedTeams]);
 
 	const handleScoreChange = (team, score) => {
-		console.log('we are inputting a score');
 		setScores((prev) => ({ ...prev, [team]: score }));
 	};
 	if (!groupStats) return null;
@@ -73,51 +69,52 @@ const GroupStage = ({ teams }) => {
 				);
 
 				const handleGroupSubmit = () => {
-					alert('👀 SUBMIT CLICKED');
-					console.log(
-						'👀 This should definitely appear in browser console'
-					);
+					console.log('👀 Submit button clicked');
 
-					const results = [];
+					const results = matchesToShow.map(({ team1, team2 }) => ({
+						team1: team1.name,
+						score1: parseInt(scores[team1.name], 10),
+						team2: team2.name,
+						score2: parseInt(scores[team2.name], 10)
+					}));
 
-					matchesToShow.forEach(({ team1, team2 }) => {
-						const s1 = parseInt(scores[team1.name], 10);
-						const s2 = parseInt(scores[team2.name], 10);
-
-						// 🛑 Skip this match if either score is missing
-						if (isNaN(s1) || isNaN(s2)) return;
-
-						results.push({
-							team1: team1.name,
-							score1: s1,
-							team2: team2.name,
-							score2: s2
-						});
-					});
 					console.warn('➡️ Submitting results:', results);
+
 					const newStats = upDateGroupStats(
 						groupStats[groupName],
 						results
 					);
+
 					console.log(
 						'✅ newStats going into setGroupStats:',
 						newStats
 					);
-					setGroupStats((prev) => {
-						const updated = { ...prev };
-						updated[groupName] = { ...newStats };
-						console.log(
-							'🎯 Final updated stats for rendering:',
-							updated[groupName]
-						);
-						return updated;
-					});
+
+					setGroupStats((prev) => ({
+						...prev,
+						[groupName]: newStats
+					}));
+
 					setGroupProgress((prev) => ({
 						...prev,
-						[groupName]: prev[groupName] + 2
+						[groupName]: prev[groupName] + matchesToShow.length
 					}));
-					if (!allScored) return; // extra safety belt
+
+					const teamsToReset = new Set();
+					results.forEach(({ team1, team2 }) => {
+						teamsToReset.add(team1);
+						teamsToReset.add(team2);
+					});
+
+					setScores((prev) => {
+						const next = { ...prev };
+						teamsToReset.forEach((team) => {
+							next[team] = '';
+						});
+						return next;
+					});
 				};
+
 				return (
 					<div key={groupName} className="group-card">
 						<h2>Group {groupName}</h2>
