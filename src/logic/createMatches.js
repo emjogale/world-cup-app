@@ -43,3 +43,7 @@ export const getFirstIndividualMatches = (matches) => {
 
 	return selected;
 };
+
+export function getNextAvailableMatches(allMatches, currentIndex) {
+	return getFirstIndividualMatches(allMatches.slice(currentIndex));
+}

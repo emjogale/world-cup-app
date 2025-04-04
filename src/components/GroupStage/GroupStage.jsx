@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import Tournament from '../../logic/Tournament';
 import './GroupStage.css';
 import { groupTeams } from '../../logic/groupTeams';
@@ -7,6 +7,8 @@ import {
 	getFirstIndividualMatches
 } from '../../logic/createMatches';
 import Match from '../Match/Match';
+import { upDateGroupStats } from '../../logic/updateGroupStats';
+import { buildInitialGroupStats } from '../../logic/updateGroupStats';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -24,11 +26,18 @@ const GroupStage = ({ teams }) => {
 	});
 
 	const [scores, setScores] = useState({});
+	const [groupStats, setGroupStats] = useState(null);
+
+	useEffect(() => {
+		if (!groupedTeams || Object.keys(groupedTeams).length === 0) return;
+		setGroupStats(buildInitialGroupStats(groupedTeams));
+	}, [groupedTeams]);
 
 	const handleScoreChange = (team, score) => {
+		console.log('we are inputting a score');
 		setScores((prev) => ({ ...prev, [team]: score }));
 	};
-
+	if (!groupStats) return null;
 	return (
 		<div className="group-stage">
 			{Object.entries(groupedTeams).map(([groupName, group]) => {
@@ -62,19 +71,52 @@ const GroupStage = ({ teams }) => {
 						scores[teamName] !== undefined &&
 						scores[teamName] !== ''
 				);
+
 				const handleGroupSubmit = () => {
-					console.log(`submitting results for group ${groupName}:`);
+					alert('👀 SUBMIT CLICKED');
+					console.log(
+						'👀 This should definitely appear in browser console'
+					);
+
+					const results = [];
+
 					matchesToShow.forEach(({ team1, team2 }) => {
 						const s1 = parseInt(scores[team1.name], 10);
 						const s2 = parseInt(scores[team2.name], 10);
+
+						// 🛑 Skip this match if either score is missing
+						if (isNaN(s1) || isNaN(s2)) return;
+
+						results.push({
+							team1: team1.name,
+							score1: s1,
+							team2: team2.name,
+							score2: s2
+						});
+					});
+					console.warn('➡️ Submitting results:', results);
+					const newStats = upDateGroupStats(
+						groupStats[groupName],
+						results
+					);
+					console.log(
+						'✅ newStats going into setGroupStats:',
+						newStats
+					);
+					setGroupStats((prev) => {
+						const updated = { ...prev };
+						updated[groupName] = { ...newStats };
 						console.log(
-							`${team1.name} ${s1} - ${s2} ${team2.name}`
+							'🎯 Final updated stats for rendering:',
+							updated[groupName]
 						);
+						return updated;
 					});
 					setGroupProgress((prev) => ({
 						...prev,
 						[groupName]: prev[groupName] + 2
 					}));
+					if (!allScored) return; // extra safety belt
 				};
 				return (
 					<div key={groupName} className="group-card">
@@ -95,32 +137,82 @@ const GroupStage = ({ teams }) => {
 									</tr>
 								</thead>
 								<tbody>
-									{group.map((team) => (
-										<tr
-											key={team.name}
-											data-testid={`row-${team.name}`}
-										>
-											<td className="team-cell">
-												<div className="team-info">
-													<img
-														src={team.flag}
-														alt={team.name}
-														width="24"
-														height="16"
-													/>
-													<span>{team.name}</span>
-												</div>
-											</td>
-											<td>0</td>
-											<td>0</td>
-											<td>0</td>
-											<td>0</td>
-											<td>0</td>
-											<td>0</td>
-											<td>0</td>
-											<td>0</td>
-										</tr>
-									))}
+									{group.map((team) => {
+										return (
+											<tr
+												key={team.name}
+												data-testid={`row-${team.name}`}
+											>
+												<td className="team-cell">
+													<div className="team-info">
+														<img
+															src={team.flag}
+															alt={team.name}
+															width="24"
+															height="16"
+														/>
+														<span>{team.name}</span>
+													</div>
+												</td>
+												<td>
+													{
+														groupStats[groupName][
+															team.name
+														].played
+													}
+												</td>
+												<td>
+													{
+														groupStats[groupName][
+															team.name
+														].won
+													}
+												</td>
+												<td>
+													{
+														groupStats[groupName][
+															team.name
+														].drawn
+													}
+												</td>
+												<td>
+													{
+														groupStats[groupName][
+															team.name
+														].lost
+													}
+												</td>
+												<td>
+													{
+														groupStats[groupName][
+															team.name
+														].for
+													}
+												</td>
+												<td>
+													{
+														groupStats[groupName][
+															team.name
+														].against
+													}
+												</td>
+												<td>
+													{
+														groupStats[groupName][
+															team.name
+														].gd
+													}
+												</td>
+												<td>
+													{
+														groupStats[groupName][
+															team.name
+														].points
+													}
+												</td>
+											</tr>
+										);
+									})}
 								</tbody>
 							</table>
 						</div>
@@ -135,8 +227,12 @@ const GroupStage = ({ teams }) => {
 							/>
 						))}
 						{/* One button for both matches */}
+
 						<button
-							onClick={handleGroupSubmit}
+							onClick={() => {
+								console.log('✅ BUTTON CLICKED');
+								handleGroupSubmit();
+							}}
 							disabled={!allScored}
 							data-testid={`submit-group-${groupName}`}
 						>

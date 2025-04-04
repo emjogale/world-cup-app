@@ -24,7 +24,7 @@ describe('shuffleTeams', () => {
 	it('shuffles predictably with a given seed', () => {
 		const teams = ['Brazil', 'Germany', 'France', 'Argentina'];
 		const result = shuffleTeams(teams, 'test-seed');
-		console.log('🔍 Seeded shuffle result:', result);
+		// console.log('🔍 Seeded shuffle result:', result);
 		const expected = ['Brazil', 'France', 'Argentina', 'Germany'];
 
 		expect(result).toEqual(expected);

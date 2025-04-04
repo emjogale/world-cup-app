@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, waitFor } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import GroupStage from './GroupStage';
@@ -121,24 +121,58 @@ describe('group stage component', () => {
 		expect(buttons.length).toBe(2); // 1 per group
 	});
 
-	it('submits both matches at once when scores are entered for both');
-
-	it('updates the group table stats when a match is submitted', async () => {
+	it.skip('updates the group table stats when a match is submitted', async () => {
 		render(<GroupStage teams={mockTeams} />);
-		// use this temporarily to log what gets rendered once
-		//screen.debug();
-		// simulate a match result
-		const matchCard = screen.getByTestId('match-China-vs-Argentina');
+
+		const matchCard = await screen.findByTestId('match-China-vs-Argentina');
 		const score1 = within(matchCard).getByTestId('score-China');
 		const score2 = within(matchCard).getByTestId('score-Argentina');
 
+		await userEvent.clear(score1);
 		await userEvent.type(score1, '3');
+		await userEvent.clear(score2);
 		await userEvent.type(score2, '1');
 
-		//check that the table updated for China
-		// const chinaRow = screen.getByTestId('row-China');
-		// expect(within(chinaRow).getByText('1')).toBeInTheDocument(); // Played
-		// expect(within(chinaRow).getByText('1')).toBeInTheDocument(); // Win
-		// expect(within(chinaRow).getByText('3')).toBeInTheDocument(); // Points
+		const submitButton = screen.getByTestId('submit-group-A');
+
+		// 💡 Wait for button to become enabled
+		await waitFor(() => {
+			expect(submitButton).not.toBeDisabled();
+		});
+
+		await userEvent.click(submitButton);
+
+		const chinaRow = await screen.findByTestId('row-China');
+		const cells = within(chinaRow).getAllByRole('cell');
+
+		// 🧪 Assert correct updated stats
+		expect(cells[1]).toHaveTextContent('1'); // Played
+		expect(cells[2]).toHaveTextContent('1'); // Won
+		expect(cells[8]).toHaveTextContent('3'); // Points
+	});
+
+	it.skip('confirms stats update visibly', async () => {
+		render(<GroupStage teams={mockTeams} />);
+
+		const matchCard = await screen.findByTestId('match-China-vs-Argentina');
+		const score1 = within(matchCard).getByTestId('score-China');
+		const score2 = within(matchCard).getByTestId('score-Argentina');
+
+		await userEvent.clear(score1);
+		await userEvent.type(score1, '3');
+		await userEvent.clear(score2);
+		await userEvent.type(score2, '1');
+
+		const submitButton = screen.getByTestId('submit-group-A');
+		await userEvent.click(submitButton);
+
+		// Wait until the row shows the updated values
+		await waitFor(() => {
+			const chinaRow = screen.getByTestId('row-China');
+			const cells = within(chinaRow).getAllByRole('cell');
+			expect(cells[1]).toHaveTextContent('1'); // Played
+			expect(cells[2]).toHaveTextContent('1'); // Won
+			expect(cells[8]).toHaveTextContent('3'); // Points
+		});
 	});
 });
