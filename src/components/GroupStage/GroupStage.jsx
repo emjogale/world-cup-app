@@ -4,12 +4,12 @@ import './GroupStage.css';
 import { groupTeams } from '../../logic/groupTeams';
 import {
 	createGroupMatches,
-	getFirstIndividualMatches,
 	buildInitialProgress
 } from '../../logic/createMatches';
 import Match from '../Match/Match';
 import { upDateGroupStats } from '../../logic/updateGroupStats';
 import { buildInitialGroupStats } from '../../logic/updateGroupStats';
+import { getNextMatches } from '../../logic/createMatches';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -18,9 +18,7 @@ const GroupStage = ({ teams }) => {
 		return groupTeams(tournament.teams);
 	}, [teams]);
 
-	const [progress, setGroupProgress] = useState(() =>
-		buildInitialProgress(groupedTeams)
-	);
+	const [progress, setGroupProgress] = useState(null);
 
 	const [scores, setScores] = useState({});
 	const [groupStats, setGroupStats] = useState(null);
@@ -28,20 +26,29 @@ const GroupStage = ({ teams }) => {
 	useEffect(() => {
 		if (!groupedTeams || Object.keys(groupedTeams).length === 0) return;
 		setGroupStats(buildInitialGroupStats(groupedTeams));
+		setGroupProgress(buildInitialProgress(groupedTeams));
 	}, [groupedTeams]);
 
 	const handleScoreChange = (team, score) => {
 		setScores((prev) => ({ ...prev, [team]: score }));
 	};
-	if (!groupStats) return null;
+
+	if (!groupStats || !progress) return null;
+
 	return (
 		<div className="group-stage">
 			{Object.entries(groupedTeams).map(([groupName, group]) => {
-				const allMatches = createGroupMatches(group); // all 6 matches for 4 teams
+				const allMatches = createGroupMatches(group);
 				const currentIndex = progress[groupName];
-				const matchesToShow = getFirstIndividualMatches(
-					allMatches.slice(currentIndex)
+				const remainingMatches = allMatches.slice(currentIndex);
+
+				console.log(
+					`🔄 Group ${groupName} is at match index`,
+					progress[groupName]
 				);
+				const matchesToShow =
+					getNextMatches(remainingMatches, groupStats[groupName]) ||
+					[];
 
 				// Dev-only check to ensure no team is scheduled more than once at the same time
 				const playingTeams = new Set();
@@ -69,8 +76,6 @@ const GroupStage = ({ teams }) => {
 				);
 
 				const handleGroupSubmit = () => {
-					console.log('👀 Submit button clicked');
-
 					const results = matchesToShow.map(({ team1, team2 }) => ({
 						team1: team1.name,
 						score1: parseInt(scores[team1.name], 10),
@@ -78,23 +83,23 @@ const GroupStage = ({ teams }) => {
 						score2: parseInt(scores[team2.name], 10)
 					}));
 
-					console.warn('➡️ Submitting results:', results);
+					console.log('➡️ Submitting results:', results);
 
 					const newStats = upDateGroupStats(
 						groupStats[groupName],
 						results
 					);
 
-					console.log(
-						'✅ newStats going into setGroupStats:',
-						newStats
-					);
+					setGroupStats((prev) => {
+						const updated = { ...prev };
+						updated[groupName] = newStats;
 
-					setGroupStats((prev) => ({
-						...prev,
-						[groupName]: newStats
-					}));
+						// ✅ TEMP DEBUGGING
+						console.log('👀 Testing getNextMatches logic:');
+						getNextMatches(allMatches, updated[groupName]);
 
+						return updated;
+					});
 					setGroupProgress((prev) => ({
 						...prev,
 						[groupName]: prev[groupName] + matchesToShow.length
@@ -227,7 +232,6 @@ const GroupStage = ({ teams }) => {
 
 						<button
 							onClick={() => {
-								console.log('✅ BUTTON CLICKED');
 								handleGroupSubmit();
 							}}
 							disabled={!allScored}
