@@ -23,7 +23,7 @@ export const createGroupMatches = (teams) => {
 	const matches = [];
 	for (let i = 0; i < teams.length; i++) {
 		for (let j = i + 1; j < teams.length; j++) {
-			matches.push({ team1: teams[i], team2: teams[j] });
+			matches.push({ team1: teams[i], team2: teams[j], played: false });
 		}
 	}
 	return matches;
@@ -52,48 +52,33 @@ export function getNextAvailableMatches(allMatches, currentIndex) {
 	return getFirstIndividualMatches(allMatches.slice(currentIndex));
 }
 
-// Builds an initial progress object like { A: 0, B: 0 }
-export const buildInitialProgress = (groups) => {
-	const initial = {};
-	for (const groupName of Object.keys(groups)) {
-		initial[groupName] = 0;
-	}
-	return initial;
-};
-
 // gets next matches for a group based on who has played fewer than 3 games
-export function getNextMatches(allMatches, groupStats) {
-	const played = {};
-	console.log('📊 Played counts:', played);
-	console.log(
-		'🎯 All matches available:',
-		allMatches.map((m) => `${m.team1.name} vs ${m.team2.name}`)
-	);
-
-	for (const teamName in groupStats) {
-		played[teamName] = groupStats[teamName].played;
-	}
-
+export const getNextMatches = (allMatches, groupStats) => {
 	const nextMatches = [];
 	const usedTeams = new Set();
 
-	for (const match of allMatches) {
+	const unplayed = allMatches.filter((m) => !m.played);
+
+	for (let i = 0; i < unplayed.length; i++) {
+		const match = unplayed[i];
 		const t1 = match.team1.name;
 		const t2 = match.team2.name;
 
-		if (
-			played[t1] < 3 &&
-			played[t2] < 3 &&
-			!usedTeams.has(t1) &&
-			!usedTeams.has(t2)
-		) {
-			nextMatches.push(match);
-			usedTeams.add(t1);
-			usedTeams.add(t2);
+		if (usedTeams.has(t1) || usedTeams.has(t2)) {
+			// 🛠️ Allow last match to be shown even if there's overlap
+			if (unplayed.length === 1) {
+				nextMatches.push(match);
+				break;
+			}
+			continue;
 		}
+
+		nextMatches.push(match);
+		usedTeams.add(t1);
+		usedTeams.add(t2);
 
 		if (nextMatches.length === 2) break;
 	}
 
 	return nextMatches;
-}
+};

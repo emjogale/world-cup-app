@@ -2,13 +2,12 @@ import React, { useMemo, useState, useEffect } from 'react';
 import Tournament from '../../logic/Tournament';
 import './GroupStage.css';
 import { groupTeams } from '../../logic/groupTeams';
-import {
-	createGroupMatches,
-	buildInitialProgress
-} from '../../logic/createMatches';
+import { createGroupMatches } from '../../logic/createMatches';
 import Match from '../Match/Match';
-import { upDateGroupStats } from '../../logic/updateGroupStats';
-import { buildInitialGroupStats } from '../../logic/updateGroupStats';
+import {
+	upDateGroupStats,
+	buildInitialGroupStats
+} from '../../logic/updateGroupStats';
 import { getNextMatches } from '../../logic/createMatches';
 
 const GroupStage = ({ teams }) => {
@@ -18,37 +17,38 @@ const GroupStage = ({ teams }) => {
 		return groupTeams(tournament.teams);
 	}, [teams]);
 
-	const [progress, setGroupProgress] = useState(null);
-
 	const [scores, setScores] = useState({});
 	const [groupStats, setGroupStats] = useState(null);
+	const [groupMatches, setGroupMatches] = useState(null);
 
 	useEffect(() => {
 		if (!groupedTeams || Object.keys(groupedTeams).length === 0) return;
 		setGroupStats(buildInitialGroupStats(groupedTeams));
-		setGroupProgress(buildInitialProgress(groupedTeams));
+
+		const allMatches = {};
+		for (const [groupName, group] of Object.entries(groupedTeams)) {
+			allMatches[groupName] = createGroupMatches(group).map((match) => ({
+				...match,
+				played: false
+			}));
+		}
+		setGroupMatches(allMatches);
 	}, [groupedTeams]);
 
 	const handleScoreChange = (team, score) => {
 		setScores((prev) => ({ ...prev, [team]: score }));
 	};
 
-	if (!groupStats || !progress) return null;
+	if (!groupStats || !groupMatches) return null;
 
 	return (
 		<div className="group-stage">
 			{Object.entries(groupedTeams).map(([groupName, group]) => {
-				const allMatches = createGroupMatches(group);
-				const currentIndex = progress[groupName];
-				const remainingMatches = allMatches.slice(currentIndex);
-
-				console.log(
-					`🔄 Group ${groupName} is at match index`,
-					progress[groupName]
+				const allMatches = groupMatches[groupName];
+				const matchesToShow = getNextMatches(
+					allMatches,
+					groupStats[groupName]
 				);
-				const matchesToShow =
-					getNextMatches(remainingMatches, groupStats[groupName]) ||
-					[];
 
 				// Dev-only check to ensure no team is scheduled more than once at the same time
 				const playingTeams = new Set();
@@ -65,7 +65,7 @@ const GroupStage = ({ teams }) => {
 					playingTeams.add(match.team1.name);
 					playingTeams.add(match.team2.name);
 				}
-				// scoped scores for this group
+
 				const teamNamesInMatches = matchesToShow.flatMap(
 					({ team1, team2 }) => [team1.name, team2.name]
 				);
@@ -89,21 +89,27 @@ const GroupStage = ({ teams }) => {
 						groupStats[groupName],
 						results
 					);
+					setGroupStats((prev) => ({
+						...prev,
+						[groupName]: newStats
+					}));
 
-					setGroupStats((prev) => {
+					setGroupMatches((prev) => {
 						const updated = { ...prev };
-						updated[groupName] = newStats;
-
-						// ✅ TEMP DEBUGGING
-						console.log('👀 Testing getNextMatches logic:');
-						getNextMatches(allMatches, updated[groupName]);
-
+						updated[groupName] = prev[groupName].map((match) => {
+							const matchWasJustPlayed = results.some(
+								(r) =>
+									(r.team1 === match.team1.name &&
+										r.team2 === match.team2.name) ||
+									(r.team1 === match.team2.name &&
+										r.team2 === match.team1.name)
+							);
+							return matchWasJustPlayed
+								? { ...match, played: true }
+								: match;
+						});
 						return updated;
 					});
-					setGroupProgress((prev) => ({
-						...prev,
-						[groupName]: prev[groupName] + matchesToShow.length
-					}));
 
 					const teamsToReset = new Set();
 					results.forEach(({ team1, team2 }) => {
@@ -139,82 +145,80 @@ const GroupStage = ({ teams }) => {
 									</tr>
 								</thead>
 								<tbody>
-									{group.map((team) => {
-										return (
-											<tr
-												key={team.name}
-												data-testid={`row-${team.name}`}
-											>
-												<td className="team-cell">
-													<div className="team-info">
-														<img
-															src={team.flag}
-															alt={team.name}
-															width="24"
-															height="16"
-														/>
-														<span>{team.name}</span>
-													</div>
-												</td>
-												<td>
-													{
-														groupStats[groupName][
-															team.name
-														].played
-													}
-												</td>
-												<td>
-													{
-														groupStats[groupName][
-															team.name
-														].won
-													}
-												</td>
-												<td>
-													{
-														groupStats[groupName][
-															team.name
-														].drawn
-													}
-												</td>
-												<td>
-													{
-														groupStats[groupName][
-															team.name
-														].lost
-													}
-												</td>
-												<td>
-													{
-														groupStats[groupName][
-															team.name
-														].for
-													}
-												</td>
-												<td>
-													{
-														groupStats[groupName][
-															team.name
-														].against
-													}
-												</td>
-												<td>
-													{
-														groupStats[groupName][
-															team.name
-														].gd
-													}
-												</td>
-												<td>
-													{
-														groupStats[groupName][
-															team.name
-														].points
-													}
-												</td>
-											</tr>
-										);
-									})}
+									{group.map((team) => (
+										<tr
+											key={team.name}
+											data-testid={`row-${team.name}`}
+										>
+											<td className="team-cell">
+												<div className="team-info">
+													<img
+														src={team.flag}
+														alt={team.name}
+														width="24"
+														height="16"
+													/>
+													<span>{team.name}</span>
+												</div>
+											</td>
+											<td>
+												{
+													groupStats[groupName][
+														team.name
+													].played
+												}
+											</td>
+											<td>
+												{
+													groupStats[groupName][
+														team.name
+													].won
+												}
+											</td>
+											<td>
+												{
+													groupStats[groupName][
+														team.name
+													].drawn
+												}
+											</td>
+											<td>
+												{
+													groupStats[groupName][
+														team.name
+													].lost
+												}
+											</td>
+											<td>
+												{
+													groupStats[groupName][
+														team.name
+													].for
+												}
+											</td>
+											<td>
+												{
+													groupStats[groupName][
+														team.name
+													].against
+												}
+											</td>
+											<td>
+												{
+													groupStats[groupName][
+														team.name
+													].gd
+												}
+											</td>
+											<td>
+												{
+													groupStats[groupName][
+														team.name
+													].points
+												}
+											</td>
+										</tr>
+									))}
 								</tbody>
 							</table>
 						</div>
@@ -228,12 +232,8 @@ const GroupStage = ({ teams }) => {
 								onScoreChange={handleScoreChange}
 							/>
 						))}
-						{/* One button for both matches */}
-
 						<button
-							onClick={() => {
-								handleGroupSubmit();
-							}}
+							onClick={handleGroupSubmit}
 							disabled={!allScored}
 							data-testid={`submit-group-${groupName}`}
 						>
@@ -247,8 +247,3 @@ const GroupStage = ({ teams }) => {
 };
 
 export default GroupStage;
-
-// Notes:
-// We use useMemo() to group teams once per teams prop change
-// We use 'test-seed' for consistent groupings in tests
-// In the future, we can update it to receive the seed as a prop or context
