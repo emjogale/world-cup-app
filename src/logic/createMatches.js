@@ -53,7 +53,7 @@ export function getNextAvailableMatches(allMatches, currentIndex) {
 }
 
 // gets next matches for a group based on who has played fewer than 3 games
-export const getNextMatches = (allMatches, groupStats) => {
+export const getNextMatches = (allMatches) => {
 	const nextMatches = [];
 	const usedTeams = new Set();
 

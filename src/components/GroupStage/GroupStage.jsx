@@ -40,7 +40,7 @@ const GroupStage = ({ teams }) => {
 	};
 
 	if (!groupStats || !groupMatches) return null;
-
+	console.log('group stats are:', groupStats);
 	return (
 		<div className="group-stage">
 			{Object.entries(groupedTeams).map(([groupName, group]) => {
@@ -145,80 +145,43 @@ const GroupStage = ({ teams }) => {
 									</tr>
 								</thead>
 								<tbody>
-									{group.map((team) => (
-										<tr
-											key={team.name}
-											data-testid={`row-${team.name}`}
-										>
-											<td className="team-cell">
-												<div className="team-info">
-													<img
-														src={team.flag}
-														alt={team.name}
-														width="24"
-														height="16"
-													/>
-													<span>{team.name}</span>
-												</div>
-											</td>
-											<td>
-												{
-													groupStats[groupName][
-														team.name
-													].played
+									{Object.values(groupStats[groupName])
+										.sort(
+											(a, b) =>
+												b.points - a.points ||
+												b.gd - a.gd ||
+												b.for - a.for
+										)
+										.map((team, index) => (
+											<tr
+												key={team.name}
+												className={
+													index < 2
+														? 'group__top-team'
+														: ''
 												}
-											</td>
-											<td>
-												{
-													groupStats[groupName][
-														team.name
-													].won
-												}
-											</td>
-											<td>
-												{
-													groupStats[groupName][
-														team.name
-													].drawn
-												}
-											</td>
-											<td>
-												{
-													groupStats[groupName][
-														team.name
-													].lost
-												}
-											</td>
-											<td>
-												{
-													groupStats[groupName][
-														team.name
-													].for
-												}
-											</td>
-											<td>
-												{
-													groupStats[groupName][
-														team.name
-													].against
-												}
-											</td>
-											<td>
-												{
-													groupStats[groupName][
-														team.name
-													].gd
-												}
-											</td>
-											<td>
-												{
-													groupStats[groupName][
-														team.name
-													].points
-												}
-											</td>
-										</tr>
-									))}
+											>
+												<td className="team-cell">
+													<div className="team-info">
+														<img
+															src={team.flag}
+															alt={team.name}
+															width="24"
+															height="16"
+														/>
+														<span>{team.name}</span>
+													</div>
+												</td>
+												<td>{team.played}</td>
+												<td>{team.won}</td>
+												<td>{team.drawn}</td>
+												<td>{team.lost}</td>
+												<td>{team.for}</td>
+												<td>{team.against}</td>
+												<td>{team.gd}</td>
+												<td>{team.points}</td>
+											</tr>
+										))}
 								</tbody>
 							</table>
 						</div>

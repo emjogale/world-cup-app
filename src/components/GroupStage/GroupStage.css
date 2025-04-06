@@ -83,6 +83,11 @@
 	border: 1px solid #ccc;
 }
 
+.group__top-team {
+	background-color: #e4f9e7; /* light green */
+	font-weight: 600;
+}
+
 @media (max-width: 600px) {
 	.group-stage {
 		grid-template-columns: 1fr;

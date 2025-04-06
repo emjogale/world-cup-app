@@ -49,12 +49,15 @@ export const upDateGroupStats = (currentStats, matchresults) => {
 
 	return newStats;
 };
-export function buildInitialGroupStats(groupedTeams) {
-	const initial = {};
-	for (const [groupName, group] of Object.entries(groupedTeams)) {
-		initial[groupName] = {};
-		for (const team of group) {
-			initial[groupName][team.name] = {
+
+export const buildInitialGroupStats = (groups) => {
+	const stats = {};
+	for (const [groupName, teams] of Object.entries(groups)) {
+		stats[groupName] = {};
+		for (const team of teams) {
+			stats[groupName][team.name] = {
+				name: team.name,
+				flag: team.flag,
 				played: 0,
 				won: 0,
 				drawn: 0,
@@ -66,5 +69,5 @@ export function buildInitialGroupStats(groupedTeams) {
 			};
 		}
 	}
-	return initial;
-}
+	return stats;
+};
