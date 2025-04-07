@@ -3,6 +3,7 @@ import { describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import GroupStage from './GroupStage';
 import { groupTeams } from '../../logic/groupTeams';
+import { upDateGroupStats } from '../../logic/updateGroupStats';
 
 const mockTeams = [
 	{ name: 'Argentina', flag: '🇦🇷' },
@@ -119,6 +120,44 @@ describe('group stage component', () => {
 		render(<GroupStage teams={mockTeams} />);
 		const buttons = screen.getAllByRole('button', { name: /submit/i });
 		expect(buttons.length).toBe(2); // 1 per group
+	});
+
+	it('calculates stats correctly for a win', () => {
+		const startingStats = {
+			China: {
+				name: 'China',
+				flag: '🇨🇳',
+				played: 0,
+				won: 0,
+				drawn: 0,
+				lost: 0,
+				for: 0,
+				against: 0,
+				gd: 0,
+				points: 0
+			},
+			Argentina: {
+				name: 'Argentina',
+				flag: '🇦🇷',
+				played: 0,
+				won: 0,
+				drawn: 0,
+				lost: 0,
+				for: 0,
+				against: 0,
+				gd: 0,
+				points: 0
+			}
+		};
+
+		const results = [
+			{ team1: 'China', score1: 3, team2: 'Argentina', score2: 1 }
+		];
+
+		const updated = upDateGroupStats(startingStats, results);
+		expect(updated.China.points).toBe(3);
+		expect(updated.China.played).toBe(1);
+		expect(updated.Argentina.points).toBe(0);
 	});
 
 	// 🔕 Skipped due to React DOM not updating in test — revisit with E2E
