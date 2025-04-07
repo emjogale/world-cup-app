@@ -43,7 +43,7 @@ const GroupStage = ({ teams }) => {
 	console.log('group stats are:', groupStats);
 	return (
 		<div className="group-stage">
-			{Object.entries(groupedTeams).map(([groupName, group]) => {
+			{Object.entries(groupedTeams).map(([groupName]) => {
 				const allMatches = groupMatches[groupName];
 				const matchesToShow = getNextMatches(
 					allMatches,
@@ -89,9 +89,14 @@ const GroupStage = ({ teams }) => {
 						groupStats[groupName],
 						results
 					);
+					console.log(
+						'✅ Updated stats for group:',
+						groupName,
+						newStats
+					);
 					setGroupStats((prev) => ({
 						...prev,
-						[groupName]: newStats
+						[groupName]: { ...newStats }
 					}));
 
 					setGroupMatches((prev) => {
@@ -160,6 +165,7 @@ const GroupStage = ({ teams }) => {
 														? 'group__top-team'
 														: ''
 												}
+												data-testid={`row-${team.name}`}
 											>
 												<td className="team-cell">
 													<div className="team-info">
