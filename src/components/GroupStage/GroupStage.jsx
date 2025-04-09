@@ -9,6 +9,7 @@ import {
 	buildInitialGroupStats
 } from '../../logic/updateGroupStats';
 import { getNextMatches } from '../../logic/createMatches';
+import { autoCompleteGroupStage } from '../../utils/devTools';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -20,6 +21,8 @@ const GroupStage = ({ teams }) => {
 	const [scores, setScores] = useState({});
 	const [groupStats, setGroupStats] = useState(null);
 	const [groupMatches, setGroupMatches] = useState(null);
+	const [showKnockoutStage, setShowKnockoutStage] = useState(false);
+	const [qualifiedTeams, setQualifiedTeams] = useState([]);
 
 	useEffect(() => {
 		if (!groupedTeams || Object.keys(groupedTeams).length === 0) return;
@@ -40,7 +43,11 @@ const GroupStage = ({ teams }) => {
 	};
 
 	if (!groupStats || !groupMatches) return null;
-	console.log('group stats are:', groupStats);
+
+	const allGroupsComplete = Object.values(groupMatches).every((matches) =>
+		matches.every((match) => match.played)
+	);
+
 	return (
 		<div className="group-stage">
 			{Object.entries(groupedTeams).map(([groupName]) => {
@@ -89,11 +96,11 @@ const GroupStage = ({ teams }) => {
 						groupStats[groupName],
 						results
 					);
-					console.log(
-						'✅ Updated stats for group:',
-						groupName,
-						newStats
-					);
+					// console.log(
+					// 	'✅ Updated stats for group:',
+					// 	groupName,
+					// 	newStats
+					// );
 					setGroupStats((prev) => ({
 						...prev,
 						[groupName]: { ...newStats }
@@ -211,6 +218,44 @@ const GroupStage = ({ teams }) => {
 					</div>
 				);
 			})}
+
+			{allGroupsComplete && !showKnockoutStage && (
+				<button
+					className="group-next-stage"
+					onClick={() => {
+						const qualified = Object.entries(groupStats).flatMap(
+							([_, teams]) =>
+								Object.values(teams)
+									.sort(
+										(a, b) =>
+											b.points - a.points ||
+											b.gd - a.gd ||
+											b.for - a.for
+									)
+									.slice(0, 2)
+						);
+
+						setQualifiedTeams(qualified);
+						setShowKnockoutStage(true);
+					}}
+				>
+					Proceed to Knockout Stage
+				</button>
+			)}
+
+			{!allGroupsComplete && (
+				<button
+					className="dev-fill-results"
+					onClick={() => {
+						const { updatedMatches, updatedStats } =
+							autoCompleteGroupStage(groupMatches, groupStats);
+						setGroupMatches(updatedMatches);
+						setGroupStats(updatedStats);
+					}}
+				>
+					🔧 Dev: Auto-complete group stage
+				</button>
+			)}
 		</div>
 	);
 };
