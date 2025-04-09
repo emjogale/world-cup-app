@@ -220,11 +220,13 @@ const GroupStage = ({ teams }) => {
 			})}
 
 			{allGroupsComplete && !showKnockoutStage && (
-				<button
-					className="group-next-stage"
-					onClick={() => {
-						const qualified = Object.entries(groupStats).flatMap(
-							([_, teams]) =>
+				<div className="knockout-button-wrapper">
+					<button
+						className="proceed-knockout-button"
+						onClick={() => {
+							const qualified = Object.entries(
+								groupStats
+							).flatMap(([_, teams]) =>
 								Object.values(teams)
 									.sort(
 										(a, b) =>
@@ -233,14 +235,22 @@ const GroupStage = ({ teams }) => {
 											b.for - a.for
 									)
 									.slice(0, 2)
-						);
+							);
 
-						setQualifiedTeams(qualified);
-						setShowKnockoutStage(true);
-					}}
-				>
-					Proceed to Knockout Stage
-				</button>
+							setQualifiedTeams(qualified);
+							setShowKnockoutStage(true);
+						}}
+					>
+						<span
+							role="img"
+							aria-label="Trophy"
+							style={{ marginRight: '0.5rem' }}
+						>
+							🏆
+						</span>
+						Proceed to Knockout Stage
+					</button>
+				</div>
 			)}
 
 			{!allGroupsComplete && (

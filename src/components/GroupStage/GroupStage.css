@@ -88,6 +88,37 @@
 	font-weight: 600;
 }
 
+.knockout-button-wrapper {
+	text-align: center;
+	margin-top: 2rem;
+}
+
+.proceed-knockout-button {
+	background-color: #1f8a70;
+	color: #fff;
+	padding: 0.75rem 1.5rem;
+	font-size: 1.1rem;
+	border: none;
+	border-radius: 0.6rem;
+	cursor: pointer;
+	transition: background-color 0.3s ease, transform 0.2s ease;
+	box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.proceed-knockout-button:hover {
+	background-color: #166e5a;
+	transform: translateY(-2px);
+}
+
+.proceed-knockout-button span[role='img'] {
+	display: inline-block;
+	transition: transform 0.2s ease;
+}
+
+.proceed-knockout-button:hover span[role='img'] {
+	transform: scale(1.2) rotate(-10deg);
+}
+
 @media (max-width: 600px) {
 	.group-stage {
 		grid-template-columns: 1fr;
