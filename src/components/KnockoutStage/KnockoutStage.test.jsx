@@ -3,26 +3,37 @@ import { describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import KnockoutStage from './KnockoutStage';
 
-describe.skip('KnockoutStage component', () => {
+describe('KnockoutStage component', () => {
 	it('renders without crashing', () => {
-		const mockTeams = ['Brazil', 'Germany'];
+		const mockTeams = [
+			{ name: 'Brazil', flag: '🇧🇷' },
+			{ name: 'Germany', flag: '🇧🇷' }
+		];
 
-		render(<KnockoutStage teams={mockTeams} />);
+		render(<KnockoutStage qualifiedTeams={mockTeams} />);
 
-		expect(screen.getAllByText('Brazil')).not.toHaveLength();
+		expect(screen.getByText(/brazil/i)).toBeInTheDocument();
 	});
 	it('renders a match for each pair of teams', () => {
-		const mockTeams = ['Brazil', 'Germany', 'France', 'Argentina'];
-		render(<KnockoutStage teams={mockTeams} />);
+		const mockTeams = [
+			{ name: 'Brazil', flag: '🇧🇷' },
+			{ name: 'Germany', flag: '🇧🇷' },
+			{ name: 'France', flag: '🇧🇷' },
+			{ name: 'Chile', flag: '🇧🇷' }
+		];
+		render(<KnockoutStage qualifiedTeams={mockTeams} />);
 
-		const matches = screen.getAllByTestId('match');
+		const matches = screen.getAllByTestId(/match/i);
 		expect(matches.length).toBeGreaterThan(0);
 	});
 
-	it.skip('shows submitted result after a match is completed', async () => {
-		const teams = ['Brazil', 'Germany']; // one match
+	it('shows submitted result after a match is completed', async () => {
+		const teams = [
+			{ name: 'Brazil', flag: '🇧🇷' },
+			{ name: 'Germany', flag: '🇧🇷' }
+		]; // one match
 
-		render(<KnockoutStage teams={teams} />);
+		render(<KnockoutStage qualifiedTeams={teams} />);
 
 		const scoreInput1 = screen.getByTestId('score-Brazil');
 		const scoreInput2 = screen.getByTestId('score-Germany');
