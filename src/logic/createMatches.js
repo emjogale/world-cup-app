@@ -8,7 +8,8 @@ export const createRoundMatches = (teams) => {
 				team1: teams[i],
 				team2: teams[i + 1],
 				score1: null,
-				score2: null
+				score2: null,
+				winner: null
 			});
 		} else {
 			console.warn(`Odd number of teams; ${teams[i]} has no opponent.`);

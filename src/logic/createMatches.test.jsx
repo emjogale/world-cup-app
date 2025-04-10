@@ -13,7 +13,8 @@ describe('createMatches.js', () => {
 				team1: 'Brazil',
 				team2: 'Germany',
 				score1: null,
-				score2: null
+				score2: null,
+				winner: null
 			});
 		});
 		it('Should log a warning if there is an odd number of teams', () => {
@@ -28,6 +29,22 @@ describe('createMatches.js', () => {
 				'Odd number of teams; France has no opponent.'
 			);
 			warnSpy.mockRestore();
+		});
+	});
+	it('creates 16 matches from 32 teams', () => {
+		const teams = Array.from({ length: 32 }, (_, i) => ({
+			name: `Team${i + 1}`
+		}));
+
+		const matches = createRoundMatches(teams);
+
+		expect(matches).toHaveLength(16);
+		expect(matches[0]).toEqual({
+			team1: teams[0],
+			team2: teams[1],
+			score1: null,
+			score2: null,
+			winner: null
 		});
 	});
 });
