@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useRef } from 'react';
 import Tournament from '../../logic/Tournament';
 import './GroupStage.css';
 import { groupTeams } from '../../logic/groupTeams';
@@ -10,6 +10,8 @@ import {
 } from '../../logic/updateGroupStats';
 import { getNextMatches } from '../../logic/createMatches';
 import { autoCompleteGroupStage } from '../../utils/devTools';
+import KnockoutStage from '../KnockoutStage/KnockoutStage';
+import { selectQualifiedTeams } from '../../logic/selectQualifiedTeams';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -23,6 +25,8 @@ const GroupStage = ({ teams }) => {
 	const [groupMatches, setGroupMatches] = useState(null);
 	const [showKnockoutStage, setShowKnockoutStage] = useState(false);
 	const [qualifiedTeams, setQualifiedTeams] = useState([]);
+
+	const knockoutRef = useRef(null);
 
 	useEffect(() => {
 		if (!groupedTeams || Object.keys(groupedTeams).length === 0) return;
@@ -208,6 +212,7 @@ const GroupStage = ({ teams }) => {
 								onScoreChange={handleScoreChange}
 							/>
 						))}
+
 						<button
 							onClick={handleGroupSubmit}
 							disabled={!allScored}
@@ -224,21 +229,20 @@ const GroupStage = ({ teams }) => {
 					<button
 						className="proceed-knockout-button"
 						onClick={() => {
-							const qualified = Object.entries(
-								groupStats
-							).flatMap(([_, teams]) =>
-								Object.values(teams)
-									.sort(
-										(a, b) =>
-											b.points - a.points ||
-											b.gd - a.gd ||
-											b.for - a.for
-									)
-									.slice(0, 2)
-							);
+							const qualified = selectQualifiedTeams(groupStats);
 
 							setQualifiedTeams(qualified);
+							console.log(
+								'✅ Qualified teams for knockout:',
+								qualified
+							);
 							setShowKnockoutStage(true);
+							// Smooth scroll
+							setTimeout(() => {
+								knockoutRef.current?.scrollIntoView({
+									behavior: 'smooth'
+								});
+							}, 0);
 						}}
 					>
 						<span
@@ -265,6 +269,11 @@ const GroupStage = ({ teams }) => {
 				>
 					🔧 Dev: Auto-complete group stage
 				</button>
+			)}
+			{showKnockoutStage && (
+				<div ref={knockoutRef}>
+					<KnockoutStage qualifiedTeams={qualifiedTeams} />
+				</div>
 			)}
 		</div>
 	);
