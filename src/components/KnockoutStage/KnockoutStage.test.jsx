@@ -47,6 +47,7 @@ describe('KnockoutStage component', () => {
 
 		await userEvent.click(submitBtn);
 
-		expect(screen.getByText(/Brazil 2 - 1 Germany/i)).toBeInTheDocument();
+		expect(screen.getByTestId('score-Brazil')).toHaveValue(2);
+		expect(screen.getByTestId('score-Germany')).toHaveValue(1);
 	});
 });

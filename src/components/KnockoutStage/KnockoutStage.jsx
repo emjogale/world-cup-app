@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Match from '../Match/Match';
 import { createRoundMatches } from '../../logic/createMatches';
 import './KnockoutStage.css';
+import { createNextKnockoutRound } from '../../logic/createNextKnockoutRound';
 
 const KnockoutStage = ({ qualifiedTeams }) => {
 	const [matches, setMatches] = useState([]);
@@ -82,7 +83,8 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 					</button>
 					{match.played && match.winner && (
 						<p className="knockout-result">
-							✅ {match.winner.name} advances!
+							{/* {console.log('match winner is:', match.winner)} ✅{' '} */}
+							{match.winner.name} advances!
 						</p>
 					)}
 				</div>

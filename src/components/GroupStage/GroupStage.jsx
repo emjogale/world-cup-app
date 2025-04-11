@@ -232,10 +232,10 @@ const GroupStage = ({ teams }) => {
 							const qualified = selectQualifiedTeams(groupStats);
 
 							setQualifiedTeams(qualified);
-							console.log(
-								'✅ Qualified teams for knockout:',
-								qualified
-							);
+							// console.log(
+							// 	'✅ Qualified teams for knockout:',
+							// 	qualified
+							// );
 							setShowKnockoutStage(true);
 							// Smooth scroll
 							setTimeout(() => {
