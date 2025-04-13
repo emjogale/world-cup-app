@@ -239,9 +239,10 @@ const GroupStage = ({ teams }) => {
 							// Smooth scroll
 							setTimeout(() => {
 								knockoutRef.current?.scrollIntoView({
-									behavior: 'smooth'
+									behavior: 'smooth',
+									block: 'start'
 								});
-							}, 0);
+							}, 50);
 						}}
 					>
 						<span

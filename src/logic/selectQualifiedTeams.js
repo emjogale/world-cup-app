@@ -2,7 +2,7 @@ export const selectQualifiedTeams = (groupStats) => {
 	const topTwo = [];
 	const thirdPlaceCandidates = [];
 
-	Object.entries(groupStats).forEach(([_, teams]) => {
+	Object.entries(groupStats).forEach(([, teams]) => {
 		const sorted = Object.values(teams).sort(
 			(a, b) => b.points - a.points || b.gd - a.gd || b.for - a.for
 		);

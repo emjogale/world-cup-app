@@ -39,4 +39,41 @@ describe('KnockoutStage component', () => {
 
 		expect(screen.getByText('Brazil advances!')).toBeInTheDocument();
 	});
+
+	it('generates next round with correct winners after all first round matches are submitted', async () => {
+		const mockTeams = [
+			{ name: 'Brazil', flag: '🇧🇷' },
+			{ name: 'Germany', flag: '🇩🇪' },
+			{ name: 'France', flag: '🇫🇷' },
+			{ name: 'Argentina', flag: '🇦🇷' }
+		];
+
+		render(<KnockoutStage qualifiedTeams={mockTeams} />);
+
+		// Fill in scores and submit for both matches
+		await userEvent.clear(screen.getByTestId('score-Brazil'));
+		await userEvent.type(screen.getByTestId('score-Brazil'), '2');
+		await userEvent.clear(screen.getByTestId('score-Germany'));
+		await userEvent.type(screen.getByTestId('score-Germany'), '1');
+		await userEvent.click(
+			screen.getAllByRole('button', { name: /submit/i })[0]
+		);
+
+		await userEvent.clear(screen.getByTestId('score-France'));
+		await userEvent.type(screen.getByTestId('score-France'), '3');
+		await userEvent.clear(screen.getByTestId('score-Argentina'));
+		await userEvent.type(screen.getByTestId('score-Argentina'), '0');
+		await userEvent.click(
+			screen.getAllByRole('button', { name: /submit/i })[1]
+		);
+
+		// Wait for Round 2 to appear
+		const round2Heading = await screen.findByText('Round 2');
+		expect(round2Heading).toBeInTheDocument();
+
+		// Check the correct teams made it
+		expect(
+			screen.getByTestId('match-Brazil-vs-France')
+		).toBeInTheDocument();
+	});
 });

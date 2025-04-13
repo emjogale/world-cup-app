@@ -88,7 +88,7 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 								{console.log(
 									`Rendering match ${match.team1.name} vs ${match.team2.name} in round ${roundIndex}`
 								)}
-								{console.log('Match data:', match)};
+								{console.log('Match data:', match)}
 								<Match
 									team1={match.team1.name}
 									team2={match.team2.name}
