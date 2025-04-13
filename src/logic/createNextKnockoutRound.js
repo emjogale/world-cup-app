@@ -13,6 +13,11 @@ export const createNextKnockoutRound = (matches) => {
 			team2: winner2,
 			score1: null,
 			score2: null,
+			extraTimeScore1: null,
+			extraTimeScore2: null,
+			penaltyScore1: null,
+			penaltyScore2: null,
+			played: false,
 			winner: null
 		});
 	}

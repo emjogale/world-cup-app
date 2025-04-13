@@ -43,7 +43,7 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 			const s2 = parseInt(match.score2, 10);
 			if (isNaN(s1) || isNaN(s2)) return prev;
 
-			const winner = s1 > s2 ? match.team1 : match.team2; // No draws in knockout!
+			const winner = s1 > s2 ? match.team1 : s2 > s1 ? match.team2 : null;
 
 			const updatedMatch = {
 				...match,
@@ -120,11 +120,70 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 								>
 									Submit
 								</button>
-								{match.played && match.winner && (
-									<p className="knockout-result">
-										{match.winner.name} advances!
-									</p>
-								)}
+								{match.played &&
+									match.score1 === match.score2 && (
+										<div className="extra-time">
+											<h4>Extra Time</h4>
+											<Match
+												team1={match.team1.name}
+												team2={match.team2.name}
+												score1={
+													match.extraTimeScore1 ?? ''
+												}
+												score2={
+													match.extraTimeScore2 ?? ''
+												}
+												onScoreChange={(team, value) =>
+													handleScoreChange(
+														roundIndex,
+														matchIndex,
+														team ===
+															match.team1.name
+															? 'extraTimeScore1'
+															: 'extraTimeScore2',
+														value
+													)
+												}
+											/>
+										</div>
+									)}
+								{match.extraTimeScore1 !== null &&
+									match.extraTimeScore2 !== null &&
+									match.extraTimeScore1 ===
+										match.extraTimeScore2 && (
+										<div className="penalties">
+											<h4>Penalties</h4>
+											<Match
+												team1={match.team1.name}
+												team2={match.team2.name}
+												score1={
+													match.penaltyScore1 ?? ''
+												}
+												score2={
+													match.penaltyScore2 ?? ''
+												}
+												onScoreChange={(team, value) =>
+													handleScoreChange(
+														roundIndex,
+														matchIndex,
+														team ===
+															match.team1.name
+															? 'penaltyScore1'
+															: 'penaltyScore2',
+														value
+													)
+												}
+											/>
+										</div>
+									)}
+
+								{match.played &&
+									match.winner &&
+									match.winner.name !== 'TBD' && (
+										<p className="knockout-result">
+											{match.winner.name} advances!
+										</p>
+									)}
 							</div>
 						);
 					})}

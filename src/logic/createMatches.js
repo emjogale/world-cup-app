@@ -9,6 +9,11 @@ export const createRoundMatches = (teams) => {
 				team2: teams[i + 1],
 				score1: null,
 				score2: null,
+				extraTimeScore1: null,
+				extraTimeScore2: null,
+				penaltyScore1: null,
+				penaltyScore2: null,
+				played: false,
 				winner: null
 			});
 		} else {

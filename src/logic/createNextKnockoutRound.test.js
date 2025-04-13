@@ -9,6 +9,11 @@ describe('createNextKnockoutRound', () => {
 				team2: { name: 'Germany' },
 				score1: 2,
 				score2: 1,
+				extraTimeScore1: null,
+				extraTimeScore2: null,
+				penaltyScore1: null,
+				penaltyScore2: null,
+				played: true,
 				winner: 'Brazil'
 			},
 			{
@@ -16,6 +21,11 @@ describe('createNextKnockoutRound', () => {
 				team2: { name: 'Argentina' },
 				score1: 1,
 				score2: 3,
+				extraTimeScore1: null,
+				extraTimeScore2: null,
+				penaltyScore1: null,
+				penaltyScore2: null,
+				played: true,
 				winner: 'Argentina'
 			}
 		];
@@ -27,6 +37,11 @@ describe('createNextKnockoutRound', () => {
 				team2: { name: 'Argentina' },
 				score1: null,
 				score2: null,
+				extraTimeScore1: null,
+				extraTimeScore2: null,
+				penaltyScore1: null,
+				penaltyScore2: null,
+				played: false,
 				winner: null
 			}
 		]);
@@ -39,6 +54,11 @@ describe('createNextKnockoutRound', () => {
 				team2: { name: 'Germany' },
 				score1: 2,
 				score2: 1,
+				extraTimeScore1: null,
+				extraTimeScore2: null,
+				penaltyScore1: null,
+				penaltyScore2: null,
+				played: false,
 				winner: 'Brazil'
 			},
 			{
@@ -46,11 +66,17 @@ describe('createNextKnockoutRound', () => {
 				team2: { name: 'Argentina' },
 				score1: null,
 				score2: null,
+				extraTimeScore1: null,
+				extraTimeScore2: null,
+				penaltyScore1: null,
+				penaltyScore2: null,
+				played: false,
 				winner: null
 			}
 		];
 
 		const nextRound = createNextKnockoutRound(currentRound);
+		console.log('nextRound is:', nextRound);
 
 		expect(nextRound).toEqual([
 			{
@@ -58,6 +84,11 @@ describe('createNextKnockoutRound', () => {
 				team2: { name: 'TBD', flag: '🏳️' },
 				score1: null,
 				score2: null,
+				extraTimeScore1: null,
+				extraTimeScore2: null,
+				penaltyScore1: null,
+				penaltyScore2: null,
+				played: false,
 				winner: null
 			}
 		]);
