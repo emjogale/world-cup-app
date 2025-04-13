@@ -1,7 +1,5 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import Tournament from '../../logic/Tournament';
 import './GroupStage.css';
-import { groupTeams } from '../../logic/groupTeams';
 import { createGroupMatches } from '../../logic/createMatches';
 import Match from '../Match/Match';
 import {
@@ -12,12 +10,13 @@ import { getNextMatches } from '../../logic/createMatches';
 import { autoCompleteGroupStage } from '../../utils/devTools';
 import KnockoutStage from '../KnockoutStage/KnockoutStage';
 import { selectQualifiedTeams } from '../../logic/selectQualifiedTeams';
+import { shuffleAndGroup } from '../../logic/shuffleAndGroup';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
 		if (teams.length === 0) return {};
-		const tournament = new Tournament(teams, 'test-seed');
-		return groupTeams(tournament.teams);
+
+		return shuffleAndGroup(teams, 'test-seed');
 	}, [teams]);
 
 	const [scores, setScores] = useState({});
