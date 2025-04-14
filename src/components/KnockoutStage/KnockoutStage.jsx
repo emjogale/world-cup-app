@@ -3,6 +3,7 @@ import Match from '../Match/Match';
 import { createRoundMatches } from '../../logic/createMatches';
 import './KnockoutStage.css';
 import { createNextKnockoutRound } from '../../logic/createNextKnockoutRound';
+import { determineWinner, hasFinalWinner } from '../../utils/matchHelpers';
 
 const KnockoutStage = ({ qualifiedTeams }) => {
 	const [knockoutRounds, setKnockoutRounds] = useState([]);
@@ -22,11 +23,13 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 				...round[matchIndex],
 				[teamKey]: parseInt(value, 10)
 			};
-			// 🏆 Update winner if both scores present
-			if (match.score1 !== null && match.score2 !== null) {
-				match.winner =
-					match.score1 > match.score2 ? match.team1 : match.team2;
-			}
+			// look for a winner or assign it null if a draw
+			match.winner = determineWinner(
+				match.score1,
+				match.score2,
+				match.team1,
+				match.team2
+			);
 			round[matchIndex] = match;
 			updated[roundIndex] = round;
 			return updated;
@@ -90,15 +93,15 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 								)}
 								{console.log('Match data:', match)}
 								<Match
-									team1={match.team1.name}
-									team2={match.team2.name}
+									team1={match.team1?.name || 'TBD'}
+									team2={match.team2?.name || 'TBD'}
 									score1={match.score1 ?? ''}
 									score2={match.score2 ?? ''}
 									onScoreChange={(team, value) =>
 										handleScoreChange(
 											roundIndex,
 											matchIndex,
-											team === match.team1.name
+											team === match.team1?.name
 												? 'score1'
 												: 'score2',
 											value
@@ -177,9 +180,8 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 										</div>
 									)}
 
-								{match.played &&
-									match.winner &&
-									match.winner.name !== 'TBD' && (
+								{hasFinalWinner(match) &&
+									match.winner?.name && (
 										<p className="knockout-result">
 											{match.winner.name} advances!
 										</p>
