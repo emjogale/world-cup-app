@@ -12,10 +12,22 @@ export function hasFinalWinner(match) {
 }
 
 export function determineWinner(match) {
-	const { score1, score2, penalties1, penalties2, team1, team2 } = match;
+	const {
+		score1,
+		score2,
+		extraTime1,
+		extraTime2,
+		penalties1,
+		penalties2,
+		team1,
+		team2
+	} = match;
 
 	if (score1 > score2) return team1;
 	if (score2 > score1) return team2;
+
+	if (extraTime1 > extraTime2) return team1;
+	if (extraTime2 > extraTime1) return team2;
 
 	// If tied, check penalties
 	if (penalties1 != null && penalties2 != null) {

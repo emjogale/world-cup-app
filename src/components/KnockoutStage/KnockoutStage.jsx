@@ -46,7 +46,7 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 			const s2 = parseInt(match.score2, 10);
 			if (isNaN(s1) || isNaN(s2)) return prev;
 
-			const winner = s1 > s2 ? match.team1 : s2 > s1 ? match.team2 : null;
+			const winner = determineWinner(match);
 
 			const updatedMatch = {
 				...match,

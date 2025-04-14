@@ -1,7 +1,16 @@
 import React from 'react';
 import './Match.css';
 
-const Match = ({ team1, team2, score1, score2, onScoreChange }) => {
+const Match = ({
+	team1,
+	team2,
+	score1,
+	score2,
+	penalties1,
+	penalties2,
+	onScoreChange,
+	onPenaltiesChange
+}) => {
 	return (
 		<div
 			className="match-card horizontal"
