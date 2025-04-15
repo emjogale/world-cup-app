@@ -76,4 +76,36 @@ describe('KnockoutStage component', () => {
 			screen.getByTestId('match-Brazil-vs-France')
 		).toBeInTheDocument();
 	});
+
+	describe('knockoutStage extra time and penalties logic', () => {
+		it('shows extra time input if regular time ends in a draw', async () => {
+			render(<KnockoutStage qualifiedTeams={mockTeams} />);
+
+			// enter draw score
+			const scoreBrazil = screen.getByTestId('score-Brazil');
+			const scoreGermany = screen.getByTestId('score-Germany');
+			const submitButtons = screen.getAllByRole('button', {
+				name: /submit/i
+			});
+			const submit = submitButtons[0]; // or use find/within a parent
+
+			await userEvent.clear(scoreBrazil);
+			await userEvent.type(scoreBrazil, '1');
+
+			await userEvent.clear(scoreGermany);
+			await userEvent.type(scoreGermany, '1');
+
+			await userEvent.click(submit);
+
+			// check for extra time input visibility
+			expect(screen.getByText('Extra Time')).toBeInTheDocument();
+			expect(screen.getByTestId('extra-Brazil')).toBeInTheDocument();
+			expect(screen.getByTestId('extra-Germany')).toBeInTheDocument();
+		});
+
+		// More tests to follow:
+		// - penalties only appear after extra time draw
+		// - determine winner correctly
+		// - winner message appears
+	});
 });

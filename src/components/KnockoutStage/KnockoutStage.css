@@ -1,23 +1,24 @@
-/* KnockoutStage.css */
+/* KnockoutStage.css (Mobile-first, clean responsive layout) */
 
 .knockout-stage {
-	padding: 2rem;
+	padding: 1rem;
 	max-width: 900px;
 	margin: 0 auto;
 }
 
 .knockout-stage h2 {
-	font-size: 2rem;
-	margin-bottom: 1.5rem;
+	font-size: 1.75rem;
+	margin-bottom: 1rem;
 	text-align: center;
 }
 
 .knockout-round {
-	margin-bottom: 2rem;
+	margin-bottom: 1.5rem;
 	border: 1px solid #ddd;
 	border-radius: 12px;
 	padding: 1rem;
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+	background-color: #fefefe;
 }
 
 .knockout-round h3 {
@@ -27,13 +28,12 @@
 }
 
 .knockout-round > div {
-	margin-bottom: 1.5rem;
-	background: #f9f9f9;
-	padding: 1rem;
-	border-radius: 8px;
 	display: flex;
 	flex-direction: column;
 	gap: 0.5rem;
+	padding: 0.5rem;
+	background-color: #f9f9f9;
+	border-radius: 8px;
 }
 
 .knockout-round button {
@@ -58,15 +58,16 @@
 	color: #2e7d32;
 }
 
+/* Tablet and up */
 @media (min-width: 600px) {
 	.knockout-stage {
-		padding: 0.5rem;
+		padding: 2rem;
 	}
+
 	.knockout-round > div {
 		flex-direction: row;
-		align-items: center;
-		width: 100%;
 		justify-content: space-between;
+		align-items: center;
 	}
 
 	.knockout-result {
