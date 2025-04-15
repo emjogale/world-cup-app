@@ -24,10 +24,11 @@ const Match = ({
 			className="match-card horizontal"
 			data-testid={`match-${team1}-vs-${team2}`}
 		>
-			<div className="regular-time">
-				<label>
-					{team1}
+			<div className="team-row regular-time">
+				<div className="team-input">
+					<label htmlFor={`score-${team1}-regular`}>{team1}</label>
 					<input
+						id={`score-${team1}-regular`}
 						data-testid={`score-${team1}`}
 						type="number"
 						min="0"
@@ -36,10 +37,13 @@ const Match = ({
 							handleChange(team1, e.target.value, 'regular')
 						}
 					/>
-				</label>
-				<span>v</span>
-				<label>
+				</div>
+
+				<span className="vs">v</span>
+
+				<div className="team-input">
 					<input
+						id={`score-${team2}-regular`}
 						data-testid={`score-${team2}`}
 						type="number"
 						min="0"
@@ -48,44 +52,56 @@ const Match = ({
 							handleChange(team2, e.target.value, 'regular')
 						}
 					/>
-					{team2}
-				</label>
+					<label htmlFor={`score-${team2}-regular`}>{team2}</label>
+				</div>
 			</div>
 
 			{played && showExtraTime && (
 				<div className="extra-time">
 					<h4>Extra Time</h4>
-					<label>
-						{team1}
-						<input
-							type="number"
-							value={extraTimeScore1}
-							onChange={(e) =>
-								handleChange(team1, e.target.value, 'extra')
-							}
-							data-testid={`extra-${team1}`}
-						/>
-					</label>
-					<label>
-						{team2}
-						<input
-							type="number"
-							value={extraTimeScore2}
-							onChange={(e) =>
-								handleChange(team2, e.target.value, 'extra')
-							}
-							data-testid={`extra-${team2}`}
-						/>
-					</label>
+					<div className="team-row">
+						<div className="team-input">
+							<label htmlFor={`score-${team1}-extra`}>
+								{team1}
+							</label>
+							<input
+								id={`score-${team1}-extra`}
+								type="number"
+								value={extraTimeScore1}
+								onChange={(e) =>
+									handleChange(team1, e.target.value, 'extra')
+								}
+								data-testid={`extra-${team1}`}
+							/>
+							<span className="vs">v</span>
+						</div>
+						<div className="team-input">
+							<input
+								id={`score-${team2}-extra`}
+								type="number"
+								value={extraTimeScore2}
+								onChange={(e) =>
+									handleChange(team2, e.target.value, 'extra')
+								}
+								data-testid={`extra-${team2}`}
+							/>
+							<label htmlFor={`score-${team2}-extra`}>
+								{team2}
+							</label>
+						</div>
+					</div>
 				</div>
 			)}
 
 			{played && showPenalties && (
 				<div className="penalties">
 					<h4>Penalties</h4>
-					<label>
-						{team1}
+					<div className="team-row">
+						<label htmlFor={`score-${team1}-penalties`}>
+							{team1}
+						</label>
 						<input
+							id={`score-${team1}-penalties`}
 							type="number"
 							value={penaltyScore1}
 							onChange={(e) =>
@@ -93,10 +109,12 @@ const Match = ({
 							}
 							data-testid={`penalty-${team1}`}
 						/>
-					</label>
-					<label>
-						{team2}
+
+						<label htmlFor={`score-${team2}-penalties`}>
+							{team2}
+						</label>
 						<input
+							id={`score-${team2}-penalties`}
 							type="number"
 							value={penaltyScore2}
 							onChange={(e) =>
@@ -104,7 +122,7 @@ const Match = ({
 							}
 							data-testid={`penalty-${team2}`}
 						/>
-					</label>
+					</div>
 				</div>
 			)}
 		</div>
