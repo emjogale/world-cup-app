@@ -14,9 +14,10 @@ describe('matchHelpers', () => {
 			const match = {
 				score1: 1,
 				score2: 1,
-				penalties1: null,
-				penalties2: null
+				penaltyScore1: null,
+				penaltyScore2: null
 			};
+
 			expect(hasFinalWinner(match)).toBe(false);
 		});
 
@@ -28,9 +29,10 @@ describe('matchHelpers', () => {
 			const match = {
 				score1: 1,
 				score2: 1,
-				penalties1: 5,
-				penalties2: 4
+				penaltyScore1: 5,
+				penaltyScore2: 4
 			};
+
 			expect(hasFinalWinner(match)).toBe(true);
 		});
 	});
@@ -53,8 +55,8 @@ describe('matchHelpers', () => {
 			const match = {
 				score1: 1,
 				score2: 1,
-				penalties1: 3,
-				penalties2: 4,
+				penaltyScore1: 3,
+				penaltyScore2: 4,
 				team1: t1,
 				team2: t2
 			};

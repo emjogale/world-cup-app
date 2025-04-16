@@ -2,12 +2,16 @@ export function hasFinalWinner(match) {
 	if (match.score1 == null || match.score2 == null) return false;
 	if (match.score1 !== match.score2) return true;
 	if (
-		match.penalties1 != null &&
-		match.penalties2 != null &&
-		match.penalties1 !== match.penalties2
+		match.penaltyScore1 != null &&
+		match.penaltyScore2 != null &&
+		match.penaltyScore1 !== match.penaltyScore2
 	) {
 		return true;
 	}
+	console.log(
+		'in the false zone match penalty score1 is:',
+		match.penaltyScore1
+	);
 	return false;
 }
 
@@ -15,10 +19,10 @@ export function determineWinner(match) {
 	const {
 		score1,
 		score2,
-		extraTime1,
-		extraTime2,
-		penalties1,
-		penalties2,
+		extraTimeScore1,
+		extraTimeScore2,
+		penaltyScore1,
+		penaltyScore2,
 		team1,
 		team2
 	} = match;
@@ -26,13 +30,13 @@ export function determineWinner(match) {
 	if (score1 > score2) return team1;
 	if (score2 > score1) return team2;
 
-	if (extraTime1 > extraTime2) return team1;
-	if (extraTime2 > extraTime1) return team2;
+	if (extraTimeScore1 > extraTimeScore2) return team1;
+	if (extraTimeScore2 > extraTimeScore1) return team2;
 
 	// If tied, check penalties
-	if (penalties1 != null && penalties2 != null) {
-		if (penalties1 > penalties2) return team1;
-		if (penalties2 > penalties1) return team2;
+	if (penaltyScore1 != null && penaltyScore2 != null) {
+		if (penaltyScore1 > penaltyScore2) return team1;
+		if (penaltyScore2 > penaltyScore1) return team2;
 	}
 
 	return null;
