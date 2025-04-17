@@ -3,7 +3,11 @@ import Match from '../Match/Match';
 import { createRoundMatches } from '../../logic/createMatches';
 import './KnockoutStage.css';
 import { createNextKnockoutRound } from '../../logic/createNextKnockoutRound';
-import { determineWinner, hasFinalWinner } from '../../utils/matchHelpers';
+import {
+	determineWinner,
+	hasFinalWinner,
+	isReadyToSubmit
+} from '../../utils/matchHelpers';
 
 const KnockoutStage = ({ qualifiedTeams }) => {
 	const [knockoutRounds, setKnockoutRounds] = useState([]);
@@ -158,9 +162,7 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 										)
 									}
 									disabled={
-										match.played ||
-										match.score1 === undefined ||
-										match.score2 === undefined
+										match.played || !isReadyToSubmit(match)
 									}
 								>
 									Submit

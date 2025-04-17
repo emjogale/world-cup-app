@@ -37,3 +37,41 @@ export function determineWinner(match) {
 
 	return null;
 }
+
+export const isReadyToSubmit = (match) => {
+	const {
+		score1,
+		score2,
+		extraTimeScore1,
+		extraTimeScore2,
+		penaltyScore1,
+		penaltyScore2
+	} = match;
+
+	if (typeof score1 !== 'number' || typeof score2 !== 'number') return false;
+
+	if (score1 !== score2) return true; // regular time win
+
+	// Allow submission at end of regular time if it's a draw
+	if (
+		extraTimeScore1 == null &&
+		extraTimeScore2 == null &&
+		penaltyScore1 == null &&
+		penaltyScore2 == null
+	) {
+		return true;
+	}
+
+	if (
+		typeof extraTimeScore1 !== 'number' ||
+		typeof extraTimeScore2 !== 'number'
+	)
+		return false;
+
+	if (extraTimeScore1 !== extraTimeScore2) return true;
+
+	if (typeof penaltyScore1 !== 'number' || typeof penaltyScore2 !== 'number')
+		return false;
+
+	return penaltyScore1 !== penaltyScore2;
+};
