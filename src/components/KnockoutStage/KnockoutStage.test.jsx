@@ -19,7 +19,10 @@ describe('KnockoutStage component', () => {
 			.getByText('Round 1')
 			.closest('.knockout-round');
 		const matchEls = within(firstRound).getAllByTestId(/match-.*-vs-.*/);
-		console.log(matchEls.map((el) => el.dataset.testid));
+		console.log(
+			'this is the matchEls list',
+			matchEls.map((el) => el.dataset.testid)
+		);
 		expect(matchEls).toHaveLength(2); // 4 teams = 2 matches
 	});
 

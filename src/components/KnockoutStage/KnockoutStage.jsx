@@ -53,9 +53,6 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 				}
 			}
 
-			// Update winner only if we have enough info
-			match.winner = determineWinner(match);
-
 			round[matchIndex] = match;
 			updated[roundIndex] = round;
 			return updated;
@@ -82,10 +79,11 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 
 			round[matchIndex] = updatedMatch;
 			updated[roundIndex] = round;
-
+			console.log(' the updated match is', updatedMatch);
 			// ⬇️ If all matches in the current round are played, generate the next round
 			const allPlayed = round.every((m) => m.played);
 			if (allPlayed) {
+				console.log('all have played!');
 				const next = createNextKnockoutRound(round);
 				if (next.length > 0) {
 					updated.push(next);

@@ -99,11 +99,7 @@ const GroupStage = ({ teams }) => {
 						groupStats[groupName],
 						results
 					);
-					// console.log(
-					// 	'✅ Updated stats for group:',
-					// 	groupName,
-					// 	newStats
-					// );
+
 					setGroupStats((prev) => ({
 						...prev,
 						[groupName]: { ...newStats }
@@ -231,10 +227,7 @@ const GroupStage = ({ teams }) => {
 							const qualified = selectQualifiedTeams(groupStats);
 
 							setQualifiedTeams(qualified);
-							// console.log(
-							// 	'✅ Qualified teams for knockout:',
-							// 	qualified
-							// );
+
 							setShowKnockoutStage(true);
 							// Smooth scroll
 							setTimeout(() => {

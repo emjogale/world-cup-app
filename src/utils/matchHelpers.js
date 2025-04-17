@@ -8,10 +8,6 @@ export function hasFinalWinner(match) {
 	) {
 		return true;
 	}
-	console.log(
-		'in the false zone match penalty score1 is:',
-		match.penaltyScore1
-	);
 	return false;
 }
 
