@@ -140,24 +140,6 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 							Number.isInteger(match.extraTimeScore2) &&
 							match.extraTimeScore1 === match.extraTimeScore2;
 
-						if (
-							match.team1.name === 'Brazil' &&
-							match.team2.name === 'England'
-						) {
-							// console.log(
-							// 	'🔍 Penalty check (Brazil vs England):',
-							// 	{
-							// 		extraTimePlayed: match.extraTimePlayed,
-							// 		extraTimeScore1: match.extraTimeScore1,
-							// 		extraTimeScore2: match.extraTimeScore2,
-							// 		isDraw:
-							// 			match.extraTimeScore1 ===
-							// 			match.extraTimeScore2,
-							// 		showPenalties
-							// 	}
-							// );
-						}
-
 						return (
 							<div key={matchIndex}>
 								<Match
@@ -202,6 +184,7 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 													'regular'
 												)
 											}
+											data-testid={`submit-regular-${match.team1.name}`}
 										>
 											Submit Regular Time
 										</button>

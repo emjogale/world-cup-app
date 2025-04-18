@@ -31,13 +31,13 @@ describe('KnockoutStage component', () => {
 
 		const score1 = screen.getByTestId('score-Brazil');
 		const score2 = screen.getByTestId('score-Germany');
-		const submit = screen.getByRole('button', { name: /submit/i });
 
 		await userEvent.clear(score1);
 		await userEvent.type(score1, '2');
 		await userEvent.clear(score2);
 		await userEvent.type(score2, '1');
 
+		const submit = screen.getByTestId('submit-regular-Brazil');
 		await userEvent.click(submit);
 
 		expect(screen.getByText('Brazil advances!')).toBeInTheDocument();
@@ -53,28 +53,30 @@ describe('KnockoutStage component', () => {
 
 		render(<KnockoutStage qualifiedTeams={mockTeams} />);
 
-		// Fill in scores and submit for both matches
+		// Submit Brazil vs Germany
 		await userEvent.clear(screen.getByTestId('score-Brazil'));
 		await userEvent.type(screen.getByTestId('score-Brazil'), '2');
 		await userEvent.clear(screen.getByTestId('score-Germany'));
 		await userEvent.type(screen.getByTestId('score-Germany'), '1');
-		await userEvent.click(
-			screen.getAllByRole('button', { name: /submit/i })[0]
-		);
+		await userEvent.click(screen.getByTestId('submit-regular-Brazil'));
 
+		// Submit France vs Argentina
 		await userEvent.clear(screen.getByTestId('score-France'));
 		await userEvent.type(screen.getByTestId('score-France'), '3');
 		await userEvent.clear(screen.getByTestId('score-Argentina'));
 		await userEvent.type(screen.getByTestId('score-Argentina'), '0');
-		await userEvent.click(
-			screen.getAllByRole('button', { name: /submit/i })[1]
-		);
+		await userEvent.click(screen.getByTestId('submit-regular-France'));
 
-		// Wait for Round 2 to appear
-		const round2Heading = await screen.findByText('Round 2');
-		expect(round2Heading).toBeInTheDocument();
+		// ✅ Wait for Round 2 match to appear
+		await screen.findByTestId('match-Brazil-vs-France');
 
-		// Check the correct teams made it
+		// ✅ Optionally check Round 2 heading exists (H3)
+		const round2Heading = screen
+			.getAllByRole('heading', { level: 3 })
+			.find((el) => el.textContent.includes('Round 2'));
+		expect(round2Heading).toBeTruthy();
+
+		// ✅ Check the correct match is present
 		expect(
 			screen.getByTestId('match-Brazil-vs-France')
 		).toBeInTheDocument();
@@ -84,24 +86,23 @@ describe('KnockoutStage component', () => {
 		it('shows extra time input if regular time ends in a draw', async () => {
 			render(<KnockoutStage qualifiedTeams={mockTeams} />);
 
-			// enter draw score
+			// Enter draw scores for Brazil vs Germany
 			const scoreBrazil = screen.getByTestId('score-Brazil');
 			const scoreGermany = screen.getByTestId('score-Germany');
-			const submitButtons = screen.getAllByRole('button', {
-				name: /submit/i
-			});
-			const submit = submitButtons[0]; // or use find/within a parent
 
 			await userEvent.clear(scoreBrazil);
 			await userEvent.type(scoreBrazil, '1');
-
 			await userEvent.clear(scoreGermany);
 			await userEvent.type(scoreGermany, '1');
 
-			await userEvent.click(submit);
+			// Wait for the submit button to appear, then click it
+			const submitButton = await screen.findByTestId(
+				'submit-regular-Brazil'
+			);
+			await userEvent.click(submitButton);
 
-			// check for extra time input visibility
-			expect(screen.getByText('Extra Time')).toBeInTheDocument();
+			// Assert that extra time inputs are now visible
+			expect(await screen.findByText('Extra Time')).toBeInTheDocument();
 			expect(screen.getByTestId('extra-Brazil')).toBeInTheDocument();
 			expect(screen.getByTestId('extra-Germany')).toBeInTheDocument();
 		});
@@ -110,5 +111,33 @@ describe('KnockoutStage component', () => {
 		// - penalties only appear after extra time draw
 		// - determine winner correctly
 		// - winner message appears
+	});
+});
+
+describe('KnockoutStage sanity test', () => {
+	it('shows regular time submit and winner message after score entry', async () => {
+		const teams = [
+			{ name: 'Brazil', flag: '🇧🇷' },
+			{ name: 'Germany', flag: '🇩🇪' }
+		];
+
+		render(<KnockoutStage qualifiedTeams={teams} />);
+
+		// Enter a non-draw score
+		await userEvent.clear(screen.getByTestId('score-Brazil'));
+		await userEvent.type(screen.getByTestId('score-Brazil'), '2');
+
+		await userEvent.clear(screen.getByTestId('score-Germany'));
+		await userEvent.type(screen.getByTestId('score-Germany'), '1');
+
+		// Wait for the regular time submit button to appear
+		const submitButton = await screen.findByTestId('submit-regular-Brazil');
+
+		expect(submitButton).toBeInTheDocument();
+
+		await userEvent.click(submitButton);
+
+		// Confirm winner message appears
+		expect(await screen.findByText('Brazil advances!')).toBeInTheDocument();
 	});
 });

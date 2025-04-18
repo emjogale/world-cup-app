@@ -12,7 +12,6 @@ const Match = ({
 	penaltyScore2,
 	regularTimePlayed,
 	extraTimePlayed,
-	penaltiesPlayed,
 	showExtraTime,
 	showPenalties,
 	onScoreChange

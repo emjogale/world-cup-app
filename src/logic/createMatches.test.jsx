@@ -18,7 +18,9 @@ describe('createMatches.js', () => {
 				extraTimeScore2: null,
 				penaltyScore1: null,
 				penaltyScore2: null,
-				played: false,
+				regularTimePlayed: false,
+				extraTimePlayed: false,
+				penaltiesPlayed: false,
 				winner: null
 			});
 		});
@@ -53,7 +55,9 @@ describe('createMatches.js', () => {
 			extraTimeScore2: null,
 			penaltyScore1: null,
 			penaltyScore2: null,
-			played: false,
+			regularTimePlayed: false,
+			extraTimePlayed: false,
+			penaltiesPlayed: false,
 			winner: null
 		});
 	});

@@ -40,6 +40,7 @@ export function determineWinner(match) {
 
 export const isReadyToSubmitRegular = (match) => {
 	const { score1, score2 } = match;
+	console.log('🔎 isReadyToSubmitRegular:', match);
 	return typeof score1 === 'number' && typeof score2 === 'number';
 };
 
