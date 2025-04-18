@@ -1,13 +1,17 @@
 import { describe, it, expect } from 'vitest';
-import { hasFinalWinner, determineWinner } from './matchHelpers';
+import { matchHasClearWinner, determineWinner } from './matchHelpers';
 
 const mockTeam = (name) => ({ name, flag: '🏳️' });
 
 describe('matchHelpers', () => {
-	describe('hasFinalWinner', () => {
+	describe('matchHasClearWinner', () => {
 		it('returns false if score1 or score2 is null', () => {
-			expect(hasFinalWinner({ score1: null, score2: 1 })).toBe(false);
-			expect(hasFinalWinner({ score1: 2, score2: null })).toBe(false);
+			expect(matchHasClearWinner({ score1: null, score2: 1 })).toBe(
+				false
+			);
+			expect(matchHasClearWinner({ score1: 2, score2: null })).toBe(
+				false
+			);
 		});
 
 		it('returns false if score1 === score2 and no penalties', () => {
@@ -18,11 +22,11 @@ describe('matchHelpers', () => {
 				penaltyScore2: null
 			};
 
-			expect(hasFinalWinner(match)).toBe(false);
+			expect(matchHasClearWinner(match)).toBe(false);
 		});
 
 		it('returns true for regular win', () => {
-			expect(hasFinalWinner({ score1: 2, score2: 1 })).toBe(true);
+			expect(matchHasClearWinner({ score1: 2, score2: 1 })).toBe(true);
 		});
 
 		it('returns true for win via penalties', () => {
@@ -33,7 +37,7 @@ describe('matchHelpers', () => {
 				penaltyScore2: 4
 			};
 
-			expect(hasFinalWinner(match)).toBe(true);
+			expect(matchHasClearWinner(match)).toBe(true);
 		});
 	});
 

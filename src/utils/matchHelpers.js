@@ -1,4 +1,4 @@
-export function hasFinalWinner(match) {
+export const matchHasClearWinner = (match) => {
 	if (match.score1 == null || match.score2 == null) return false;
 	if (match.score1 !== match.score2) return true;
 	if (
@@ -9,7 +9,7 @@ export function hasFinalWinner(match) {
 		return true;
 	}
 	return false;
-}
+};
 
 export function determineWinner(match) {
 	const {
@@ -44,25 +44,34 @@ export const isReadyToSubmitRegular = (match) => {
 };
 
 export const isReadyToSubmitExtraTime = (match) => {
-	const { score1, score2, extraTimeScore1, extraTimeScore2 } = match;
+	const {
+		score1,
+		score2,
+		extraTimeScore1,
+		extraTimeScore2,
+
+		extraTimePlayed
+	} = match;
+
 	const regDraw =
 		typeof score1 === 'number' &&
 		typeof score2 === 'number' &&
 		score1 === score2;
-
-	const extraValid =
+	const extraSet =
 		typeof extraTimeScore1 === 'number' &&
-		typeof extraTimeScore2 === 'number' &&
-		extraTimeScore1 !== extraTimeScore2;
+		typeof extraTimeScore2 === 'number';
+
 	console.log('📍 Checking ExtraTime:', {
 		score1,
 		score2,
 		extraTimeScore1,
 		extraTimeScore2,
 		regDraw,
-		extraValid
+		extraSet,
+		ready: regDraw && extraSet && !extraTimePlayed
 	});
-	return regDraw && extraValid;
+
+	return regDraw && extraSet && !extraTimePlayed;
 };
 
 export const isReadyToSubmitPenalties = (match) => {
@@ -88,4 +97,8 @@ export const isReadyToSubmitPenalties = (match) => {
 	});
 
 	return extraDraw && penaltiesValid;
+};
+
+export const hasFinalWinner = (match) => {
+	return match.played === true && typeof match.winner?.name === 'string';
 };

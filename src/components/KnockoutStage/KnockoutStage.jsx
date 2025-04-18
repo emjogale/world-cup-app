@@ -5,10 +5,11 @@ import './KnockoutStage.css';
 import { createNextKnockoutRound } from '../../logic/createNextKnockoutRound';
 import {
 	determineWinner,
-	hasFinalWinner,
+	matchHasClearWinner,
 	isReadyToSubmitRegular,
 	isReadyToSubmitExtraTime,
-	isReadyToSubmitPenalties
+	isReadyToSubmitPenalties,
+	hasFinalWinner
 } from '../../utils/matchHelpers';
 
 const KnockoutStage = ({ qualifiedTeams }) => {
@@ -71,24 +72,36 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 			const round = [...updated[roundIndex]];
 			const match = round[matchIndex];
 
-			if (phase === 'regular') {
-				match.regularTimePlayed = true;
-			} else if (phase === 'extra') {
-				match.extraTimePlayed = true;
-			} else if (phase === 'penalties') {
-				match.penaltiesPlayed = true;
-				match.played = true;
-				match.winner = determineWinner(match);
+			// 🛠️ Construct an updated match immutably
+			const updatedMatch = {
+				...match,
+				regularTimePlayed:
+					phase === 'regular' ? true : match.regularTimePlayed,
+				extraTimePlayed:
+					phase === 'extra' ? true : match.extraTimePlayed,
+				penaltiesPlayed:
+					phase === 'penalties' ? true : match.penaltiesPlayed
+			};
+
+			// Always determine the winner after a phase
+			if (
+				phase === 'regular' ||
+				phase === 'extra' ||
+				phase === 'penalties'
+			) {
+				updatedMatch.winner = determineWinner(updatedMatch);
 			}
-			// Always determine the winner if we’ve finished any phase
-			if (phase === 'regular' || phase === 'extra') {
-				match.winner = determineWinner(match);
+
+			// ✅ Mark match as played if we have a winner
+			if (updatedMatch.winner) {
+				updatedMatch.played = true;
 			}
-			round[matchIndex] = match;
+
+			round[matchIndex] = updatedMatch;
 			updated[roundIndex] = round;
 
-			// If it's the final submission (after penalties), trigger next round
-			if (phase === 'penalties' || match.winner) {
+			// 💡 Advance to next round only when match.played is true
+			if (updatedMatch.played) {
 				const allPlayed = round.every((m) => m.played);
 				if (allPlayed) {
 					const next = createNextKnockoutRound(round);
@@ -126,6 +139,24 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 							Number.isInteger(match.extraTimeScore1) &&
 							Number.isInteger(match.extraTimeScore2) &&
 							match.extraTimeScore1 === match.extraTimeScore2;
+
+						if (
+							match.team1.name === 'Brazil' &&
+							match.team2.name === 'England'
+						) {
+							// console.log(
+							// 	'🔍 Penalty check (Brazil vs England):',
+							// 	{
+							// 		extraTimePlayed: match.extraTimePlayed,
+							// 		extraTimeScore1: match.extraTimeScore1,
+							// 		extraTimeScore2: match.extraTimeScore2,
+							// 		isDraw:
+							// 			match.extraTimeScore1 ===
+							// 			match.extraTimeScore2,
+							// 		showPenalties
+							// 	}
+							// );
+						}
 
 						return (
 							<div key={matchIndex}>
@@ -179,13 +210,16 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 									!match.extraTimePlayed &&
 									isReadyToSubmitExtraTime(match) && (
 										<button
-											onClick={() =>
+											onClick={() => {
+												console.log(
+													'🎯 Submitting extra time'
+												);
 												handleSubmitMatch(
 													roundIndex,
 													matchIndex,
 													'extra'
-												)
-											}
+												);
+											}}
 										>
 											Submit Extra Time
 										</button>
@@ -205,7 +239,12 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 											Submit Penalties
 										</button>
 									)}
-
+								{console.log('🏁 Winner check:', {
+									name: match.winner?.name,
+									played: match.played,
+									matchHasClearWinner:
+										matchHasClearWinner(match)
+								})}
 								{hasFinalWinner(match) &&
 									match.winner?.name && (
 										<p className="knockout-result">
