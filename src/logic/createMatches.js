@@ -13,7 +13,9 @@ export const createRoundMatches = (teams) => {
 				extraTimeScore2: null,
 				penaltyScore1: null,
 				penaltyScore2: null,
-				played: false,
+				regularTimePlayed: false,
+				extraTimePlayed: false,
+				penaltiesPlayed: false,
 				winner: null
 			});
 		} else {

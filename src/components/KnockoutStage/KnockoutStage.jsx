@@ -6,7 +6,9 @@ import { createNextKnockoutRound } from '../../logic/createNextKnockoutRound';
 import {
 	determineWinner,
 	hasFinalWinner,
-	isReadyToSubmit
+	isReadyToSubmitRegular,
+	isReadyToSubmitExtraTime,
+	isReadyToSubmitPenalties
 } from '../../utils/matchHelpers';
 
 const KnockoutStage = ({ qualifiedTeams }) => {
@@ -63,34 +65,36 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 		});
 	};
 
-	const handleSubmitMatch = (roundIndex, matchIndex) => {
+	const handleSubmitMatch = (roundIndex, matchIndex, phase = 'regular') => {
 		setKnockoutRounds((prev) => {
 			const updated = [...prev];
 			const round = [...updated[roundIndex]];
 			const match = round[matchIndex];
 
-			const s1 = parseInt(match.score1, 10);
-			const s2 = parseInt(match.score2, 10);
-			if (isNaN(s1) || isNaN(s2)) return prev;
-
-			const winner = determineWinner(match);
-
-			const updatedMatch = {
-				...match,
-				played: true,
-				winner
-			};
-
-			round[matchIndex] = updatedMatch;
+			if (phase === 'regular') {
+				match.regularTimePlayed = true;
+			} else if (phase === 'extra') {
+				match.extraTimePlayed = true;
+			} else if (phase === 'penalties') {
+				match.penaltiesPlayed = true;
+				match.played = true;
+				match.winner = determineWinner(match);
+			}
+			// Always determine the winner if we’ve finished any phase
+			if (phase === 'regular' || phase === 'extra') {
+				match.winner = determineWinner(match);
+			}
+			round[matchIndex] = match;
 			updated[roundIndex] = round;
-			console.log(' the updated match is', updatedMatch);
-			// ⬇️ If all matches in the current round are played, generate the next round
-			const allPlayed = round.every((m) => m.played);
-			if (allPlayed) {
-				console.log('all have played!');
-				const next = createNextKnockoutRound(round);
-				if (next.length > 0) {
-					updated.push(next);
+
+			// If it's the final submission (after penalties), trigger next round
+			if (phase === 'penalties' || match.winner) {
+				const allPlayed = round.every((m) => m.played);
+				if (allPlayed) {
+					const next = createNextKnockoutRound(round);
+					if (next.length > 0) {
+						updated.push(next);
+					}
 				}
 			}
 
@@ -114,10 +118,11 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 						if (!match.team1 || !match.team2) return null;
 
 						const showExtraTime =
-							match.played && match.score1 === match.score2;
+							match.regularTimePlayed &&
+							match.score1 === match.score2;
 
 						const showPenalties =
-							showExtraTime &&
+							match.extraTimePlayed &&
 							Number.isInteger(match.extraTimeScore1) &&
 							Number.isInteger(match.extraTimeScore2) &&
 							match.extraTimeScore1 === match.extraTimeScore2;
@@ -137,7 +142,9 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 									}
 									penaltyScore1={match.penaltyScore1 ?? ''}
 									penaltyScore2={match.penaltyScore2 ?? ''}
-									played={match.played}
+									regularTimePlayed={match.regularTimePlayed}
+									extraTimePlayed={match.extraTimePlayed}
+									penaltiesPlayed={match.penaltiesPlayed}
 									showExtraTime={showExtraTime}
 									showPenalties={showPenalties}
 									onScoreChange={(
@@ -154,19 +161,51 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 										)
 									}
 								/>
-								<button
-									onClick={() =>
-										handleSubmitMatch(
-											roundIndex,
-											matchIndex
-										)
-									}
-									disabled={
-										match.played || !isReadyToSubmit(match)
-									}
-								>
-									Submit
-								</button>
+								{!match.regularTimePlayed &&
+									isReadyToSubmitRegular(match) && (
+										<button
+											onClick={() =>
+												handleSubmitMatch(
+													roundIndex,
+													matchIndex,
+													'regular'
+												)
+											}
+										>
+											Submit Regular Time
+										</button>
+									)}
+								{match.regularTimePlayed &&
+									!match.extraTimePlayed &&
+									isReadyToSubmitExtraTime(match) && (
+										<button
+											onClick={() =>
+												handleSubmitMatch(
+													roundIndex,
+													matchIndex,
+													'extra'
+												)
+											}
+										>
+											Submit Extra Time
+										</button>
+									)}
+								{match.extraTimePlayed &&
+									!match.penaltiesPlayed &&
+									isReadyToSubmitPenalties(match) && (
+										<button
+											onClick={() =>
+												handleSubmitMatch(
+													roundIndex,
+													matchIndex,
+													'penalties'
+												)
+											}
+										>
+											Submit Penalties
+										</button>
+									)}
+
 								{hasFinalWinner(match) &&
 									match.winner?.name && (
 										<p className="knockout-result">

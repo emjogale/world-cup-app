@@ -10,7 +10,9 @@ const Match = ({
 	extraTimeScore2,
 	penaltyScore1,
 	penaltyScore2,
-	played,
+	regularTimePlayed,
+	extraTimePlayed,
+	penaltiesPlayed,
 	showExtraTime,
 	showPenalties,
 	onScoreChange
@@ -56,7 +58,7 @@ const Match = ({
 				</div>
 			</div>
 
-			{played && showExtraTime && (
+			{regularTimePlayed && showExtraTime && (
 				<div className="extra-time">
 					<h4>Extra Time</h4>
 					<div className="team-row">
@@ -93,7 +95,7 @@ const Match = ({
 				</div>
 			)}
 
-			{played && showPenalties && (
+			{regularTimePlayed && extraTimePlayed && showPenalties && (
 				<div className="penalties">
 					<h4>Penalties</h4>
 					<div className="team-row">
