@@ -1,4 +1,4 @@
-export function autoCompleteGroupStage(groupMatches, groupStats) {
+export const autoCompleteGroupStage = (groupMatches, groupStats) => {
 	const updatedMatches = {};
 	const updatedStats = {};
 
@@ -37,4 +37,19 @@ export function autoCompleteGroupStage(groupMatches, groupStats) {
 	}
 
 	return { updatedMatches, updatedStats };
-}
+};
+
+export const devAutofillKnockoutRound = (round) => {
+	return round.map((match) => {
+		const updated = { ...match };
+
+		// Simple logic: team1 always wins with score 2-0
+		updated.score1 = 2;
+		updated.score2 = 0;
+		updated.regularTimePlayed = true;
+		updated.played = true;
+		updated.winner = updated.team1;
+
+		return updated;
+	});
+};

@@ -11,6 +11,7 @@ import {
 	isReadyToSubmitPenalties,
 	hasFinalWinner
 } from '../../utils/matchHelpers';
+import { devAutofillKnockoutRound } from '../../utils/devTools';
 
 const KnockoutStage = ({ qualifiedTeams }) => {
 	const [knockoutRounds, setKnockoutRounds] = useState([]);
@@ -21,6 +22,27 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 			setKnockoutRounds([firstRound]); // store full first round in an array
 		}
 	}, [qualifiedTeams]);
+
+	const handleDevAutofill = () => {
+		setKnockoutRounds((prev) => {
+			const updated = [...prev];
+			const roundIndex = updated.length - 1;
+			const autofilledRound = devAutofillKnockoutRound(
+				updated[roundIndex]
+			);
+
+			updated[roundIndex] = autofilledRound;
+
+			// Optionally trigger next round if all matches are now played
+			const allPlayed = autofilledRound.every((m) => m.played);
+			if (allPlayed) {
+				const next = createNextKnockoutRound(autofilledRound);
+				if (next.length > 0) updated.push(next);
+			}
+
+			return updated;
+		});
+	};
 
 	const handleScoreChange = (
 		roundIndex,
@@ -203,6 +225,7 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 													'extra'
 												);
 											}}
+											data-testid={`submit-extra-${match.team1.name}`}
 										>
 											Submit Extra Time
 										</button>
@@ -218,6 +241,7 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 													'penalties'
 												)
 											}
+											data-testid={`submit-penalties-${match.team1.name}`}
 										>
 											Submit Penalties
 										</button>
@@ -239,6 +263,9 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 					})}
 				</div>
 			))}
+			<button onClick={handleDevAutofill} className="dev-button">
+				Dev Complete Knockout Round
+			</button>
 		</div>
 	);
 };

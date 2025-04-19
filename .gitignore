@@ -23,5 +23,7 @@ dist-ssr
 *.sln
 *.sw?
 
+# test coverage
+coverage/
 # temporary things
 scratch.js

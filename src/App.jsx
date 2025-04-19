@@ -40,6 +40,7 @@ const App = () => {
 
 			{stage !== 'qualifiers' && seed && (
 				<>
+					{console.log('Seed is:', seed)}
 					<p
 						style={{
 							marginTop: '1rem',

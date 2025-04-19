@@ -107,10 +107,112 @@ describe('KnockoutStage component', () => {
 			expect(screen.getByTestId('extra-Germany')).toBeInTheDocument();
 		});
 
-		// More tests to follow:
-		// - penalties only appear after extra time draw
-		// - determine winner correctly
-		// - winner message appears
+		it('shows winner message after extra time win', async () => {
+			render(<KnockoutStage qualifiedTeams={mockTeams.slice(0, 2)} />); // Brazil vs Germany
+
+			const score1 = screen.getByTestId('score-Brazil');
+			const score2 = screen.getByTestId('score-Germany');
+
+			// Regular time draw
+			await userEvent.clear(score1);
+			await userEvent.type(score1, '1');
+			await userEvent.clear(score2);
+			await userEvent.type(score2, '1');
+
+			const regularSubmit = await screen.findByTestId(
+				'submit-regular-Brazil'
+			);
+			await userEvent.click(regularSubmit);
+
+			// Fill extra time scores
+			const extra1 = await screen.findByTestId('extra-Brazil');
+			const extra2 = await screen.findByTestId('extra-Germany');
+
+			await userEvent.clear(extra1);
+			await userEvent.type(extra1, '2');
+			await userEvent.clear(extra2);
+			await userEvent.type(extra2, '1');
+
+			const extraSubmit = await screen.findByTestId(
+				'submit-extra-Brazil'
+			);
+			await userEvent.click(extraSubmit);
+
+			expect(
+				await screen.findByText('Brazil advances!')
+			).toBeInTheDocument();
+		});
+	});
+
+	it('shows penalty inputs only after an extra time draw', async () => {
+		render(<KnockoutStage qualifiedTeams={mockTeams.slice(0, 2)} />);
+
+		// Regular time: draw
+		await userEvent.clear(screen.getByTestId('score-Brazil'));
+		await userEvent.type(screen.getByTestId('score-Brazil'), '1');
+		await userEvent.clear(screen.getByTestId('score-Germany'));
+		await userEvent.type(screen.getByTestId('score-Germany'), '1');
+
+		const regularSubmit = await screen.findByTestId(
+			'submit-regular-Brazil'
+		);
+		await userEvent.click(regularSubmit);
+
+		// Extra time: draw
+		await userEvent.clear(screen.getByTestId('extra-Brazil'));
+		await userEvent.type(screen.getByTestId('extra-Brazil'), '2');
+		await userEvent.clear(screen.getByTestId('extra-Germany'));
+		await userEvent.type(screen.getByTestId('extra-Germany'), '2');
+
+		await screen.findByText('Extra Time'); // confirms draw was processed
+		const extraSubmit = await screen.findByTestId('submit-extra-Brazil');
+		await userEvent.click(extraSubmit);
+
+		// Penalty input appears
+		expect(await screen.findByText('Penalties')).toBeInTheDocument();
+		expect(screen.getByTestId('penalty-Brazil')).toBeInTheDocument();
+		expect(screen.getByTestId('penalty-Germany')).toBeInTheDocument();
+	});
+
+	it('shows winner message after penalty shootout win', async () => {
+		render(<KnockoutStage qualifiedTeams={mockTeams.slice(0, 2)} />); // Brazil vs Germany
+
+		// Regular time draw
+		await userEvent.clear(screen.getByTestId('score-Brazil'));
+		await userEvent.type(screen.getByTestId('score-Brazil'), '1');
+		await userEvent.clear(screen.getByTestId('score-Germany'));
+		await userEvent.type(screen.getByTestId('score-Germany'), '1');
+
+		const regularSubmit = await screen.findByTestId(
+			'submit-regular-Brazil'
+		);
+		await userEvent.click(regularSubmit);
+
+		// Extra time draw
+		const extra1 = await screen.findByTestId('extra-Brazil');
+		const extra2 = await screen.findByTestId('extra-Germany');
+
+		await userEvent.clear(extra1);
+		await userEvent.type(extra1, '2');
+		await userEvent.clear(extra2);
+		await userEvent.type(extra2, '2');
+
+		const extraSubmit = await screen.findByTestId('submit-extra-Brazil');
+		await userEvent.click(extraSubmit);
+
+		// Penalty shootout
+		const pen1 = await screen.findByTestId('penalty-Brazil');
+		const pen2 = await screen.findByTestId('penalty-Germany');
+
+		await userEvent.clear(pen1);
+		await userEvent.type(pen1, '4');
+		await userEvent.clear(pen2);
+		await userEvent.type(pen2, '3');
+
+		const penSubmit = await screen.findByTestId('submit-penalties-Brazil');
+		await userEvent.click(penSubmit);
+
+		expect(await screen.findByText('Brazil advances!')).toBeInTheDocument();
 	});
 });
 
