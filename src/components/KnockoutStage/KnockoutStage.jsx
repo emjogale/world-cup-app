@@ -12,6 +12,7 @@ import {
 	hasFinalWinner
 } from '../../utils/matchHelpers';
 import { devAutofillKnockoutRound } from '../../utils/devTools';
+import { getKnockoutRoundLabel } from '../../utils/roundLabels';
 
 const KnockoutStage = ({ qualifiedTeams }) => {
 	const [knockoutRounds, setKnockoutRounds] = useState([]);
@@ -147,7 +148,7 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 
 			{knockoutRounds.map((round, roundIndex) => (
 				<div key={roundIndex} className="knockout-round">
-					<h3>Round {roundIndex + 1}</h3>
+					<h3>{getKnockoutRoundLabel(round.length * 2)}</h3>
 
 					{round.map((match, matchIndex) => {
 						if (!match.team1 || !match.team2) return null;
