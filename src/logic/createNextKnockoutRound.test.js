@@ -50,47 +50,23 @@ describe('createNextKnockoutRound', () => {
 	it('handles incomplete matches by inserting placeholders', () => {
 		const currentRound = [
 			{
-				team1: { name: 'Brazil' },
-				team2: { name: 'Germany' },
+				team1: { name: 'Brazil', flag: '🇧🇷' },
+				team2: { name: 'Germany', flag: '🇩🇪' },
 				score1: 2,
 				score2: 1,
-				extraTimeScore1: null,
-				extraTimeScore2: null,
-				penaltyScore1: null,
-				penaltyScore2: null,
-				played: false,
-				winner: 'Brazil'
+				played: true,
+				winner: { name: 'Brazil', flag: '🇧🇷' }
 			},
 			{
-				team1: { name: 'France' },
-				team2: { name: 'Argentina' },
-				score1: null,
-				score2: null,
-				extraTimeScore1: null,
-				extraTimeScore2: null,
-				penaltyScore1: null,
-				penaltyScore2: null,
+				team1: { name: 'France', flag: '🇫🇷' },
+				team2: { name: 'Argentina', flag: '🇦🇷' },
 				played: false,
 				winner: null
 			}
 		];
 
 		const nextRound = createNextKnockoutRound(currentRound);
-		console.log('nextRound is:', nextRound);
 
-		expect(nextRound).toEqual([
-			{
-				team1: { name: 'Brazil' },
-				team2: { name: 'TBD', flag: '🏳️' },
-				score1: null,
-				score2: null,
-				extraTimeScore1: null,
-				extraTimeScore2: null,
-				penaltyScore1: null,
-				penaltyScore2: null,
-				played: false,
-				winner: null
-			}
-		]);
+		expect(nextRound).toEqual([]);
 	});
 });

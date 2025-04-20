@@ -11,8 +11,7 @@ export const getKnockoutRoundLabel = (numTeams) => {
 			return 'Semifinals';
 		case 2:
 			return 'Final';
-		case 1:
-			return 'Third Place Playoff'; // optional, if you're showing it separately
+
 		default:
 			return 'Knockout Round';
 	}

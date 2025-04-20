@@ -9,7 +9,8 @@ import {
 	isReadyToSubmitRegular,
 	isReadyToSubmitExtraTime,
 	isReadyToSubmitPenalties,
-	hasFinalWinner
+	hasFinalWinner,
+	getTournamentWinner
 } from '../../utils/matchHelpers';
 import { devAutofillKnockoutRound } from '../../utils/devTools';
 import { getKnockoutRoundLabel } from '../../utils/roundLabels';
@@ -138,6 +139,8 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 		});
 	};
 
+	const tournamentWinner = getTournamentWinner(knockoutRounds);
+
 	if (!qualifiedTeams || qualifiedTeams.length === 0) {
 		return <p>No knockout teams yet</p>;
 	}
@@ -148,8 +151,12 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 
 			{knockoutRounds.map((round, roundIndex) => (
 				<div key={roundIndex} className="knockout-round">
-					<h3>{getKnockoutRoundLabel(round.length * 2)}</h3>
-
+					<h3>
+						{round.length === 1 && tournamentWinner
+							? `🏆 Winner: ${tournamentWinner}`
+							: getKnockoutRoundLabel(round.length * 2)}
+					</h3>
+					{console.log('round is', round)}
 					{round.map((match, matchIndex) => {
 						if (!match.team1 || !match.team2) return null;
 
@@ -256,7 +263,10 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 								{hasFinalWinner(match) &&
 									match.winner?.name && (
 										<p className="knockout-result">
-											{match.winner.name} advances!
+											{roundIndex ===
+											knockoutRounds.length - 1
+												? `${match.winner.name} wins the World Cup! 🏆`
+												: `${match.winner.name} advances!`}
 										</p>
 									)}
 							</div>

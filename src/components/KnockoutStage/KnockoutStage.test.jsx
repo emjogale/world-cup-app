@@ -16,7 +16,7 @@ describe('KnockoutStage component', () => {
 
 		// scope to first round container only
 		const firstRound = screen
-			.getByText('Round 1')
+			.getByText('Semifinals')
 			.closest('.knockout-round');
 		const matchEls = within(firstRound).getAllByTestId(/match-.*-vs-.*/);
 		console.log(
@@ -40,7 +40,9 @@ describe('KnockoutStage component', () => {
 		const submit = screen.getByTestId('submit-regular-Brazil');
 		await userEvent.click(submit);
 
-		expect(screen.getByText('Brazil advances!')).toBeInTheDocument();
+		expect(
+			screen.getByText('Brazil wins the World Cup! 🏆')
+		).toBeInTheDocument();
 	});
 
 	it('generates next round with correct winners after all first round matches are submitted', async () => {
@@ -73,7 +75,8 @@ describe('KnockoutStage component', () => {
 		// ✅ Optionally check Round 2 heading exists (H3)
 		const round2Heading = screen
 			.getAllByRole('heading', { level: 3 })
-			.find((el) => el.textContent.includes('Round 2'));
+			.find((el) => el.textContent.includes('Final'));
+		console.log('round2Heading');
 		expect(round2Heading).toBeTruthy();
 
 		// ✅ Check the correct match is present
@@ -139,7 +142,7 @@ describe('KnockoutStage component', () => {
 			await userEvent.click(extraSubmit);
 
 			expect(
-				await screen.findByText('Brazil advances!')
+				await screen.findByText('Brazil wins the World Cup! 🏆')
 			).toBeInTheDocument();
 		});
 	});
@@ -212,7 +215,29 @@ describe('KnockoutStage component', () => {
 		const penSubmit = await screen.findByTestId('submit-penalties-Brazil');
 		await userEvent.click(penSubmit);
 
-		expect(await screen.findByText('Brazil advances!')).toBeInTheDocument();
+		expect(
+			await screen.findByText('Brazil wins the World Cup! 🏆')
+		).toBeInTheDocument();
+	});
+
+	it('shows the final winner message in the last round', async () => {
+		const mockTeams = [
+			{ name: 'Brazil', flag: '🇧🇷' },
+			{ name: 'Germany', flag: '🇩🇪' }
+		];
+
+		render(<KnockoutStage qualifiedTeams={mockTeams} />);
+
+		// Fill in a score to win the final
+		await userEvent.type(screen.getByTestId('score-Brazil'), '2');
+		await userEvent.type(screen.getByTestId('score-Germany'), '1');
+
+		const submit = await screen.findByTestId('submit-regular-Brazil');
+		await userEvent.click(submit);
+
+		expect(
+			screen.getByText(/brazil wins the world cup/i)
+		).toBeInTheDocument();
 	});
 });
 
@@ -240,6 +265,8 @@ describe('KnockoutStage sanity test', () => {
 		await userEvent.click(submitButton);
 
 		// Confirm winner message appears
-		expect(await screen.findByText('Brazil advances!')).toBeInTheDocument();
+		expect(
+			await screen.findByText('Brazil wins the World Cup! 🏆')
+		).toBeInTheDocument();
 	});
 });

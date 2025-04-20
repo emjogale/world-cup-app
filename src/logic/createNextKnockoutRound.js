@@ -1,4 +1,12 @@
 export const createNextKnockoutRound = (matches) => {
+	const winners = matches
+		.filter((match) => match.winner)
+		.map((match) => match.winner);
+
+	// ✅ If only one team advanced, the tournament is over
+	if (winners.length <= 1) {
+		return []; // No next round
+	}
 	const nextRound = [];
 
 	for (let i = 0; i < matches.length; i += 2) {

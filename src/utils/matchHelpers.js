@@ -103,3 +103,14 @@ export const isReadyToSubmitPenalties = (match) => {
 export const hasFinalWinner = (match) => {
 	return match.played === true && typeof match.winner?.name === 'string';
 };
+
+export const getTournamentWinner = (knockoutRounds) => {
+	if (!Array.isArray(knockoutRounds) || knockoutRounds.length === 0)
+		return null;
+
+	const lastRound = knockoutRounds[knockoutRounds.length - 1];
+	if (lastRound.length === 1 && lastRound[0].played && lastRound[0].winner) {
+		return lastRound[0].winner.name;
+	}
+	return null;
+};
