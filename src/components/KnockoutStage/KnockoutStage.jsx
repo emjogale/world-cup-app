@@ -274,6 +274,12 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 					})}
 				</div>
 			))}
+			{tournamentWinner && (
+				<p className="champion-banner">
+					🏆 Champion: <strong>{tournamentWinner}</strong>
+				</p>
+			)}
+
 			<button onClick={handleDevAutofill} className="dev-button">
 				Dev Complete Knockout Round
 			</button>

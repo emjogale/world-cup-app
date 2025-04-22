@@ -52,42 +52,42 @@ describe('App component', () => {
 		});
 	});
 
-	// TODO: this test still fails as the seed button still fails to be recognised...
 	it.skip('shows seed if available and lets you copy it', async () => {
-		// 🧪 Put mock seed into localStorage
+		// TODO: Debug DOM visibility issues preventing seed detection
 		localStorage.setItem('tdd-seed', 'mock-seed-abc');
-
-		// 🧪 Provide a fake clipboard implementation
+		const allText = document.body.textContent;
+		console.log('🔎 TEXT CONTENT:', allText);
 		Object.assign(navigator, {
 			clipboard: {
 				writeText: vi.fn()
 			}
 		});
 
-		mockFetchTeams();
+		mockFetchTeams(); // ensure data loads
 
 		render(<App />);
 
-		// 🧪 Advance past qualifiers
 		const startBtn = await screen.findByRole('button', {
 			name: /start tournament/i
 		});
 		await userEvent.click(startBtn);
 
-		// ✅ Wait for something that proves app has advanced
+		// Wait for Group A to confirm we're past qualifiers
 		await screen.findByText(/group a/i);
 
-		// ✅ Now check for seed line
-		const seedEl = await screen.findByText((_, el) => {
-			const content = el?.textContent || '';
-			console.log('🔎 Checking element text:', content);
-			return content.toLowerCase().includes('using seed');
-		});
-		expect(seedEl).toBeInTheDocument();
+		// DEBUG: dump what’s in the DOM
+		screen.debug();
 
-		// ✅ Copy button
+		// Look for the seed line
+		const seedLine = await screen.findByText(
+			(_, el) => el?.textContent?.includes('Using seed:'),
+			{ exact: false }
+		);
+		expect(seedLine).toBeInTheDocument();
+
 		const copyButton = screen.getByRole('button', { name: /copy/i });
 		await userEvent.click(copyButton);
+
 		expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
 			'mock-seed-abc'
 		);
