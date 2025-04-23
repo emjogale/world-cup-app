@@ -16,7 +16,8 @@ export default defineConfig({
 				'node_modules/',
 				'src/assets/',
 				'**/*.test.{js,jsx}',
-				'src/test-utils/**'
+				'src/test-utils/**',
+				'src/main.jsx'
 			]
 		},
 		logHeapUsage: false,
