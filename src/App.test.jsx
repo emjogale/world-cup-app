@@ -51,7 +51,7 @@ describe('App component', () => {
 			expect(screen.getByText(/Group A/i)).toBeInTheDocument();
 		});
 	});
-
+	// ❌ Skipping this test for now — DOM doesn't reliably expose seed line in test env
 	it.skip('shows seed if available and lets you copy it', async () => {
 		// TODO: Debug DOM visibility issues preventing seed detection
 		localStorage.setItem('tdd-seed', 'mock-seed-abc');

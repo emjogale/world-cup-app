@@ -8,7 +8,9 @@ import './index.css';
 const App = () => {
 	const [stage, setStage] = useState('qualifiers');
 	const [teams, setTeams] = useState([]);
-	const [seed, setSeed] = useState('');
+	const [seed, setSeed] = useState(
+		() => localStorage.getItem('tdd-seed') || ''
+	);
 	const [shuffledTeams, setShuffledTeams] = useState([]);
 	const [winners, setWinners] = useState([]);
 	const [loading, setLoading] = useState(true);
@@ -50,7 +52,10 @@ const App = () => {
 					>
 						Using seed: <strong>{seed}</strong>
 						<button
-							onClick={() => navigator.clipboard.writeText(seed)}
+							onClick={() => {
+								console.log('clicking the test seed copy');
+								navigator.clipboard.writeText(seed);
+							}}
 							className="seed-copy"
 						>
 							Copy Seed
