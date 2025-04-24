@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Match from '../Match/Match';
-import { createRoundMatches } from '../../logic/createMatches';
 import './KnockoutStage.css';
 import { createNextKnockoutRound } from '../../logic/createNextKnockoutRound';
 import {
@@ -14,13 +13,14 @@ import {
 } from '../../utils/matchHelpers';
 import { devAutofillKnockoutRound } from '../../utils/devTools';
 import { getKnockoutRoundLabel } from '../../utils/roundLabels';
+import { createFirstKnockoutRound } from '../../logic/createFirstKnockoutRound';
 
 const KnockoutStage = ({ qualifiedTeams }) => {
 	const [knockoutRounds, setKnockoutRounds] = useState([]);
 
 	useEffect(() => {
 		if (qualifiedTeams.length > 0) {
-			const firstRound = createRoundMatches(qualifiedTeams);
+			const firstRound = createFirstKnockoutRound(qualifiedTeams);
 			setKnockoutRounds([firstRound]); // store full first round in an array
 		}
 	}, [qualifiedTeams]);
