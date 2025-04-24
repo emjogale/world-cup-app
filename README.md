@@ -1,4 +1,4 @@
-# 🧭 Tournament App Overview
+# 🧭 World Cup App Overview
 
 ## 🎮 1. UI Flow
 
@@ -21,7 +21,7 @@
 ├── <Qualifiers />        // shows all teams with flags
 ├── <GroupStage />        // shows grouped teams in tables
 │   └── <GroupTable />    // optional: renders each group
-├── <Tournament />        // knockout stage matches
+├── <KnockoutStage />        // knockout stage matches
 │   └── <Match />         // 1 vs 1 match with score input
 ```
 
@@ -43,10 +43,11 @@
    • User enters results
    • Call getWinners() for each group
 
-5. TOURNAMENT (KNOCKOUTS)
-   • createRoundMatches(winners)
-   • User enters results
-   • Repeat until 1 team left
+5. KNOCKOUT STAGE
+   - createFirstKnockoutRound(winners, second place and best thirds from Group Stage)
+   - createRoundMatches
+   - User enters results
+   - Repeat until 1 team left
 ```
 
 ---
