@@ -59,7 +59,7 @@
 ```js
 {
   name: 'Brazil',
-  flag: 'https://flagcdn.com/w320/br.png'
+  flag: 'https://flagpedia.net/data/flags/w320/br.png'
 }
 ```
 
@@ -67,10 +67,19 @@
 
 ```js
 {
-  team1: 'Brazil',
-  team2: 'Germany',
-  score1: 2,
-  score2: 1
+	team1,
+	team2,
+	score1,
+	score2,
+	extraTimeScore1,
+	extraTimeScore2,
+	penaltyScore1,
+	penaltyScore2,
+	regularTimePlayed,
+	extraTimePlayed,
+	showExtraTime,
+	showPenalties,
+	onScoreChange
 }
 ```
 
@@ -89,5 +98,5 @@
 
 -   Qualifiers: fetch test, display test, error fallback test
 -   GroupStage: test group logic, test match rendering
--   Tournament: test match results, advancing rounds
+-   KnockoutStage: test match results, advancing rounds
 -   Utility Functions: pure unit tests for shuffle, group, match creation
