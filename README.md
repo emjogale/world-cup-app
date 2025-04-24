@@ -20,7 +20,6 @@
 <App>
 ├── <Qualifiers />        // shows all teams with flags
 ├── <GroupStage />        // shows grouped teams in tables
-│   └── <GroupTable />    // optional: renders each group
 ├── <KnockoutStage />        // knockout stage matches
 │   └── <Match />         // 1 vs 1 match with score input
 ```
@@ -44,10 +43,11 @@
    • Call getWinners() for each group
 
 5. KNOCKOUT STAGE
-   - createFirstKnockoutRound(winners, second place and best thirds from Group Stage)
-   - createRoundMatches
-   - User enters results
+   - createFirstKnockoutRound() avoids same-group rematches in R16
+   - createRoundMatches() used for later rounds
+   - User enters results (regular, extra time, penalties)
    - Repeat until 1 team left
+   - Display Champion 🎉
 ```
 
 ---
@@ -68,18 +68,18 @@
 ```js
 {
 	team1,
-	team2,
-	score1,
-	score2,
-	extraTimeScore1,
-	extraTimeScore2,
-	penaltyScore1,
-	penaltyScore2,
-	regularTimePlayed,
-	extraTimePlayed,
-	showExtraTime,
-	showPenalties,
-	onScoreChange
+		team2,
+		score1,
+		score2,
+		extraTimeScore1,
+		extraTimeScore2,
+		penaltyScore1,
+		penaltyScore2,
+		regularTimePlayed,
+		extraTimePlayed,
+		showExtraTime,
+		showPenalties,
+		onScoreChange;
 }
 ```
 
@@ -98,5 +98,5 @@
 
 -   Qualifiers: fetch test, display test, error fallback test
 -   GroupStage: test group logic, test match rendering
--   KnockoutStage: test match results, advancing rounds
+-   KnockoutStage: test match results, advancing rounds, penalties and extra time
 -   Utility Functions: pure unit tests for shuffle, group, match creation
