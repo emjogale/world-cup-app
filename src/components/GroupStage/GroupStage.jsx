@@ -163,37 +163,50 @@ const GroupStage = ({ teams }) => {
 												b.gd - a.gd ||
 												b.for - a.for
 										)
-										.map((team, index) => (
-											<tr
-												key={team.name}
-												className={
-													index < 2
-														? 'group__top-team'
-														: ''
-												}
-												data-testid={`row-${team.name}`}
-											>
-												<td className="team-cell">
-													<div className="team-info">
-														<img
-															src={team.flag}
-															alt={team.name}
-															width="24"
-															height="16"
-														/>
-														<span>{team.name}</span>
-													</div>
-												</td>
-												<td>{team.played}</td>
-												<td>{team.won}</td>
-												<td>{team.drawn}</td>
-												<td>{team.lost}</td>
-												<td>{team.for}</td>
-												<td>{team.against}</td>
-												<td>{team.gd}</td>
-												<td>{team.points}</td>
-											</tr>
-										))}
+										.map((team, index) => {
+											const isTopTwo = index < 2;
+											const isQualifiedThird =
+												index === 2 &&
+												qualifiedTeams.some(
+													(qt) =>
+														qt.name === team.name
+												);
+
+											return (
+												<tr
+													key={team.name}
+													className={
+														isTopTwo ||
+														isQualifiedThird
+															? 'group__top-team'
+															: ''
+													}
+													data-testid={`row-${team.name}`}
+												>
+													<td className="team-cell">
+														<div className="team-info">
+															<img
+																src={team.flag}
+																alt={team.name}
+																width="24"
+																height="16"
+															/>
+															<span>
+																{team.name}
+															</span>
+														</div>
+													</td>
+													<td>{team.played}</td>
+													<td>{team.won}</td>
+													<td>{team.drawn}</td>
+													<td>{team.lost}</td>
+													<td>{team.for}</td>
+													<td>{team.against}</td>
+													<td>{team.gd}</td>
+													<td>{team.points}</td>
+												</tr>
+											);
+										})}
 								</tbody>
 							</table>
 						</div>
