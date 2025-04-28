@@ -9,7 +9,8 @@ import {
 	isReadyToSubmitExtraTime,
 	isReadyToSubmitPenalties,
 	hasFinalWinner,
-	getTournamentWinner
+	getTournamentWinner,
+	getKnockoutResultMessage
 } from '../../utils/matchHelpers';
 import { devAutofillKnockoutRound } from '../../utils/devTools';
 import { getKnockoutRoundLabel } from '../../utils/roundLabels';
@@ -156,8 +157,13 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 							? `🏆 Winner: ${tournamentWinner}`
 							: getKnockoutRoundLabel(round.length * 2)}
 					</h3>
-					{console.log('round is', round)}
+
 					{round.map((match, matchIndex) => {
+						console.log('🧩', {
+							roundIndex,
+							match,
+							knockoutRoundsLength: knockoutRounds.length
+						});
 						if (!match.team1 || !match.team2) return null;
 
 						const showExtraTime =
@@ -260,15 +266,17 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 									matchHasClearWinner:
 										matchHasClearWinner(match)
 								})}
-								{hasFinalWinner(match) &&
-									match.winner?.name && (
-										<p className="knockout-result">
-											{roundIndex ===
-											knockoutRounds.length - 1
-												? `${match.winner.name} wins the World Cup! 🏆`
-												: `${match.winner.name} advances!`}
-										</p>
-									)}
+
+								{hasFinalWinner(match) && (
+									<p className="knockout-result">
+										{getKnockoutResultMessage(
+											match,
+											round,
+											roundIndex,
+											knockoutRounds
+										)}
+									</p>
+								)}
 							</div>
 						);
 					})}

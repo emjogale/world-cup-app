@@ -1,5 +1,9 @@
 import { describe, it, expect } from 'vitest';
-import { matchHasClearWinner, determineWinner } from './matchHelpers';
+import {
+	matchHasClearWinner,
+	determineWinner,
+	isFinalMatch
+} from './matchHelpers';
 
 const mockTeam = (name) => ({ name, flag: '🏳️' });
 
@@ -65,6 +69,31 @@ describe('matchHelpers', () => {
 				team2: t2
 			};
 			expect(determineWinner(match)).toEqual(t2);
+		});
+	});
+
+	describe('isFinalMatch', () => {
+		it('returns true for a 1-match final round', () => {
+			const knockoutRounds = [
+				[{ team1: {}, team2: {} }],
+				[{ team1: {}, team2: {} }]
+			];
+			const round = [{ team1: {}, team2: {} }];
+			expect(isFinalMatch(round, 1, knockoutRounds)).toBe(true);
+		});
+
+		it('returns false for earlier rounds', () => {
+			const knockoutRounds = [
+				[
+					{ team1: {}, team2: {} },
+					{ team1: {}, team2: {} }
+				]
+			];
+			const round = [
+				{ team1: {}, team2: {} },
+				{ team1: {}, team2: {} }
+			];
+			expect(isFinalMatch(round, 0, knockoutRounds)).toBe(false);
 		});
 	});
 });

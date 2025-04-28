@@ -1,30 +1,34 @@
 export const createNextKnockoutRound = (matches) => {
 	const winners = matches
-		.filter((match) => match.winner)
+		.filter((match) => match.played && match.winner)
 		.map((match) => match.winner);
 
-	// ✅ If only one team advanced, the tournament is over
 	if (winners.length <= 1) {
-		return []; // No next round
+		return []; // Tournament over
 	}
+
+	if (winners.length % 2 !== 0) {
+		return []; // Cannot create fair next round yet
+	}
+
 	const nextRound = [];
 
-	for (let i = 0; i < matches.length; i += 2) {
-		const match1 = matches[i];
-		const match2 = matches[i + 1];
-
-		const winner1 = getWinner(match1);
-		const winner2 = match2 ? getWinner(match2) : null;
+	for (let i = 0; i < winners.length; i += 2) {
+		const team1 = winners[i];
+		const team2 = winners[i + 1];
 
 		nextRound.push({
-			team1: winner1,
-			team2: winner2,
+			team1,
+			team2,
 			score1: null,
 			score2: null,
 			extraTimeScore1: null,
 			extraTimeScore2: null,
 			penaltyScore1: null,
 			penaltyScore2: null,
+			regularTimePlayed: false,
+			extraTimePlayed: false,
+			penaltiesPlayed: false,
 			played: false,
 			winner: null
 		});
@@ -32,14 +36,3 @@ export const createNextKnockoutRound = (matches) => {
 
 	return nextRound;
 };
-
-// helper
-function getWinner(match) {
-	const { team1, team2, score1, score2 } = match;
-
-	if (score1 === null || score2 === null) {
-		return { name: 'TBD', flag: '🏳️' };
-	}
-
-	return score1 > score2 ? team1 : team2;
-}
