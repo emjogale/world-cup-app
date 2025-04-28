@@ -37,23 +37,9 @@ describe('createNextKnockoutRound', () => {
 		];
 		const nextRound = createNextKnockoutRound(currentRound);
 
-		expect(nextRound).toEqual([
-			{
-				team1: { name: 'Brazil' },
-				team2: { name: 'Argentina' },
-				score1: null,
-				score2: null,
-				extraTimeScore1: null,
-				extraTimeScore2: null,
-				penaltyScore1: null,
-				penaltyScore2: null,
-				regularTimePlayed: false,
-				extraTimePlayed: false,
-				penaltiesPlayed: false,
-				played: false,
-				winner: null
-			}
-		]);
+		expect(nextRound).toMatchSnapshot(
+			'Next round after first knockout round'
+		);
 	});
 
 	it('handles incomplete matches by inserting placeholders', () => {

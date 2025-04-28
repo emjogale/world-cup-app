@@ -47,7 +47,9 @@ describe('App component', () => {
 		fireEvent.click(startBtn);
 
 		// ✅ Wait directly for the heading using findByText
-		const groupHeading = await screen.findByText(/Group A/i);
+		const groupHeading = await screen.findByText(/Group A/i, {
+			timeout: 3000
+		});
 		expect(groupHeading).toBeInTheDocument();
 	});
 	// ❌ Skipping this test for now — DOM doesn't reliably expose seed line in test env

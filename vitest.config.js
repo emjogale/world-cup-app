@@ -8,6 +8,11 @@ export default defineConfig({
 		environment: 'jsdom',
 		setupFiles: ['tests/setup.js'],
 		include: ['src/**/*.test.{js,jsx}'],
+		passWithNoTests: false,
+		snapshotFormat: {
+			printBasicPrototype: false
+		},
+		update: false,
 		coverage: {
 			reporter: ['text', 'html'],
 			all: true,
