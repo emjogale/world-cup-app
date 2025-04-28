@@ -49,16 +49,6 @@ export const isReadyToSubmitExtraTime = (match) => {
 		typeof extraTimeScore1 === 'number' &&
 		typeof extraTimeScore2 === 'number';
 
-	console.log('📍 Checking ExtraTime:', {
-		score1,
-		score2,
-		extraTimeScore1,
-		extraTimeScore2,
-		regDraw,
-		extraSet,
-		ready: regDraw && extraSet && !extraTimePlayed
-	});
-
 	return regDraw && extraSet && !extraTimePlayed;
 };
 
@@ -75,14 +65,6 @@ export const isReadyToSubmitPenalties = (match) => {
 		typeof penaltyScore1 === 'number' &&
 		typeof penaltyScore2 === 'number' &&
 		penaltyScore1 !== penaltyScore2;
-	console.log('📍 Checking Penalties:', {
-		extraTimeScore1,
-		extraTimeScore2,
-		penaltyScore1,
-		penaltyScore2,
-		extraDraw,
-		penaltiesValid
-	});
 
 	return extraDraw && penaltiesValid;
 };

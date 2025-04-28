@@ -93,8 +93,6 @@ const GroupStage = ({ teams }) => {
 						score2: parseInt(scores[team2.name], 10)
 					}));
 
-					console.log('➡️ Submitting results:', results);
-
 					const newStats = upDateGroupStats(
 						groupStats[groupName],
 						results

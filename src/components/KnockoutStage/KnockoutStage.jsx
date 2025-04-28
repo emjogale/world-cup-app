@@ -14,6 +14,27 @@ import { devAutofillKnockoutRound } from '../../utils/devTools';
 import { getKnockoutRoundLabel } from '../../utils/roundLabels';
 import { createFirstKnockoutRound } from '../../logic/createFirstKnockoutRound';
 
+const isFinalMatch = (round, roundIndex, knockoutRounds) => {
+	return (
+		Array.isArray(round) &&
+		round.length === 1 &&
+		roundIndex === knockoutRounds.length - 1
+	);
+};
+
+const getRoundTitle = (round, roundIndex, knockoutRounds, tournamentWinner) => {
+	if (
+		Array.isArray(round) &&
+		round.length === 1 &&
+		roundIndex === knockoutRounds.length - 1 &&
+		tournamentWinner
+	) {
+		return `🏆 Winner: ${tournamentWinner}`;
+	}
+
+	return getKnockoutRoundLabel(round.length * 2);
+};
+
 const KnockoutStage = ({ qualifiedTeams }) => {
 	const [knockoutRounds, setKnockoutRounds] = useState([]);
 
@@ -151,17 +172,15 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 			{knockoutRounds.map((round, roundIndex) => (
 				<div key={roundIndex} className="knockout-round">
 					<h3>
-						{round.length === 1 && tournamentWinner
-							? `🏆 Winner: ${tournamentWinner}`
-							: getKnockoutRoundLabel(round.length * 2)}
+						{getRoundTitle(
+							round,
+							roundIndex,
+							knockoutRounds,
+							tournamentWinner
+						)}
 					</h3>
 
 					{round.map((match, matchIndex) => {
-						console.log('🧩', {
-							roundIndex,
-							match,
-							knockoutRoundsLength: knockoutRounds.length
-						});
 						if (!match.team1 || !match.team2) return null;
 
 						const showExtraTime =
@@ -228,9 +247,6 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 									isReadyToSubmitExtraTime(match) && (
 										<button
 											onClick={() => {
-												console.log(
-													'🎯 Submitting extra time'
-												);
 												handleSubmitMatch(
 													roundIndex,
 													matchIndex,
@@ -261,8 +277,11 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 
 								{hasFinalWinner(match) && (
 									<p className="knockout-result">
-										{round.length === 1 &&
-										roundIndex === knockoutRounds.length - 1
+										{isFinalMatch(
+											round,
+											roundIndex,
+											knockoutRounds
+										)
 											? `${match.winner.name} wins the World Cup! 🏆`
 											: `${match.winner.name} advances!`}
 									</p>

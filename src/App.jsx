@@ -53,7 +53,6 @@ const App = () => {
 						Using seed: <strong>{seed}</strong>
 						<button
 							onClick={() => {
-								console.log('clicking the test seed copy');
 								navigator.clipboard.writeText(seed);
 							}}
 							className="seed-copy"
