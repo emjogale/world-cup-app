@@ -13,8 +13,11 @@ describe('createNextKnockoutRound', () => {
 				extraTimeScore2: null,
 				penaltyScore1: null,
 				penaltyScore2: null,
+				regularTimePlayed: false,
+				extraTimePlayed: false,
+				penaltiesPlayed: false,
 				played: true,
-				winner: 'Brazil'
+				winner: { name: 'Brazil' }
 			},
 			{
 				team1: { name: 'France' },
@@ -25,8 +28,11 @@ describe('createNextKnockoutRound', () => {
 				extraTimeScore2: null,
 				penaltyScore1: null,
 				penaltyScore2: null,
+				regularTimePlayed: false,
+				extraTimePlayed: false,
+				penaltiesPlayed: false,
 				played: true,
-				winner: 'Argentina'
+				winner: { name: 'Argentina' }
 			}
 		];
 		const nextRound = createNextKnockoutRound(currentRound);
@@ -41,6 +47,9 @@ describe('createNextKnockoutRound', () => {
 				extraTimeScore2: null,
 				penaltyScore1: null,
 				penaltyScore2: null,
+				regularTimePlayed: false,
+				extraTimePlayed: false,
+				penaltiesPlayed: false,
 				played: false,
 				winner: null
 			}
