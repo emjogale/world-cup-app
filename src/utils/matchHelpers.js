@@ -1,16 +1,3 @@
-export const matchHasClearWinner = (match) => {
-	if (match.score1 == null || match.score2 == null) return false;
-	if (match.score1 !== match.score2) return true;
-	if (
-		match.penaltyScore1 != null &&
-		match.penaltyScore2 != null &&
-		match.penaltyScore1 !== match.penaltyScore2
-	) {
-		return true;
-	}
-	return false;
-};
-
 export function determineWinner(match) {
 	const {
 		score1,

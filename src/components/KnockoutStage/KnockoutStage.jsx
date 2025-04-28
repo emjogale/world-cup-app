@@ -4,13 +4,11 @@ import './KnockoutStage.css';
 import { createNextKnockoutRound } from '../../logic/createNextKnockoutRound';
 import {
 	determineWinner,
-	matchHasClearWinner,
 	isReadyToSubmitRegular,
 	isReadyToSubmitExtraTime,
 	isReadyToSubmitPenalties,
 	hasFinalWinner,
-	getTournamentWinner,
-	getKnockoutResultMessage
+	getTournamentWinner
 } from '../../utils/matchHelpers';
 import { devAutofillKnockoutRound } from '../../utils/devTools';
 import { getKnockoutRoundLabel } from '../../utils/roundLabels';
@@ -260,21 +258,13 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 											Submit Penalties
 										</button>
 									)}
-								{console.log('🏁 Winner check:', {
-									name: match.winner?.name,
-									played: match.played,
-									matchHasClearWinner:
-										matchHasClearWinner(match)
-								})}
 
 								{hasFinalWinner(match) && (
 									<p className="knockout-result">
-										{getKnockoutResultMessage(
-											match,
-											round,
-											roundIndex,
-											knockoutRounds
-										)}
+										{round.length === 1 &&
+										roundIndex === knockoutRounds.length - 1
+											? `${match.winner.name} wins the World Cup! 🏆`
+											: `${match.winner.name} advances!`}
 									</p>
 								)}
 							</div>
