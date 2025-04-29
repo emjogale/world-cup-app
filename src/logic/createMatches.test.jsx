@@ -84,4 +84,20 @@ describe('createGroupMatches', () => {
 			])
 		);
 	});
+
+	it('ensures no team plays against itself', () => {
+		const mockGroup = ['Brazil', 'Germany', 'France'];
+		const matches = createGroupMatches(mockGroup.map((name) => ({ name })));
+
+		matches.forEach((match) => {
+			expect(match.team1.name).not.toBe(match.team2.name);
+		});
+	});
+
+	it('creates the correct number of matches for a group of 6 teams', () => {
+		const mockGroup = ['A', 'B', 'C', 'D', 'E', 'F'];
+		const matches = createGroupMatches(mockGroup.map((name) => ({ name })));
+
+		expect(matches).toHaveLength(15); // (6 * 5) / 2 = 15 matches
+	});
 });
