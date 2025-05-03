@@ -3,7 +3,9 @@ import { shuffleTeams } from './logic/shuffleTeams';
 import Qualifiers from './components/Qualifiers/Qualifiers';
 import GroupStage from './components/GroupStage/GroupStage';
 import KnockoutStage from './components/KnockoutStage/KnockoutStage';
+import { generateMockTeams } from './utils/teamFactories';
 import './index.css';
+import RegionalQualifiers from './components/RegionalQualifiers/RegionalQualifiers';
 
 const App = () => {
 	const [stage, setStage] = useState('qualifiers');
@@ -15,6 +17,8 @@ const App = () => {
 	const [winners, setWinners] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
+
+	const mockAsiaTeams = generateMockTeams(42, 'Asia');
 
 	useEffect(() => {
 		fetch('/teams.json')
@@ -39,7 +43,7 @@ const App = () => {
 
 			{loading && <p>Loading teams...</p>}
 			{error && <p style={{ color: 'red' }}>{error}</p>}
-
+			<RegionalQualifiers region="Asia" teams={mockAsiaTeams} spots={8} />
 			{stage !== 'qualifiers' && seed && (
 				<>
 					{console.log('Seed is:', seed)}
@@ -62,6 +66,7 @@ const App = () => {
 					</p>
 				</>
 			)}
+
 			{stage === 'qualifiers' && (
 				<>
 					<Qualifiers />

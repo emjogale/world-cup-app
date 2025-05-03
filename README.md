@@ -94,7 +94,7 @@
 
 ---
 
-## ✅ TDD Strategy Per Stage
+## ✅ Testing Strategy Per Stage
 
 -   Qualifiers: fetch test, display test, error fallback test
 -   GroupStage: test group logic, test match rendering

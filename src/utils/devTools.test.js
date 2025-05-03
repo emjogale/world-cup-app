@@ -59,5 +59,7 @@ describe('autoCompleteGroupStage', () => {
 		expect(updatedMatches.GroupA[0].played).toBe(true);
 		expect(updatedStats.GroupA.Brazil.won).toBe(1);
 		expect(updatedStats.GroupA.Germany.lost).toBe(1);
+		expect(updatedStats.GroupA.Brazil.points).toBe(3);
+		expect(updatedStats.GroupA.Brazil.gd).toBe(1); // 1 - 0
 	});
 });
