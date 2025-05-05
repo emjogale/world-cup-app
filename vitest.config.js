@@ -12,6 +12,9 @@ export default defineConfig({
 		snapshotFormat: {
 			printBasicPrototype: false
 		},
+		snapshotOptions: {
+			dir: '__snapshots__' // default
+		},
 		update: false,
 		coverage: {
 			reporter: ['text', 'html'],
