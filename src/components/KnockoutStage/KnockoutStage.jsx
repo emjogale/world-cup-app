@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Match from '../Match/Match';
 import './KnockoutStage.css';
-import { createNextKnockoutRound } from '../../logic/createNextKnockoutRound';
+import { createFirstKnockoutRound } from '../../tournament/matches/createFirstKnockoutRound';
+import { createNextKnockoutRound } from '../../tournament/matches/createNextKnockoutRound';
 import {
 	determineWinner,
 	isReadyToSubmitRegular,
@@ -12,7 +13,6 @@ import {
 } from '../../utils/matchHelpers';
 import { devAutofillKnockoutRound } from '../../utils/devTools';
 import { getKnockoutRoundLabel } from '../../utils/roundLabels';
-import { createFirstKnockoutRound } from '../../logic/createFirstKnockoutRound';
 
 const isFinalMatch = (round, roundIndex, knockoutRounds) => {
 	return (

@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import GroupStage from './GroupStage';
-import { groupTeams } from '../../logic/groupTeams';
-import { upDateGroupStats } from '../../logic/updateGroupStats';
+import { groupTeams } from '../../tournament/grouping/groupTeams';
+import { upDateGroupStats } from '../../tournament/grouping/updateGroupStats';
 
 const mockTeams = [
 	{ name: 'Argentina', flag: '🇦🇷' },

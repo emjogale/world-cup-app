@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { selectQualifiedTeams } from './selectQualifiedTeams';
+import { selectQualifiedTeams } from '../selectQualifiedTeams';
 
 // Mock data for testing including fake flags
 const buildTeam = (name, stats = {}) => ({

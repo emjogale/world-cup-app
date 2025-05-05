@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`createNextKnockoutRound > generates next round with correct winners only > Next round after first knockout round 1`] = `
+[
+  {
+    "extraTimePlayed": false,
+    "extraTimeScore1": null,
+    "extraTimeScore2": null,
+    "penaltiesPlayed": false,
+    "penaltyScore1": null,
+    "penaltyScore2": null,
+    "played": false,
+    "regularTimePlayed": false,
+    "score1": null,
+    "score2": null,
+    "team1": {
+      "name": "Brazil",
+    },
+    "team2": {
+      "name": "Argentina",
+    },
+    "winner": null,
+  },
+]
+`;

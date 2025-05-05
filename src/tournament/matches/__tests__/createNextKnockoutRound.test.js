@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createNextKnockoutRound } from './createNextKnockoutRound';
+import { createNextKnockoutRound } from '../createNextKnockoutRound';
 
 describe('createNextKnockoutRound', () => {
 	it('generates next round with correct winners only', () => {

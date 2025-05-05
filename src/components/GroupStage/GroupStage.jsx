@@ -1,16 +1,17 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react';
-import './GroupStage.css';
-import { createGroupMatches } from '../../logic/createMatches';
+import { createGroupMatches } from '../../tournament/matches/createMatches';
+
 import Match from '../Match/Match';
 import {
 	upDateGroupStats,
 	buildInitialGroupStats
-} from '../../logic/updateGroupStats';
-import { getNextMatches } from '../../logic/createMatches';
+} from '../../tournament/grouping/updateGroupStats';
+
+import { getNextMatches } from '../../tournament/matches/createMatches';
 import { autoCompleteGroupStage } from '../../utils/devTools';
 import KnockoutStage from '../KnockoutStage/KnockoutStage';
-import { selectQualifiedTeams } from '../../logic/selectQualifiedTeams';
-import { shuffleAndGroup } from '../../logic/shuffleAndGroup';
+import { selectQualifiedTeams } from '../../tournament/matches/selectQualifiedTeams';
+import { shuffleAndGroup } from '../../tournament/grouping/shuffleAndGroup';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -52,7 +53,7 @@ const GroupStage = ({ teams }) => {
 	);
 
 	return (
-		<div className="group-stage">
+		<div className="group-stage" data-testid="group-stage">
 			{Object.entries(groupedTeams).map(([groupName]) => {
 				const allMatches = groupMatches[groupName];
 				const matchesToShow = getNextMatches(

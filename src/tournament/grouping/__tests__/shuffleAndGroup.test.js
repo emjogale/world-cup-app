@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { shuffleAndGroup } from './shuffleAndGroup';
+import { shuffleAndGroup } from '../shuffleAndGroup';
 
 const mockTeams = [
 	{ name: 'Argentina', flag: '🇦🇷' },

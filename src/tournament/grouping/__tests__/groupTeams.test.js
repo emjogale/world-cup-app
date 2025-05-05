@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 
-import { groupTeams } from './groupTeams';
+import { groupTeams } from '../groupTeams';
 
 describe('groupTeams', () => {
 	const mockTeams = Array.from({ length: 8 }, (_, i) => ({

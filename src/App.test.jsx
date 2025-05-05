@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import App from '../src/App';
 import { mockFetchTeams } from './test-utils/mockFetchTeams';
@@ -47,9 +47,8 @@ describe('App component', () => {
 		fireEvent.click(startBtn);
 
 		// ✅ Wait directly for the heading using findByText
-		const groupHeading = await screen.findByText(/Group A/i, {
-			timeout: 3000
-		});
+		const container = await screen.findByTestId('group-stage');
+		const groupHeading = within(container).getByText(/Group A/i);
 		expect(groupHeading).toBeInTheDocument();
 	});
 	// ❌ Skipping this test for now — DOM doesn't reliably expose seed line in test env

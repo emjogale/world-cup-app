@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createGroupMatches } from '../../logic/createMatches';
+import { createGroupMatches } from '../../tournament/matches/createMatches';
 import { autoCompleteGroupStage } from '../../utils/devTools';
 
 const RegionalQualifiers = ({ region, teams, spots }) => {

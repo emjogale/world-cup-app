@@ -1,4 +1,4 @@
-import { shuffleTeams } from './shuffleTeams';
+import { shuffleTeams } from '../shuffleTeams';
 import { groupTeams } from './groupTeams';
 
 export const shuffleAndGroup = (teams, seed = null) => {

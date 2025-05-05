@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { shuffleTeams } from './logic/shuffleTeams';
+import { shuffleTeams } from './tournament/shuffleTeams';
 import Qualifiers from './components/Qualifiers/Qualifiers';
 import GroupStage from './components/GroupStage/GroupStage';
 import KnockoutStage from './components/KnockoutStage/KnockoutStage';
