@@ -1,3 +1,4 @@
+// Returns a new object with all stat fields set to zero
 export const emptyStats = () => ({
 	played: 0,
 	won: 0,
@@ -9,7 +10,65 @@ export const emptyStats = () => ({
 	gd: 0
 });
 
-export const upDateGroupStats = (currentStats, matchresults) => {
+/**
+ * 🎯 Used in: RegionalQualifiers (one group at a time)
+ * Creates an initial stats object for a list of teams
+ * Example output:
+ * {
+ *   Brazil: { played: 0, won: 0, ... },
+ *   Germany: { played: 0, won: 0, ... }
+ * }
+ */
+export const initializeGroupStats = (teams) => {
+	const stats = {};
+	for (const team of teams) {
+		stats[team.name] = emptyStats();
+	}
+	return stats;
+};
+
+/**
+ * 🔁 Used in: GroupStage (all groups at once)
+ * Builds full tournament group stats from a grouped team object
+ * Example input:
+ * {
+ *   A: [team1, team2, ...],
+ *   B: [team5, team6, ...],
+ *   ...
+ * }
+ * Output:
+ * {
+ *   A: { Brazil: {...}, Germany: {...} },
+ *   B: { France: {...}, Japan: {...} }
+ * }
+ */
+export const buildInitialGroupStats = (groups) => {
+	const stats = {};
+	for (const [groupName, teams] of Object.entries(groups)) {
+		stats[groupName] = {};
+		for (const team of teams) {
+			stats[groupName][team.name] = {
+				name: team.name,
+				flag: team.flag,
+				played: 0,
+				won: 0,
+				drawn: 0,
+				lost: 0,
+				for: 0,
+				against: 0,
+				gd: 0,
+				points: 0
+			};
+		}
+	}
+	return stats;
+};
+
+/**
+ * 🏟️ Updates group stats after one or more matches
+ * Used throughout the app (GroupStage, RegionalQualifiers) to calculate standings
+ */
+export const updateGroupStats = (currentStats, matchresults) => {
 	const newStats = {};
 	for (const team in currentStats) {
 		newStats[team] = { ...currentStats[team] };
@@ -48,26 +107,4 @@ export const upDateGroupStats = (currentStats, matchresults) => {
 	}
 
 	return newStats;
-};
-
-export const buildInitialGroupStats = (groups) => {
-	const stats = {};
-	for (const [groupName, teams] of Object.entries(groups)) {
-		stats[groupName] = {};
-		for (const team of teams) {
-			stats[groupName][team.name] = {
-				name: team.name,
-				flag: team.flag,
-				played: 0,
-				won: 0,
-				drawn: 0,
-				lost: 0,
-				for: 0,
-				against: 0,
-				gd: 0,
-				points: 0
-			};
-		}
-	}
-	return stats;
 };

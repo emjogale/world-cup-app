@@ -3,7 +3,7 @@ import { createGroupMatches } from '../../tournament/matches/createMatches';
 
 import Match from '../Match/Match';
 import {
-	upDateGroupStats,
+	updateGroupStats,
 	buildInitialGroupStats
 } from '../../tournament/grouping/updateGroupStats';
 
@@ -94,7 +94,7 @@ const GroupStage = ({ teams }) => {
 						score2: parseInt(scores[team2.name], 10)
 					}));
 
-					const newStats = upDateGroupStats(
+					const newStats = updateGroupStats(
 						groupStats[groupName],
 						results
 					);

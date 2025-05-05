@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { createGroupMatches } from '../../tournament/matches/createMatches';
 import { autoCompleteGroupStage } from '../../utils/devTools';
+import {
+	initializeGroupStats,
+	updateGroupStats
+} from '../../tournament/grouping/updateGroupStats';
 
 const RegionalQualifiers = ({ region, teams, spots }) => {
-	const [groups, setGroups] = useState([]);
 	const [matches, setMatches] = useState([]);
-	const [standings, setStandings] = useState([]);
 	const [qualifiedTeams, setQualifiedTeams] = useState([]);
+	const [regionalStats, setRegionalStats] = useState({});
 
 	useEffect(() => {
 		if (teams && teams.length > 0) {
@@ -23,23 +26,11 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 			groups.forEach((group) => {
 				newMatches[group.name] = createGroupMatches(group.teams);
 
-				newStats[group.name] = group.teams.reduce((acc, team) => {
-					acc[team.name] = {
-						played: 0,
-						won: 0,
-						lost: 0,
-						drawn: 0,
-						points: 0,
-						for: 0,
-						against: 0,
-						gd: 0
-					};
-					return acc;
-				}, {});
+				newStats[group.name] = initializeGroupStats(group.teams);
 			});
 
 			setMatches(newMatches);
-			setStandings(newStats);
+			setRegionalStats(newStats);
 		}
 	}, [teams]);
 
@@ -60,7 +51,7 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 				</div>
 			))}
 
-			{Object.entries(standings).map(([groupName, groupTable]) => (
+			{Object.entries(regionalStats).map(([groupName, groupTable]) => (
 				<div key={groupName}>
 					<h4>{groupName} Standings</h4>
 					<ul>
@@ -74,7 +65,7 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 				</div>
 			))}
 
-			{/* Render groups, matches, standings */}
+			{/* Render groups, matches, stats */}
 			{qualifiedTeams.length > 0 && (
 				<div>
 					<h3>Qualified Teams</h3>
@@ -89,10 +80,10 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 			<button
 				onClick={() => {
 					const { updatedMatches, updatedStats } =
-						autoCompleteGroupStage(matches, standings);
+						autoCompleteGroupStage(matches, regionalStats);
 
 					setMatches(updatedMatches);
-					setStandings(updatedStats);
+					setRegionalStats(updatedStats);
 
 					// Optional: decide qualified teams immediately
 					// setQualifiedTeams(...) here later

@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import userEvent from '@testing-library/user-event';
 import GroupStage from './GroupStage';
 import { groupTeams } from '../../tournament/grouping/groupTeams';
-import { upDateGroupStats } from '../../tournament/grouping/updateGroupStats';
+import { updateGroupStats } from '../../tournament/grouping/updateGroupStats';
 
 const mockTeams = [
 	{ name: 'Argentina', flag: '🇦🇷' },
@@ -154,7 +154,7 @@ describe('group stage component', () => {
 			{ team1: 'China', score1: 3, team2: 'Argentina', score2: 1 }
 		];
 
-		const updated = upDateGroupStats(startingStats, results);
+		const updated = updateGroupStats(startingStats, results);
 		expect(updated.China.points).toBe(3);
 		expect(updated.China.played).toBe(1);
 		expect(updated.Argentina.points).toBe(0);
