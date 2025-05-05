@@ -12,6 +12,7 @@ import { autoCompleteGroupStage } from '../../utils/devTools';
 import KnockoutStage from '../KnockoutStage/KnockoutStage';
 import { selectQualifiedTeams } from '../../tournament/matches/selectQualifiedTeams';
 import { shuffleAndGroup } from '../../tournament/grouping/shuffleAndGroup';
+import './GroupStage.css';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
