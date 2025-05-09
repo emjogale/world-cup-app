@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { createGroupMatches } from '../../tournament/matches/createMatches';
 import { autoCompleteGroupStage } from '../../utils/devTools';
-import {
-	initializeGroupStats,
-	updateGroupStats
-} from '../../tournament/grouping/updateGroupStats';
+import { initializeGroupStats } from '../../tournament/grouping/updateGroupStats';
+import { selectRegionalQualifiers } from '../../tournament/grouping/selectRegionalQualifiers';
 
 const RegionalQualifiers = ({ region, teams, spots }) => {
 	const [matches, setMatches] = useState([]);
@@ -70,8 +68,8 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 				<div>
 					<h3>Qualified Teams</h3>
 					<ul>
-						{qualifiedTeams.map((team) => (
-							<li key={team.name}>{team.name}</li>
+						{qualifiedTeams.filter(Boolean).map((team, index) => (
+							<li key={`${team.name}-${index}`}>{team.name}</li>
 						))}
 					</ul>
 				</div>
@@ -85,8 +83,15 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 					setMatches(updatedMatches);
 					setRegionalStats(updatedStats);
 
-					// Optional: decide qualified teams immediately
-					// setQualifiedTeams(...) here later
+					const qualifiers = selectRegionalQualifiers(
+						updatedStats,
+						spots
+					);
+					setQualifiedTeams(qualifiers);
+					console.log(
+						'Qualified:',
+						qualifiers.map((t) => t?.name)
+					);
 				}}
 				className="dev-button"
 			>
