@@ -7,7 +7,6 @@ import { sortByGroupRanking } from '../../utils/groupHelpers';
 import './RegionalQualifiers.css';
 
 const RegionalQualifiers = ({ region, teams, spots }) => {
-	console.log('🧪 teams prop received:', teams);
 	const [matches, setMatches] = useState([]);
 	const [qualifiedTeams, setQualifiedTeams] = useState([]);
 	const [regionalStats, setRegionalStats] = useState({});
@@ -22,9 +21,8 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 
 			const newMatches = {};
 			const newStats = {};
-			console.log('👀 useEffect running');
-			console.log('👉 group count:', groupCount);
-			console.log('✅ newMatches:', newMatches);
+
+			// console.log('✅ newMatches:', newMatches);
 			console.log('✅ newStats:', newStats);
 			groups.forEach((group) => {
 				newMatches[group.name] = createGroupMatches(group.teams);
@@ -46,8 +44,6 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 			{Object.entries(matches).map(([groupName, groupMatches]) => {
 				const groupStats = regionalStats[groupName];
 				if (!groupStats) return null;
-				console.log('👀 Matches:', matches);
-				console.log('📊 Regional Stats:', regionalStats);
 
 				return (
 					<div key={groupName} className="group-card">
@@ -72,8 +68,8 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 								<tbody>
 									{Object.values(regionalStats[groupName])
 										.sort(sortByGroupRanking)
-										.map((team) => (
-											<tr key={team.name}>
+										.map((team, index) => (
+											<tr key={`${team.name}-${index}`}>
 												<td className="team-cell">
 													<div className="team-info">
 														<img
@@ -101,10 +97,20 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 
 						{/* Match Fixtures */}
 						<ul className="regional-fixtures">
-							{groupMatches.map((match, i) => (
-								<li key={i}>
-									{match.team1.name} {match.score1 ?? '-'} :{' '}
-									{match.score2 ?? '-'} {match.team2.name}
+							{groupMatches.map((match) => (
+								<li
+									key={`${match.team1.name}-vs-${match.team2.name}`}
+								>
+									<span className="team-name">
+										{match.team1.name}
+									</span>
+									<span className="score">
+										{match.score1 ?? '-'} :{' '}
+										{match.score2 ?? '-'}
+									</span>
+									<span className="team-name">
+										{match.team2.name}
+									</span>
 								</li>
 							))}
 						</ul>
