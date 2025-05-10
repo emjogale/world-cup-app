@@ -1,3 +1,5 @@
+import { sortByGroupRanking } from '../../utils/groupHelpers';
+
 export const selectRegionalQualifiers = (regionalStats, spots) => {
 	const allTeams = [];
 
@@ -11,9 +13,7 @@ export const selectRegionalQualifiers = (regionalStats, spots) => {
 		);
 
 		// sort group standings (stats)
-		teams.sort(
-			(a, b) => b.points - a.points || b.gd - a.gd || b.for - a.for
-		);
+		teams.sort(sortByGroupRanking);
 
 		// push top team from this group
 		allTeams.push(teams[0]);
@@ -36,9 +36,7 @@ export const selectRegionalQualifiers = (regionalStats, spots) => {
 			.filter((team) => team !== undefined);
 
 		// sort all seconds to find best ones
-		seconds.sort(
-			(a, b) => b.points - a.points || b.gd - a.gd || b.for - a.for
-		);
+		seconds.sort(sortByGroupRanking);
 		const extras = seconds.slice(0, spots - allTeams.length);
 		allTeams.push(...extras);
 	}
