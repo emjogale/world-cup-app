@@ -13,6 +13,7 @@ import KnockoutStage from '../KnockoutStage/KnockoutStage';
 import { selectQualifiedTeams } from '../../tournament/matches/selectQualifiedTeams';
 import { shuffleAndGroup } from '../../tournament/grouping/shuffleAndGroup';
 import './GroupStage.css';
+import { sortByGroupRanking } from '../../utils/groupHelpers';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -157,12 +158,7 @@ const GroupStage = ({ teams }) => {
 								</thead>
 								<tbody>
 									{Object.values(groupStats[groupName])
-										.sort(
-											(a, b) =>
-												b.points - a.points ||
-												b.gd - a.gd ||
-												b.for - a.for
-										)
+										.sort(sortByGroupRanking)
 										.map((team, index) => {
 											const isTopTwo = index < 2;
 											const isQualifiedThird =
