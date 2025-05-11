@@ -3,13 +3,17 @@ import { createGroupMatches } from '../../tournament/matches/createMatches';
 import { autoCompleteGroupStage } from '../../utils/devTools';
 import { initializeGroupStats } from '../../tournament/grouping/updateGroupStats';
 import { selectRegionalQualifiers } from '../../tournament/grouping/selectRegionalQualifiers';
-import { sortByGroupRanking } from '../../utils/groupHelpers';
+import {
+	handleGroupSubmitHelper,
+	sortByGroupRanking
+} from '../../utils/groupHelpers';
 import './RegionalQualifiers.css';
 
 const RegionalQualifiers = ({ region, teams, spots }) => {
 	const [matches, setMatches] = useState([]);
 	const [qualifiedTeams, setQualifiedTeams] = useState([]);
 	const [regionalStats, setRegionalStats] = useState({});
+	const [scores, setScores] = useState({});
 
 	useEffect(() => {
 		if (teams && teams.length > 0) {
@@ -104,16 +108,62 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 									<span className="team-name">
 										{match.team1.name}
 									</span>
-									<span className="score">
-										{match.score1 ?? '-'} :{' '}
-										{match.score2 ?? '-'}
-									</span>
+									<input
+										type="number"
+										min="0"
+										value={scores[match.team1.name] ?? ''}
+										onChange={(e) =>
+											setScores((prev) => ({
+												...prev,
+												[match.team1.name]:
+													e.target.value
+											}))
+										}
+									/>
+									<span> : </span>
+									<input
+										type="number"
+										min="0"
+										value={scores[match.team2.name] ?? ''}
+										onChange={(e) =>
+											setScores((prev) => ({
+												...prev,
+												[match.team2.name]:
+													e.target.value
+											}))
+										}
+									/>
 									<span className="team-name">
 										{match.team2.name}
 									</span>
 								</li>
 							))}
 						</ul>
+						<button
+							onClick={() => {
+								const { newStats, updatedMatches, nextScores } =
+									handleGroupSubmitHelper({
+										groupName,
+										groupMatches,
+										scores,
+										currentStats: regionalStats[groupName]
+									});
+
+								setRegionalStats((prev) => ({
+									...prev,
+									[groupName]: newStats
+								}));
+
+								setMatches((prev) => ({
+									...prev,
+									[groupName]: updatedMatches
+								}));
+
+								setScores(nextScores);
+							}}
+						>
+							Submit
+						</button>
 					</div>
 				);
 			})}

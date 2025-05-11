@@ -58,14 +58,14 @@ const GroupStage = ({ teams }) => {
 		<div className="group-stage" data-testid="group-stage">
 			{Object.entries(groupedTeams).map(([groupName]) => {
 				const allMatches = groupMatches[groupName];
-				const matchesToShow = getNextMatches(
+				const matchesToDisplay = getNextMatches(
 					allMatches,
 					groupStats[groupName]
 				);
 
 				// Dev-only check to ensure no team is scheduled more than once at the same time
 				const playingTeams = new Set();
-				for (const match of matchesToShow) {
+				for (const match of matchesToDisplay) {
 					if (
 						playingTeams.has(match.team1.name) ||
 						playingTeams.has(match.team2.name)
@@ -79,7 +79,7 @@ const GroupStage = ({ teams }) => {
 					playingTeams.add(match.team2.name);
 				}
 
-				const teamNamesInMatches = matchesToShow.flatMap(
+				const teamNamesInMatches = matchesToDisplay.flatMap(
 					({ team1, team2 }) => [team1.name, team2.name]
 				);
 				const allScored = teamNamesInMatches.every(
@@ -89,12 +89,14 @@ const GroupStage = ({ teams }) => {
 				);
 
 				const handleGroupSubmit = () => {
-					const results = matchesToShow.map(({ team1, team2 }) => ({
-						team1: team1.name,
-						score1: parseInt(scores[team1.name], 10),
-						team2: team2.name,
-						score2: parseInt(scores[team2.name], 10)
-					}));
+					const results = matchesToDisplay.map(
+						({ team1, team2 }) => ({
+							team1: team1.name,
+							score1: parseInt(scores[team1.name], 10),
+							team2: team2.name,
+							score2: parseInt(scores[team2.name], 10)
+						})
+					);
 
 					const newStats = updateGroupStats(
 						groupStats[groupName],
@@ -103,7 +105,7 @@ const GroupStage = ({ teams }) => {
 
 					setGroupStats((prev) => ({
 						...prev,
-						[groupName]: { ...newStats }
+						[groupName]: newStats
 					}));
 
 					setGroupMatches((prev) => {
@@ -206,7 +208,7 @@ const GroupStage = ({ teams }) => {
 								</tbody>
 							</table>
 						</div>
-						{matchesToShow.map(({ team1, team2 }) => (
+						{matchesToDisplay.map(({ team1, team2 }) => (
 							<Match
 								key={`${team1.name}-vs-${team2.name}`}
 								team1={team1.name}
