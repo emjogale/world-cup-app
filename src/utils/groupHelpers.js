@@ -11,7 +11,6 @@ export const sortByGroupRanking = (a, b) =>
  * clear score inputs
  */
 export const handleGroupSubmitHelper = ({
-	groupName,
 	matchesToDisplay,
 	scores,
 	currentStats

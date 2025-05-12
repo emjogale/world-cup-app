@@ -1,4 +1,4 @@
-import { sortByGroupRanking } from './groupHelpers';
+import { handleGroupSubmitHelper, sortByGroupRanking } from './groupHelpers';
 import { describe, it, expect } from 'vitest';
 
 describe('sortByGroupRanking', () => {
@@ -16,5 +16,96 @@ describe('sortByGroupRanking', () => {
 			'Team B',
 			'Team A'
 		]);
+	});
+});
+
+describe('handleGroupSubmitHelper', () => {
+	it('updates stats, marks matches played, and clears scores', () => {
+		const matchesToDisplay = [
+			{
+				team1: { name: 'Team A' },
+				team2: { name: 'Team B' },
+				played: false
+			},
+			{
+				team1: { name: 'Team C' },
+				team2: { name: 'Team D' },
+				played: false
+			}
+		];
+
+		const scores = {
+			'Team A': '2',
+			'Team B': '1',
+			'Team C': '0',
+			'Team D': '3'
+		};
+
+		const currentStats = {
+			'Team A': {
+				played: 0,
+				won: 0,
+				drawn: 0,
+				lost: 0,
+				for: 0,
+				against: 0,
+				points: 0,
+				gd: 0
+			},
+			'Team B': {
+				played: 0,
+				won: 0,
+				drawn: 0,
+				lost: 0,
+				for: 0,
+				against: 0,
+				points: 0,
+				gd: 0
+			},
+			'Team C': {
+				played: 0,
+				won: 0,
+				drawn: 0,
+				lost: 0,
+				for: 0,
+				against: 0,
+				points: 0,
+				gd: 0
+			},
+			'Team D': {
+				played: 0,
+				won: 0,
+				drawn: 0,
+				lost: 0,
+				for: 0,
+				against: 0,
+				points: 0,
+				gd: 0
+			}
+		};
+
+		const { newStats, updatedMatches, nextScores } =
+			handleGroupSubmitHelper({
+				matchesToDisplay,
+				scores,
+				currentStats
+			});
+
+		// Check matches marked as played
+		expect(updatedMatches.every((m) => m.played)).toBe(true);
+
+		// Check stats updated correctly
+		expect(newStats['Team A'].won).toBe(1);
+		expect(newStats['Team B'].lost).toBe(1);
+		expect(newStats['Team D'].won).toBe(1);
+		expect(newStats['Team C'].lost).toBe(1);
+
+		// Check scores cleared
+		expect(nextScores).toEqual({
+			'Team A': '',
+			'Team B': '',
+			'Team C': '',
+			'Team D': ''
+		});
 	});
 });
