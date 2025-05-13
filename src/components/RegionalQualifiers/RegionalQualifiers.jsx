@@ -8,6 +8,7 @@ import {
 	sortByGroupRanking
 } from '../../utils/groupHelpers';
 import './RegionalQualifiers.css';
+import { getMatchKey } from '../../utils/matchHelpers';
 
 const RegionalQualifiers = ({ region, teams, spots }) => {
 	const [matches, setMatches] = useState([]);
@@ -111,27 +112,55 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 									<input
 										type="number"
 										min="0"
-										value={scores[match.team1.name] ?? ''}
-										onChange={(e) =>
+										value={
+											scores[
+												getMatchKey(
+													match.team1,
+													match.team2
+												)
+											]?.score1 || ''
+										}
+										onChange={(e) => {
+											const key = getMatchKey(
+												match.team1,
+												match.team2
+											);
+											const value = e.target.value;
 											setScores((prev) => ({
 												...prev,
-												[match.team1.name]:
-													e.target.value
-											}))
-										}
+												[key]: {
+													...prev[key],
+													score1: value
+												}
+											}));
+										}}
 									/>
 									<span> : </span>
 									<input
 										type="number"
 										min="0"
-										value={scores[match.team2.name] ?? ''}
-										onChange={(e) =>
+										value={
+											scores[
+												getMatchKey(
+													match.team1,
+													match.team2
+												)
+											]?.score2 || ''
+										}
+										onChange={(e) => {
+											const key = getMatchKey(
+												match.team1,
+												match.team2
+											);
+											const value = e.target.value;
 											setScores((prev) => ({
 												...prev,
-												[match.team2.name]:
-													e.target.value
-											}))
-										}
+												[key]: {
+													...prev[key],
+													score2: value
+												}
+											}));
+										}}
 									/>
 									<span className="team-name">
 										{match.team2.name}

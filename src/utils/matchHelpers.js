@@ -83,3 +83,5 @@ export const getTournamentWinner = (knockoutRounds) => {
 	}
 	return null;
 };
+
+export const getMatchKey = (team1, team2) => `${team1.name}-vs-${team2.name}`;

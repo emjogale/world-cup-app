@@ -1,4 +1,5 @@
 import { updateGroupStats } from '../tournament/grouping/updateGroupStats';
+import { getMatchKey } from './matchHelpers';
 
 // sorts teams by points, then goal difference, then goals for
 export const sortByGroupRanking = (a, b) =>
@@ -15,14 +16,21 @@ export const handleGroupSubmitHelper = ({
 	scores,
 	currentStats
 }) => {
-	const results = matchesToDisplay.map(({ team1, team2 }) => ({
-		team1: team1.name,
-		score1: parseInt(scores[team1.name], 10),
-		team2: team2.name,
-		score2: parseInt(scores[team2.name], 10)
-	}));
+	// Build results array from score inputs
+	const results = matchesToDisplay.map(({ team1, team2 }) => {
+		const key = getMatchKey(team1, team2);
+		return {
+			team1: team1.name,
+			score1: parseInt(scores[key]?.score1, 10),
+			team2: team2.name,
+			score2: parseInt(scores[key]?.score2, 10)
+		};
+	});
+
+	// Update stats with these match results
 	const newStats = updateGroupStats(currentStats, results);
 
+	// Mark those matches as played
 	const updatedMatches = matchesToDisplay.map((match) => {
 		const matchWasJustPlayed = results.some(
 			(r) =>
@@ -33,15 +41,13 @@ export const handleGroupSubmitHelper = ({
 		return matchWasJustPlayed ? { ...match, played: true } : match;
 	});
 
-	const teamsToReset = new Set();
-	results.forEach(({ team1, team2 }) => {
-		teamsToReset.add(team1);
-		teamsToReset.add(team2);
-	});
-
+	// Clear out just the scores for these matches
+	const keysToReset = matchesToDisplay.map((match) =>
+		getMatchKey(match.team1, match.team2)
+	);
 	const nextScores = { ...scores };
-	teamsToReset.forEach((team) => {
-		nextScores[team] = '';
+	keysToReset.forEach((key) => {
+		nextScores[key] = { score1: '', score2: '' };
 	});
 
 	return {

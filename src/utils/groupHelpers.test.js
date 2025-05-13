@@ -35,10 +35,8 @@ describe('handleGroupSubmitHelper', () => {
 		];
 
 		const scores = {
-			'Team A': '2',
-			'Team B': '1',
-			'Team C': '0',
-			'Team D': '3'
+			'Team A-vs-Team B': { score1: '2', score2: '1' },
+			'Team C-vs-Team D': { score1: '0', score2: '3' }
 		};
 
 		const currentStats = {
@@ -102,10 +100,14 @@ describe('handleGroupSubmitHelper', () => {
 
 		// Check scores cleared
 		expect(nextScores).toEqual({
-			'Team A': '',
-			'Team B': '',
-			'Team C': '',
-			'Team D': ''
+			'Team A-vs-Team B': {
+				score1: '',
+				score2: ''
+			},
+			'Team C-vs-Team D': {
+				score1: '',
+				score2: ''
+			}
 		});
 	});
 });
