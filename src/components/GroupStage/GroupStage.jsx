@@ -2,10 +2,7 @@ import React, { useMemo, useState, useEffect, useRef } from 'react';
 import { createGroupMatches } from '../../tournament/matches/createMatches';
 
 import Match from '../Match/Match';
-import {
-	updateGroupStats,
-	buildInitialGroupStats
-} from '../../tournament/grouping/updateGroupStats';
+import { buildInitialGroupStats } from '../../tournament/grouping/updateGroupStats';
 
 import { getNextMatches } from '../../tournament/matches/createMatches';
 import { autoCompleteGroupStage } from '../../utils/devTools';
@@ -13,7 +10,10 @@ import KnockoutStage from '../KnockoutStage/KnockoutStage';
 import { selectQualifiedTeams } from '../../tournament/matches/selectQualifiedTeams';
 import { shuffleAndGroup } from '../../tournament/grouping/shuffleAndGroup';
 import './GroupStage.css';
-import { sortByGroupRanking } from '../../utils/groupHelpers';
+import {
+	handleGroupSubmitHelper,
+	sortByGroupRanking
+} from '../../utils/groupHelpers';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -87,58 +87,6 @@ const GroupStage = ({ teams }) => {
 						scores[teamName] !== undefined &&
 						scores[teamName] !== ''
 				);
-
-				const handleGroupSubmit = () => {
-					const results = matchesToDisplay.map(
-						({ team1, team2 }) => ({
-							team1: team1.name,
-							score1: parseInt(scores[team1.name], 10),
-							team2: team2.name,
-							score2: parseInt(scores[team2.name], 10)
-						})
-					);
-
-					const newStats = updateGroupStats(
-						groupStats[groupName],
-						results
-					);
-
-					setGroupStats((prev) => ({
-						...prev,
-						[groupName]: newStats
-					}));
-
-					setGroupMatches((prev) => {
-						const updated = { ...prev };
-						updated[groupName] = prev[groupName].map((match) => {
-							const matchWasJustPlayed = results.some(
-								(r) =>
-									(r.team1 === match.team1.name &&
-										r.team2 === match.team2.name) ||
-									(r.team1 === match.team2.name &&
-										r.team2 === match.team1.name)
-							);
-							return matchWasJustPlayed
-								? { ...match, played: true }
-								: match;
-						});
-						return updated;
-					});
-
-					const teamsToReset = new Set();
-					results.forEach(({ team1, team2 }) => {
-						teamsToReset.add(team1);
-						teamsToReset.add(team2);
-					});
-
-					setScores((prev) => {
-						const next = { ...prev };
-						teamsToReset.forEach((team) => {
-							next[team] = '';
-						});
-						return next;
-					});
-				};
 
 				return (
 					<div key={groupName} className="group-card">
@@ -220,7 +168,27 @@ const GroupStage = ({ teams }) => {
 						))}
 
 						<button
-							onClick={handleGroupSubmit}
+							onClick={() => {
+								const { newStats, updatedMatches, nextScores } =
+									handleGroupSubmitHelper({
+										groupName,
+										groupMatches,
+										scores,
+										currentStats: groupStats[groupName]
+									});
+
+								setGroupStats((prev) => ({
+									...prev,
+									[groupName]: newStats
+								}));
+
+								setGroupMatches((prev) => ({
+									...prev,
+									[groupName]: updatedMatches
+								}));
+
+								setScores(nextScores);
+							}}
 							disabled={!allScored}
 							data-testid={`submit-group-${groupName}`}
 						>
