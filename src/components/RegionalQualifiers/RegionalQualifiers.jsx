@@ -9,6 +9,7 @@ import {
 } from '../../utils/groupHelpers';
 import './RegionalQualifiers.css';
 import { getMatchKey } from '../../utils/matchHelpers';
+import { handleScoreChange } from '../../utils/scoreHelpers';
 
 const RegionalQualifiers = ({ region, teams, spots }) => {
 	const [matches, setMatches] = useState([]);
@@ -120,20 +121,14 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 												)
 											]?.score1 || ''
 										}
-										onChange={(e) => {
-											const key = getMatchKey(
-												match.team1,
-												match.team2
-											);
-											const value = e.target.value;
-											setScores((prev) => ({
-												...prev,
-												[key]: {
-													...prev[key],
-													score1: value
-												}
-											}));
-										}}
+										onChange={(e) =>
+											handleScoreChange(
+												match,
+												'score1',
+												e.target.value,
+												setScores
+											)
+										}
 									/>
 									<span> : </span>
 									<input
@@ -147,20 +142,14 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 												)
 											]?.score2 || ''
 										}
-										onChange={(e) => {
-											const key = getMatchKey(
-												match.team1,
-												match.team2
-											);
-											const value = e.target.value;
-											setScores((prev) => ({
-												...prev,
-												[key]: {
-													...prev[key],
-													score2: value
-												}
-											}));
-										}}
+										onChange={(e) =>
+											handleScoreChange(
+												match,
+												'score2',
+												e.target.value,
+												setScores
+											)
+										}
 									/>
 									<span className="team-name">
 										{match.team2.name}
