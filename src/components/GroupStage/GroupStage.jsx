@@ -161,8 +161,14 @@ const GroupStage = ({ teams }) => {
 								key={`${team1.name}-vs-${team2.name}`}
 								team1={team1.name}
 								team2={team2.name}
-								score1={scores[team1.name] || ''}
-								score2={scores[team2.name] || ''}
+								score1={
+									scores[`${team1.name}-vs-${team2.name}`]
+										?.score1 || ''
+								}
+								score2={
+									scores[`${team1.name}-vs-${team2.name}`]
+										?.score2 || ''
+								}
 								onScoreChange={handleScoreChange}
 							/>
 						))}
