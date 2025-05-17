@@ -15,6 +15,7 @@ import {
 	sortByGroupRanking
 } from '../../utils/groupHelpers';
 import { handleScoreChangeHelper } from '../../utils/scoreHelpers';
+import { getMatchKey } from '../../utils/matchHelpers';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -80,14 +81,17 @@ const GroupStage = ({ teams }) => {
 					playingTeams.add(match.team2.name);
 				}
 
-				const teamNamesInMatches = matchesToDisplay.flatMap(
-					({ team1, team2 }) => [team1.name, team2.name]
-				);
-				const allScored = teamNamesInMatches.every(
-					(teamName) =>
-						scores[teamName] !== undefined &&
-						scores[teamName] !== ''
-				);
+				const allScored = matchesToDisplay.every((match) => {
+					const key = getMatchKey(match.team1, match.team2);
+					const entry = scores[key];
+					return (
+						entry &&
+						entry.score1 !== undefined &&
+						entry.score1 !== '' &&
+						entry.score2 !== undefined &&
+						entry.score2 !== ''
+					);
+				});
 
 				return (
 					<div key={groupName} className="group-card">
@@ -186,11 +190,16 @@ const GroupStage = ({ teams }) => {
 							onClick={() => {
 								const { newStats, updatedMatches, nextScores } =
 									handleGroupSubmitHelper({
-										groupName,
-										groupMatches,
+										matchesToDisplay,
 										scores,
 										currentStats: groupStats[groupName]
 									});
+								console.log('🧮 New Stats:', newStats);
+								console.log(
+									'🎯 Updated Matches:',
+									updatedMatches
+								);
+								console.log('🧽 Next Scores:', nextScores);
 
 								setGroupStats((prev) => ({
 									...prev,
