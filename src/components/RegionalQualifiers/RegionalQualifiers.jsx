@@ -9,7 +9,7 @@ import {
 } from '../../utils/groupHelpers';
 import './RegionalQualifiers.css';
 import { getMatchKey } from '../../utils/matchHelpers';
-import { handleScoreChange } from '../../utils/scoreHelpers';
+import { handleScoreChangeHelper } from '../../utils/scoreHelpers';
 
 const RegionalQualifiers = ({ region, teams, spots }) => {
 	const [matches, setMatches] = useState([]);
@@ -122,7 +122,7 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 											]?.score1 || ''
 										}
 										onChange={(e) =>
-											handleScoreChange(
+											handleScoreChangeHelper(
 												match,
 												'score1',
 												e.target.value,
@@ -143,7 +143,7 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 											]?.score2 || ''
 										}
 										onChange={(e) =>
-											handleScoreChange(
+											handleScoreChangeHelper(
 												match,
 												'score2',
 												e.target.value,

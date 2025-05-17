@@ -14,6 +14,7 @@ import {
 	handleGroupSubmitHelper,
 	sortByGroupRanking
 } from '../../utils/groupHelpers';
+import { handleScoreChangeHelper } from '../../utils/scoreHelpers';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -44,8 +45,8 @@ const GroupStage = ({ teams }) => {
 		setGroupMatches(allMatches);
 	}, [groupedTeams]);
 
-	const handleScoreChange = (team, score) => {
-		setScores((prev) => ({ ...prev, [team]: score }));
+	const handleScoreChange = (match, teamPosition, value) => {
+		handleScoreChangeHelper(match, teamPosition, value, setScores);
 	};
 
 	if (!groupStats || !groupMatches) return null;
@@ -169,7 +170,15 @@ const GroupStage = ({ teams }) => {
 									scores[`${team1.name}-vs-${team2.name}`]
 										?.score2 || ''
 								}
-								onScoreChange={handleScoreChange}
+								onScoreChange={(team, value) =>
+									handleScoreChange(
+										{ team1, team2 },
+										team === team1.name
+											? 'score1'
+											: 'score2',
+										value
+									)
+								}
 							/>
 						))}
 

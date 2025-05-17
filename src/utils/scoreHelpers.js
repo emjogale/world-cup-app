@@ -7,7 +7,12 @@ import { getMatchKey } from './matchHelpers';
  * what the new value is (value)
  * and how to update the state (setScores)
  */
-export const handleScoreChange = (match, teamPosition, value, setScores) => {
+export const handleScoreChangeHelper = (
+	match,
+	teamPosition,
+	value,
+	setScores
+) => {
 	const key = getMatchKey(match.team1, match.team2);
 	setScores((prev) => ({
 		...prev,
