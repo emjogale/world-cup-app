@@ -28,8 +28,6 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 			const newMatches = {};
 			const newStats = {};
 
-			// console.log('✅ newMatches:', newMatches);
-			console.log('✅ newStats:', newStats);
 			groups.forEach((group) => {
 				newMatches[group.name] = createGroupMatches(group.teams);
 				newStats[group.name] = initializeGroupStats(group.teams);

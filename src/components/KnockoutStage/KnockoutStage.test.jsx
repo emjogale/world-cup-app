@@ -73,7 +73,7 @@ describe('KnockoutStage component', () => {
 		const round2Heading = screen
 			.getAllByRole('heading', { level: 3 })
 			.find((el) => el.textContent.includes('Final'));
-		console.log('round2Heading');
+
 		expect(round2Heading).toBeTruthy();
 
 		// ✅ Check the correct match is present
@@ -237,44 +237,6 @@ describe('KnockoutStage component', () => {
 		).toBeInTheDocument();
 	});
 	it('does not declare a World Cup winner after a non-final match', () => {
-		// Set up a knockout stage with a quarterfinal round (4 matches)
-		const knockoutRounds = [
-			[
-				{
-					team1: { name: 'Team A' },
-					team2: { name: 'Team B' },
-					score1: 2,
-					score2: 1,
-					winner: { name: 'Team A' },
-					played: true
-				},
-				{
-					team1: { name: 'Team C' },
-					team2: { name: 'Team D' },
-					score1: 1,
-					score2: 2,
-					winner: { name: 'Team D' },
-					played: false
-				},
-				{
-					team1: { name: 'Team E' },
-					team2: { name: 'Team F' },
-					score1: null,
-					score2: null,
-					winner: null,
-					played: false
-				},
-				{
-					team1: { name: 'Team G' },
-					team2: { name: 'Team H' },
-					score1: null,
-					score2: null,
-					winner: null,
-					played: false
-				}
-			]
-		];
-
 		render(<KnockoutStage qualifiedTeams={[]} />); // however you normally set up
 
 		// Simulate knockoutRounds state manually if needed or mock

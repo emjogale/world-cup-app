@@ -202,14 +202,7 @@ const GroupStage = ({ teams }) => {
 										scores,
 										currentStats: groupStats[groupName]
 									});
-								console.log(
-									'✅ updatedMatches returned:',
-									updatedMatches
-								);
-								console.log(
-									'🔄 any played:',
-									updatedMatches.map((m) => m.played)
-								);
+
 								setGroupStats((prev) => ({
 									...prev,
 									[groupName]: newStats
@@ -240,13 +233,7 @@ const GroupStage = ({ teams }) => {
 										[groupName]: updatedGroup
 									};
 								});
-								setTimeout(() => {
-									console.log(
-										'📦 Current matches for',
-										groupName,
-										groupMatches[groupName]
-									);
-								}, 0);
+
 								setScores(nextScores);
 							}}
 							disabled={!allScored}

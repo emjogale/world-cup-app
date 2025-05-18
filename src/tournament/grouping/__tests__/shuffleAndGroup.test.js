@@ -15,8 +15,6 @@ const mockTeams = [
 describe('shuffleAndGroup', () => {
 	it('shuffles and groups teams into 2 groups of 4 with stable seed', () => {
 		const grouped = shuffleAndGroup(mockTeams, 'test-seed');
-		// console.log('grouped is', grouped);
-		// console.log('flat is', Object.values(grouped).flat());
 
 		expect(Object.keys(grouped)).toHaveLength(2); // 2 groups
 		expect(Object.values(grouped).flat()).toHaveLength(8); // 8 teams flat
