@@ -11,6 +11,7 @@ export const sortByGroupRanking = (a, b) =>
  * mark matches as played
  * clear score inputs
  */
+
 export const handleGroupSubmitHelper = ({
 	matchesToDisplay,
 	scores,
@@ -30,18 +31,20 @@ export const handleGroupSubmitHelper = ({
 	// Update stats with these match results
 	const newStats = updateGroupStats(currentStats, results);
 
+	// Create a Set of keys for submitted matches
+	const justPlayedKeys = new Set(
+		results.map((r) => getMatchKey({ name: r.team1 }, { name: r.team2 }))
+	);
+
 	// Mark those matches as played
 	const updatedMatches = matchesToDisplay.map((match) => {
-		const matchWasJustPlayed = results.some(
-			(r) =>
-				(r.team1 === match.team1.name &&
-					r.team2 === match.team2.name) ||
-				(r.team1 === match.team2.name && r.team2 === match.team1.name)
-		);
-		return matchWasJustPlayed ? { ...match, played: true } : match;
+		const matchKey = getMatchKey(match.team1, match.team2);
+		return justPlayedKeys.has(matchKey)
+			? { ...match, played: true }
+			: match;
 	});
 
-	// Clear out just the scores for these matches
+	// Clear only the submitted match scores
 	const keysToReset = matchesToDisplay.map((match) =>
 		getMatchKey(match.team1, match.team2)
 	);

@@ -46,6 +46,18 @@ const GroupStage = ({ teams }) => {
 		setGroupMatches(allMatches);
 	}, [groupedTeams]);
 
+	const matchesToDisplayByGroup = useMemo(() => {
+		if (!groupMatches || !groupStats) return {};
+
+		const result = {};
+		for (const groupName in groupMatches) {
+			const matches = groupMatches[groupName];
+			const stats = groupStats[groupName];
+			result[groupName] = getNextMatches(matches, stats);
+		}
+		return result;
+	}, [groupMatches, groupStats]);
+
 	const handleScoreChange = (match, teamPosition, value) => {
 		handleScoreChangeHelper(match, teamPosition, value, setScores);
 	};
@@ -59,12 +71,8 @@ const GroupStage = ({ teams }) => {
 	return (
 		<div className="group-stage" data-testid="group-stage">
 			{Object.entries(groupedTeams).map(([groupName]) => {
-				const allMatches = groupMatches[groupName];
-				const matchesToDisplay = getNextMatches(
-					allMatches,
-					groupStats[groupName]
-				);
-
+				const matchesToDisplay =
+					matchesToDisplayByGroup[groupName] || [];
 				// Dev-only check to ensure no team is scheduled more than once at the same time
 				const playingTeams = new Set();
 				for (const match of matchesToDisplay) {
@@ -194,23 +202,51 @@ const GroupStage = ({ teams }) => {
 										scores,
 										currentStats: groupStats[groupName]
 									});
-								console.log('🧮 New Stats:', newStats);
 								console.log(
-									'🎯 Updated Matches:',
+									'✅ updatedMatches returned:',
 									updatedMatches
 								);
-								console.log('🧽 Next Scores:', nextScores);
-
+								console.log(
+									'🔄 any played:',
+									updatedMatches.map((m) => m.played)
+								);
 								setGroupStats((prev) => ({
 									...prev,
 									[groupName]: newStats
 								}));
 
-								setGroupMatches((prev) => ({
-									...prev,
-									[groupName]: updatedMatches
-								}));
+								setGroupMatches((prev) => {
+									const group = prev[groupName]; // get all the matches for this group
 
+									// loop over every match in group to check which one was just played - then mark it as played
+									const updatedGroup = group.map((match) => {
+										const updated = updatedMatches.find(
+											(m) =>
+												(m.team1.name ===
+													match.team1.name &&
+													m.team2.name ===
+														match.team2.name) ||
+												(m.team1.name ===
+													match.team2.name &&
+													m.team2.name ===
+														match.team1.name)
+										);
+										return updated
+											? { ...match, played: true }
+											: match;
+									});
+									return {
+										...prev,
+										[groupName]: updatedGroup
+									};
+								});
+								setTimeout(() => {
+									console.log(
+										'📦 Current matches for',
+										groupName,
+										groupMatches[groupName]
+									);
+								}, 0);
 								setScores(nextScores);
 							}}
 							disabled={!allScored}
