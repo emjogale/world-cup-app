@@ -159,4 +159,19 @@ describe('group stage component', () => {
 		expect(updated.China.played).toBe(1);
 		expect(updated.Argentina.points).toBe(0);
 	});
+
+	it('only updates the score for the match just played', async () => {
+		render(<GroupStage teams={mockTeams} />);
+
+		// enter a score for China
+		const chinaInput = screen.getByTestId('score-China');
+		await userEvent.type(chinaInput, '3');
+
+		const argentinaInput = screen.getByTestId('score-Argentina');
+		const brazilInput = screen.getByTestId('score-Brazil');
+
+		// check another teams score input is unaffected
+		expect(argentinaInput.value).toBe('');
+		expect(brazilInput.value).toBe('');
+	});
 });
