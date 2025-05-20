@@ -1,11 +1,21 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { describe, it, expect } from 'vitest';
 import RegionalQualifiers from './RegionalQualifiers';
 import { generateMockTeams } from '../../utils/teamFactories';
 
+const mockTeams = [
+	{ name: 'Japan', flag: '🇯🇵' },
+	{ name: 'South Korea', flag: '🇰🇷' },
+	{ name: 'Iran', flag: '🇮🇷' },
+	{ name: 'Saudi Arabia', flag: '🇸🇦' },
+	{ name: 'Australia', flag: '🇦🇺' },
+	{ name: 'Qatar', flag: '🇶🇦' }
+];
+
 describe('RegionalQualifiers component', () => {
-	it('renders regional qualifiers and autofills matches', () => {
+	it('dev autofill renders regional qualifiers and autofills matches', () => {
 		const mockTeams = generateMockTeams(42, 'Asia');
 
 		render(
@@ -21,5 +31,24 @@ describe('RegionalQualifiers component', () => {
 
 		// Check that some match results appeared (e.g., Team Asia 1 vs Team Asia 2)
 		expect(screen.getAllByText(/Team Asia/i)).not.toHaveLength(0);
+	});
+});
+
+describe('RegionalQualifiers input isolation', () => {
+	it('only updates the score for the targeted match input', async () => {
+		render(
+			<RegionalQualifiers region="Asia" teams={mockTeams} spots={4} />
+		);
+
+		// Wait for inputs to render (could use findBy if needed)
+		const japanInput = screen.getByTestId('score-Japan-vs-South Korea-1');
+		await userEvent.type(japanInput, '2');
+
+		// Check that unrelated inputs are still blank
+		const koreaInput = screen.getByTestId('score-South Korea-vs-Japan-2');
+		const australiaInput = screen.getByTestId('score-Australia-vs-Qatar-1');
+
+		expect(koreaInput.value).toBe('');
+		expect(australiaInput.value).toBe('');
 	});
 });
