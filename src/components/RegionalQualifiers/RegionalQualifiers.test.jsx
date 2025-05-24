@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from 'vitest';
 import RegionalQualifiers from './RegionalQualifiers';
 import { generateMockTeams } from '../../utils/teamFactories';
+import { getScoreTestId } from '../../test-utils/getScoreTestId';
 
 const mockTeams = [
 	{ name: 'Japan', flag: '🇯🇵' },
@@ -40,15 +41,14 @@ describe('RegionalQualifiers input isolation', () => {
 			<RegionalQualifiers region="Asia" teams={mockTeams} spots={4} />
 		);
 
-		// Wait for inputs to render (could use findBy if needed)
-		const japanInput = screen.getByTestId('score-Japan-vs-South Korea-1');
+		const japanInput = await screen.findByTestId(
+			getScoreTestId('Japan', 'South Korea', 1)
+		);
 		await userEvent.type(japanInput, '2');
 
-		// Check that unrelated inputs are still blank
-		const koreaInput = screen.getByTestId('score-South Korea-vs-Japan-2');
-		const australiaInput = screen.getByTestId('score-Australia-vs-Qatar-1');
-
-		expect(koreaInput.value).toBe('');
-		expect(australiaInput.value).toBe('');
+		const unrelatedInput = screen.getByTestId(
+			getScoreTestId('Australia', 'Qatar', 1)
+		);
+		expect(unrelatedInput.value).toBe('');
 	});
 });

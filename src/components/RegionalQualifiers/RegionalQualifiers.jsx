@@ -10,6 +10,7 @@ import {
 import './RegionalQualifiers.css';
 import { getMatchKey } from '../../utils/matchHelpers';
 import { handleScoreChangeHelper } from '../../utils/scoreHelpers';
+import { safe } from '../../utils/stringUtils';
 
 const RegionalQualifiers = ({ region, teams, spots }) => {
 	const [matches, setMatches] = useState([]);
@@ -111,7 +112,9 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 									<input
 										type="number"
 										min="0"
-										data-testid={`score-${match.team1.name}-vs-${match.team2.name}-1`}
+										data-testid={`score-${safe(
+											match.team1.name
+										)}-vs-${safe(match.team2.name)}-1`}
 										value={
 											scores[
 												getMatchKey(
@@ -133,7 +136,9 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 									<input
 										type="number"
 										min="0"
-										data-testid={`score-${match.team2.name}-vs-${match.team1.name}-2`}
+										data-testid={`score-${safe(
+											match.team2.name
+										)}-vs-${safe(match.team1.name)}-2`}
 										value={
 											scores[
 												getMatchKey(
