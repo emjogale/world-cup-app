@@ -164,11 +164,11 @@ describe('group stage component', () => {
 		render(<GroupStage teams={mockTeams} />);
 
 		// enter a score for China
-		const chinaInput = screen.getByTestId('score-China');
+		const chinaInput = screen.getByTestId('score-china');
 		await userEvent.type(chinaInput, '3');
 
-		const argentinaInput = screen.getByTestId('score-Argentina');
-		const brazilInput = screen.getByTestId('score-Brazil');
+		const argentinaInput = screen.getByTestId('score-argentina');
+		const brazilInput = screen.getByTestId('score-brazil');
 
 		// check another teams score input is unaffected
 		expect(argentinaInput.value).toBe('');

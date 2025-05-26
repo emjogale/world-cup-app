@@ -49,8 +49,8 @@ describe('Match component', () => {
 
 		render(<Wrapper />);
 
-		const scoreInput1 = screen.getByTestId('score-England');
-		const scoreInput2 = screen.getByTestId('score-Germany');
+		const scoreInput1 = screen.getByTestId('score-england');
+		const scoreInput2 = screen.getByTestId('score-germany');
 
 		await userEvent.clear(scoreInput1);
 		await userEvent.type(scoreInput1, '4');
@@ -61,26 +61,4 @@ describe('Match component', () => {
 		expect(scoreInput1.value).toBe('4');
 		expect(scoreInput2.value).toBe('2');
 	});
-
-	// it('calls onResult with correct scores when submitted', async () => {
-	// 	const mockHandler = vi.fn();
-
-	// 	render(
-	// 		<Match team1="England" team2="Germany" onResult={mockHandler} />
-	// 	);
-
-	// 	const scoreInput1 = screen.getByTestId('score-England');
-	// 	const scoreInput2 = screen.getByTestId('score-Germany');
-
-	// 	await userEvent.clear(scoreInput1);
-	// 	await userEvent.type(scoreInput1, '3');
-
-	// 	await userEvent.clear(scoreInput2);
-	// 	await userEvent.type(scoreInput2, '1');
-
-	// 	const submitButton = screen.getByRole('button', { name: /submit/i });
-	// 	await userEvent.click(submitButton);
-
-	// 	expect(mockHandler).toHaveBeenCalledWith('England', 3, 'Germany', 1);
-	// });
 });

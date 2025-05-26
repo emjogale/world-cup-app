@@ -26,8 +26,8 @@ describe('KnockoutStage component', () => {
 	it('shows submitted result after a match is completed', async () => {
 		render(<KnockoutStage qualifiedTeams={mockTeams.slice(0, 2)} />); // only one match
 
-		const score1 = screen.getByTestId('score-Brazil');
-		const score2 = screen.getByTestId('score-Germany');
+		const score1 = screen.getByTestId('score-brazil');
+		const score2 = screen.getByTestId('score-germany');
 
 		await userEvent.clear(score1);
 		await userEvent.type(score1, '2');
@@ -53,17 +53,17 @@ describe('KnockoutStage component', () => {
 		render(<KnockoutStage qualifiedTeams={mockTeams} />);
 
 		// Submit Brazil vs Germany
-		await userEvent.clear(screen.getByTestId('score-Brazil'));
-		await userEvent.type(screen.getByTestId('score-Brazil'), '2');
-		await userEvent.clear(screen.getByTestId('score-Germany'));
-		await userEvent.type(screen.getByTestId('score-Germany'), '1');
+		await userEvent.clear(screen.getByTestId('score-brazil'));
+		await userEvent.type(screen.getByTestId('score-brazil'), '2');
+		await userEvent.clear(screen.getByTestId('score-germany'));
+		await userEvent.type(screen.getByTestId('score-germany'), '1');
 		await userEvent.click(screen.getByTestId('submit-regular-Brazil'));
 
 		// Submit France vs Argentina
-		await userEvent.clear(screen.getByTestId('score-France'));
-		await userEvent.type(screen.getByTestId('score-France'), '3');
-		await userEvent.clear(screen.getByTestId('score-Argentina'));
-		await userEvent.type(screen.getByTestId('score-Argentina'), '0');
+		await userEvent.clear(screen.getByTestId('score-france'));
+		await userEvent.type(screen.getByTestId('score-france'), '3');
+		await userEvent.clear(screen.getByTestId('score-argentina'));
+		await userEvent.type(screen.getByTestId('score-argentina'), '0');
 		await userEvent.click(screen.getByTestId('submit-regular-France'));
 
 		// ✅ Wait for Round 2 match to appear
@@ -87,8 +87,8 @@ describe('KnockoutStage component', () => {
 			render(<KnockoutStage qualifiedTeams={mockTeams} />);
 
 			// Enter draw scores for Brazil vs Germany
-			const scoreBrazil = screen.getByTestId('score-Brazil');
-			const scoreGermany = screen.getByTestId('score-Germany');
+			const scoreBrazil = screen.getByTestId('score-brazil');
+			const scoreGermany = screen.getByTestId('score-germany');
 
 			await userEvent.clear(scoreBrazil);
 			await userEvent.type(scoreBrazil, '1');
@@ -110,8 +110,8 @@ describe('KnockoutStage component', () => {
 		it('shows winner message after extra time win', async () => {
 			render(<KnockoutStage qualifiedTeams={mockTeams.slice(0, 2)} />); // Brazil vs Germany
 
-			const score1 = screen.getByTestId('score-Brazil');
-			const score2 = screen.getByTestId('score-Germany');
+			const score1 = screen.getByTestId('score-brazil');
+			const score2 = screen.getByTestId('score-germany');
 
 			// Regular time draw
 			await userEvent.clear(score1);
@@ -148,10 +148,10 @@ describe('KnockoutStage component', () => {
 		render(<KnockoutStage qualifiedTeams={mockTeams.slice(0, 2)} />);
 
 		// Regular time: draw
-		await userEvent.clear(screen.getByTestId('score-Brazil'));
-		await userEvent.type(screen.getByTestId('score-Brazil'), '1');
-		await userEvent.clear(screen.getByTestId('score-Germany'));
-		await userEvent.type(screen.getByTestId('score-Germany'), '1');
+		await userEvent.clear(screen.getByTestId('score-brazil'));
+		await userEvent.type(screen.getByTestId('score-brazil'), '1');
+		await userEvent.clear(screen.getByTestId('score-germany'));
+		await userEvent.type(screen.getByTestId('score-germany'), '1');
 
 		const regularSubmit = await screen.findByTestId(
 			'submit-regular-Brazil'
@@ -178,10 +178,10 @@ describe('KnockoutStage component', () => {
 		render(<KnockoutStage qualifiedTeams={mockTeams.slice(0, 2)} />); // Brazil vs Germany
 
 		// Regular time draw
-		await userEvent.clear(screen.getByTestId('score-Brazil'));
-		await userEvent.type(screen.getByTestId('score-Brazil'), '1');
-		await userEvent.clear(screen.getByTestId('score-Germany'));
-		await userEvent.type(screen.getByTestId('score-Germany'), '1');
+		await userEvent.clear(screen.getByTestId('score-brazil'));
+		await userEvent.type(screen.getByTestId('score-brazil'), '1');
+		await userEvent.clear(screen.getByTestId('score-germany'));
+		await userEvent.type(screen.getByTestId('score-germany'), '1');
 
 		const regularSubmit = await screen.findByTestId(
 			'submit-regular-Brazil'
@@ -226,8 +226,8 @@ describe('KnockoutStage component', () => {
 		render(<KnockoutStage qualifiedTeams={mockTeams} />);
 
 		// Fill in a score to win the final
-		await userEvent.type(screen.getByTestId('score-Brazil'), '2');
-		await userEvent.type(screen.getByTestId('score-Germany'), '1');
+		await userEvent.type(screen.getByTestId('score-brazil'), '2');
+		await userEvent.type(screen.getByTestId('score-germany'), '1');
 
 		const submit = await screen.findByTestId('submit-regular-Brazil');
 		await userEvent.click(submit);
@@ -259,11 +259,11 @@ describe('KnockoutStage sanity test', () => {
 		render(<KnockoutStage qualifiedTeams={teams} />);
 
 		// Enter a non-draw score
-		await userEvent.clear(screen.getByTestId('score-Brazil'));
-		await userEvent.type(screen.getByTestId('score-Brazil'), '2');
+		await userEvent.clear(screen.getByTestId('score-brazil'));
+		await userEvent.type(screen.getByTestId('score-brazil'), '2');
 
-		await userEvent.clear(screen.getByTestId('score-Germany'));
-		await userEvent.type(screen.getByTestId('score-Germany'), '1');
+		await userEvent.clear(screen.getByTestId('score-germany'));
+		await userEvent.type(screen.getByTestId('score-germany'), '1');
 
 		// Wait for the regular time submit button to appear
 		const submitButton = await screen.findByTestId('submit-regular-Brazil');

@@ -9,5 +9,5 @@
 import { safe } from '../utils/stringUtils';
 
 export const getScoreTestId = (team1, team2, position) => {
-	return `score-${safe(team1)}-vs-${safe(team2)}-${position}`;
+	return `score-${safe(safe(team1))}-vs-${safe(team2)}-${position}`;
 };

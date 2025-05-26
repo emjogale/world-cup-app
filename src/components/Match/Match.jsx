@@ -1,5 +1,6 @@
 import React from 'react';
 import './Match.css';
+import { safe } from '../../utils/stringUtils';
 
 const Match = ({
 	team1,
@@ -27,10 +28,12 @@ const Match = ({
 		>
 			<div className="team-row regular-time">
 				<div className="team-input">
-					<label htmlFor={`score-${team1}-regular`}>{team1}</label>
+					<label htmlFor={`score-${safe(team1)}-regular`}>
+						{team1}
+					</label>
 					<input
-						id={`score-${team1}-regular`}
-						data-testid={`score-${team1}`}
+						id={`score-${safe(team1)}-regular`}
+						data-testid={`score-${safe(team1)}`}
 						type="number"
 						min="0"
 						value={score1}
@@ -44,8 +47,8 @@ const Match = ({
 
 				<div className="team-input">
 					<input
-						id={`score-${team2}-regular`}
-						data-testid={`score-${team2}`}
+						id={`score-${safe(team2)}-regular`}
+						data-testid={`score-${safe(team2)}`}
 						type="number"
 						min="0"
 						value={score2}
@@ -53,7 +56,9 @@ const Match = ({
 							handleChange(team2, e.target.value, 'regular')
 						}
 					/>
-					<label htmlFor={`score-${team2}-regular`}>{team2}</label>
+					<label htmlFor={`score-${safe(team2)}-regular`}>
+						{team2}
+					</label>
 				</div>
 			</div>
 
@@ -62,11 +67,11 @@ const Match = ({
 					<h4>Extra Time</h4>
 					<div className="team-row">
 						<div className="team-input">
-							<label htmlFor={`score-${team1}-extra`}>
+							<label htmlFor={`score-${safe(team1)}-extra`}>
 								{team1}
 							</label>
 							<input
-								id={`score-${team1}-extra`}
+								id={`score-${safe(team1)}-extra`}
 								type="number"
 								value={extraTimeScore1}
 								onChange={(e) =>
@@ -78,7 +83,7 @@ const Match = ({
 						</div>
 						<div className="team-input">
 							<input
-								id={`score-${team2}-extra`}
+								id={`score-${safe(team2)}-extra`}
 								type="number"
 								value={extraTimeScore2}
 								onChange={(e) =>
@@ -86,7 +91,7 @@ const Match = ({
 								}
 								data-testid={`extra-${team2}`}
 							/>
-							<label htmlFor={`score-${team2}-extra`}>
+							<label htmlFor={`score-${safe(team2)}-extra`}>
 								{team2}
 							</label>
 						</div>
@@ -98,11 +103,11 @@ const Match = ({
 				<div className="penalties">
 					<h4>Penalties</h4>
 					<div className="team-row">
-						<label htmlFor={`score-${team1}-penalties`}>
+						<label htmlFor={`score-${safe(team1)}-penalties`}>
 							{team1}
 						</label>
 						<input
-							id={`score-${team1}-penalties`}
+							id={`score-${safe(team1)}-penalties`}
 							type="number"
 							value={penaltyScore1}
 							onChange={(e) =>
@@ -111,11 +116,11 @@ const Match = ({
 							data-testid={`penalty-${team1}`}
 						/>
 
-						<label htmlFor={`score-${team2}-penalties`}>
+						<label htmlFor={`score-${safe(team2)}-penalties`}>
 							{team2}
 						</label>
 						<input
-							id={`score-${team2}-penalties`}
+							id={`score-${safe(team2)}-penalties`}
 							type="number"
 							value={penaltyScore2}
 							onChange={(e) =>
