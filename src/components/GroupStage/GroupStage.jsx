@@ -16,6 +16,7 @@ import {
 } from '../../utils/groupHelpers';
 import { handleScoreChangeHelper } from '../../utils/scoreHelpers';
 import { getMatchKey } from '../../utils/matchHelpers';
+import { safe } from '../../utils/stringUtils';
 
 const GroupStage = ({ teams }) => {
 	const groupedTeams = useMemo(() => {
@@ -69,8 +70,8 @@ const GroupStage = ({ teams }) => {
 	);
 
 	return (
-		<div className="group-stage" data-testid="group-stage">
-			{Object.entries(groupedTeams).map(([groupName]) => {
+        <div className="group-stage" data-testid="group-stage">
+            {Object.entries(groupedTeams).map(([groupName]) => {
 				const matchesToDisplay =
 					matchesToDisplayByGroup[groupName] || [];
 				// Dev-only check to ensure no team is scheduled more than once at the same time
@@ -102,9 +103,9 @@ const GroupStage = ({ teams }) => {
 				});
 
 				return (
-					<div key={groupName} className="group-card">
-						<h2>Group {groupName}</h2>
-						<div className="group-table-wrapper">
+                    <div key={groupName} className="group-card">
+                        <h2>Group {groupName}</h2>
+                        <div className="group-table-wrapper">
 							<table className="group-table">
 								<thead>
 									<tr>
@@ -169,9 +170,11 @@ const GroupStage = ({ teams }) => {
 								</tbody>
 							</table>
 						</div>
-						{matchesToDisplay.map(({ team1, team2 }) => (
+                        {matchesToDisplay.map(({ team1, team2 }) => (
 							<Match
-								key={`${team1.name}-vs-${team2.name}`}
+								key={`${safe(safe(team1.name))}-vs-${safe(safe(
+									team2.name
+								))}`}
 								team1={team1.name}
 								team2={team2.name}
 								score1={
@@ -193,8 +196,7 @@ const GroupStage = ({ teams }) => {
 								}
 							/>
 						))}
-
-						<button
+                        <button
 							onClick={() => {
 								const { newStats, updatedMatches, nextScores } =
 									handleGroupSubmitHelper({
@@ -241,11 +243,10 @@ const GroupStage = ({ teams }) => {
 						>
 							Submit Results
 						</button>
-					</div>
-				);
+                    </div>
+                );
 			})}
-
-			{allGroupsComplete && !showKnockoutStage && (
+            {allGroupsComplete && !showKnockoutStage && (
 				<div className="knockout-button-wrapper">
 					<button
 						className="proceed-knockout-button"
@@ -275,8 +276,7 @@ const GroupStage = ({ teams }) => {
 					</button>
 				</div>
 			)}
-
-			{!allGroupsComplete && (
+            {!allGroupsComplete && (
 				<button
 					className="dev-fill-results"
 					onClick={() => {
@@ -289,13 +289,13 @@ const GroupStage = ({ teams }) => {
 					🔧 Dev: Auto-complete group stage
 				</button>
 			)}
-			{showKnockoutStage && (
+            {showKnockoutStage && (
 				<div ref={knockoutRef}>
 					<KnockoutStage qualifiedTeams={qualifiedTeams} />
 				</div>
 			)}
-		</div>
-	);
+        </div>
+    );
 };
 
 export default GroupStage;

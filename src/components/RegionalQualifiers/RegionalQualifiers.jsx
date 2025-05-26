@@ -101,7 +101,7 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
                         <ul className="regional-fixtures">
 							{groupMatches.map((match) => (
 								<li
-									key={`${safe(match.team1.name)}-vs-${safe(match.team2.name)}`}
+									key={`${safe(safe(safe(match.team1.name)))}-vs-${safe(safe(safe(match.team2.name)))}`}
 								>
 									<span className="team-name">
 										{match.team1.name}
