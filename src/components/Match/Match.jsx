@@ -24,7 +24,7 @@ const Match = ({
 	return (
 		<div
 			className="match-card horizontal"
-			data-testid={`match-${team1}-vs-${team2}`}
+			data-testid={`match-${safe(team1)}-vs-${safe(team2)}`}
 		>
 			<div className="team-row regular-time">
 				<div className="team-input">
@@ -77,7 +77,7 @@ const Match = ({
 								onChange={(e) =>
 									handleChange(team1, e.target.value, 'extra')
 								}
-								data-testid={`extra-${team1}`}
+								data-testid={`extra-${safe(team1)}`}
 							/>
 							<span className="vs">v</span>
 						</div>
@@ -89,7 +89,7 @@ const Match = ({
 								onChange={(e) =>
 									handleChange(team2, e.target.value, 'extra')
 								}
-								data-testid={`extra-${team2}`}
+								data-testid={`extra-${safe(team2)}`}
 							/>
 							<label htmlFor={`score-${safe(team2)}-extra`}>
 								{team2}
@@ -113,7 +113,7 @@ const Match = ({
 							onChange={(e) =>
 								handleChange(team1, e.target.value, 'penalties')
 							}
-							data-testid={`penalty-${team1}`}
+							data-testid={`penalty-${safe(team1)}`}
 						/>
 
 						<label htmlFor={`score-${safe(team2)}-penalties`}>
@@ -126,7 +126,7 @@ const Match = ({
 							onChange={(e) =>
 								handleChange(team2, e.target.value, 'penalties')
 							}
-							data-testid={`penalty-${team2}`}
+							data-testid={`penalty-${safe(team2)}`}
 						/>
 					</div>
 				</div>

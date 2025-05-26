@@ -93,7 +93,7 @@ describe('group stage component', () => {
 
 		// Make sure specific initial match is on screen
 		expect(
-			screen.getByTestId('match-China-vs-Argentina')
+			screen.getByTestId('match-china-vs-argentina')
 		).toBeInTheDocument();
 
 		// Submit Group A's matches (China, Argentina, Canada, Chile)
@@ -108,7 +108,7 @@ describe('group stage component', () => {
 
 		// After submission, that match should be gone
 		expect(
-			screen.queryByTestId('match-China-vs-Argentina')
+			screen.queryByTestId('match-china-vs-argentina')
 		).not.toBeInTheDocument();
 
 		// Still 4 matches total (2 from Group B, 2 new from Group A)

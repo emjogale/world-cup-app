@@ -34,7 +34,7 @@ describe('KnockoutStage component', () => {
 		await userEvent.clear(score2);
 		await userEvent.type(score2, '1');
 
-		const submit = screen.getByTestId('submit-regular-Brazil');
+		const submit = screen.getByTestId('submit-regular-brazil');
 		await userEvent.click(submit);
 
 		expect(
@@ -57,17 +57,17 @@ describe('KnockoutStage component', () => {
 		await userEvent.type(screen.getByTestId('score-brazil'), '2');
 		await userEvent.clear(screen.getByTestId('score-germany'));
 		await userEvent.type(screen.getByTestId('score-germany'), '1');
-		await userEvent.click(screen.getByTestId('submit-regular-Brazil'));
+		await userEvent.click(screen.getByTestId('submit-regular-brazil'));
 
 		// Submit France vs Argentina
 		await userEvent.clear(screen.getByTestId('score-france'));
 		await userEvent.type(screen.getByTestId('score-france'), '3');
 		await userEvent.clear(screen.getByTestId('score-argentina'));
 		await userEvent.type(screen.getByTestId('score-argentina'), '0');
-		await userEvent.click(screen.getByTestId('submit-regular-France'));
+		await userEvent.click(screen.getByTestId('submit-regular-france'));
 
 		// ✅ Wait for Round 2 match to appear
-		await screen.findByTestId('match-Brazil-vs-France');
+		await screen.findByTestId('match-brazil-vs-france');
 
 		// ✅ Optionally check Round 2 heading exists (H3)
 		const round2Heading = screen
@@ -78,7 +78,7 @@ describe('KnockoutStage component', () => {
 
 		// ✅ Check the correct match is present
 		expect(
-			screen.getByTestId('match-Brazil-vs-France')
+			screen.getByTestId('match-brazil-vs-france')
 		).toBeInTheDocument();
 	});
 
@@ -97,14 +97,14 @@ describe('KnockoutStage component', () => {
 
 			// Wait for the submit button to appear, then click it
 			const submitButton = await screen.findByTestId(
-				'submit-regular-Brazil'
+				'submit-regular-brazil'
 			);
 			await userEvent.click(submitButton);
 
 			// Assert that extra time inputs are now visible
 			expect(await screen.findByText('Extra Time')).toBeInTheDocument();
-			expect(screen.getByTestId('extra-Brazil')).toBeInTheDocument();
-			expect(screen.getByTestId('extra-Germany')).toBeInTheDocument();
+			expect(screen.getByTestId('extra-brazil')).toBeInTheDocument();
+			expect(screen.getByTestId('extra-germany')).toBeInTheDocument();
 		});
 
 		it('shows winner message after extra time win', async () => {
@@ -120,13 +120,13 @@ describe('KnockoutStage component', () => {
 			await userEvent.type(score2, '1');
 
 			const regularSubmit = await screen.findByTestId(
-				'submit-regular-Brazil'
+				'submit-regular-brazil'
 			);
 			await userEvent.click(regularSubmit);
 
 			// Fill extra time scores
-			const extra1 = await screen.findByTestId('extra-Brazil');
-			const extra2 = await screen.findByTestId('extra-Germany');
+			const extra1 = await screen.findByTestId('extra-brazil');
+			const extra2 = await screen.findByTestId('extra-germany');
 
 			await userEvent.clear(extra1);
 			await userEvent.type(extra1, '2');
@@ -134,7 +134,7 @@ describe('KnockoutStage component', () => {
 			await userEvent.type(extra2, '1');
 
 			const extraSubmit = await screen.findByTestId(
-				'submit-extra-Brazil'
+				'submit-extra-brazil'
 			);
 			await userEvent.click(extraSubmit);
 
@@ -154,24 +154,24 @@ describe('KnockoutStage component', () => {
 		await userEvent.type(screen.getByTestId('score-germany'), '1');
 
 		const regularSubmit = await screen.findByTestId(
-			'submit-regular-Brazil'
+			'submit-regular-brazil'
 		);
 		await userEvent.click(regularSubmit);
 
 		// Extra time: draw
-		await userEvent.clear(screen.getByTestId('extra-Brazil'));
-		await userEvent.type(screen.getByTestId('extra-Brazil'), '2');
-		await userEvent.clear(screen.getByTestId('extra-Germany'));
-		await userEvent.type(screen.getByTestId('extra-Germany'), '2');
+		await userEvent.clear(screen.getByTestId('extra-brazil'));
+		await userEvent.type(screen.getByTestId('extra-brazil'), '2');
+		await userEvent.clear(screen.getByTestId('extra-germany'));
+		await userEvent.type(screen.getByTestId('extra-germany'), '2');
 
 		await screen.findByText('Extra Time'); // confirms draw was processed
-		const extraSubmit = await screen.findByTestId('submit-extra-Brazil');
+		const extraSubmit = await screen.findByTestId('submit-extra-brazil');
 		await userEvent.click(extraSubmit);
 
 		// Penalty input appears
 		expect(await screen.findByText('Penalties')).toBeInTheDocument();
-		expect(screen.getByTestId('penalty-Brazil')).toBeInTheDocument();
-		expect(screen.getByTestId('penalty-Germany')).toBeInTheDocument();
+		expect(screen.getByTestId('penalty-brazil')).toBeInTheDocument();
+		expect(screen.getByTestId('penalty-germany')).toBeInTheDocument();
 	});
 
 	it('shows winner message after penalty shootout win', async () => {
@@ -184,32 +184,32 @@ describe('KnockoutStage component', () => {
 		await userEvent.type(screen.getByTestId('score-germany'), '1');
 
 		const regularSubmit = await screen.findByTestId(
-			'submit-regular-Brazil'
+			'submit-regular-brazil'
 		);
 		await userEvent.click(regularSubmit);
 
 		// Extra time draw
-		const extra1 = await screen.findByTestId('extra-Brazil');
-		const extra2 = await screen.findByTestId('extra-Germany');
+		const extra1 = await screen.findByTestId('extra-brazil');
+		const extra2 = await screen.findByTestId('extra-germany');
 
 		await userEvent.clear(extra1);
 		await userEvent.type(extra1, '2');
 		await userEvent.clear(extra2);
 		await userEvent.type(extra2, '2');
 
-		const extraSubmit = await screen.findByTestId('submit-extra-Brazil');
+		const extraSubmit = await screen.findByTestId('submit-extra-brazil');
 		await userEvent.click(extraSubmit);
 
 		// Penalty shootout
-		const pen1 = await screen.findByTestId('penalty-Brazil');
-		const pen2 = await screen.findByTestId('penalty-Germany');
+		const pen1 = await screen.findByTestId('penalty-brazil');
+		const pen2 = await screen.findByTestId('penalty-germany');
 
 		await userEvent.clear(pen1);
 		await userEvent.type(pen1, '4');
 		await userEvent.clear(pen2);
 		await userEvent.type(pen2, '3');
 
-		const penSubmit = await screen.findByTestId('submit-penalties-Brazil');
+		const penSubmit = await screen.findByTestId('submit-penalties-brazil');
 		await userEvent.click(penSubmit);
 
 		expect(
@@ -229,7 +229,7 @@ describe('KnockoutStage component', () => {
 		await userEvent.type(screen.getByTestId('score-brazil'), '2');
 		await userEvent.type(screen.getByTestId('score-germany'), '1');
 
-		const submit = await screen.findByTestId('submit-regular-Brazil');
+		const submit = await screen.findByTestId('submit-regular-brazil');
 		await userEvent.click(submit);
 
 		expect(
@@ -266,7 +266,7 @@ describe('KnockoutStage sanity test', () => {
 		await userEvent.type(screen.getByTestId('score-germany'), '1');
 
 		// Wait for the regular time submit button to appear
-		const submitButton = await screen.findByTestId('submit-regular-Brazil');
+		const submitButton = await screen.findByTestId('submit-regular-brazil');
 
 		expect(submitButton).toBeInTheDocument();
 

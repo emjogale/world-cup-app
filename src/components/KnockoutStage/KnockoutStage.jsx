@@ -13,6 +13,7 @@ import {
 } from '../../utils/matchHelpers';
 import { devAutofillKnockoutRound } from '../../utils/devTools';
 import { getKnockoutRoundLabel } from '../../utils/roundLabels';
+import { safe } from '../../utils/stringUtils';
 
 const isFinalMatch = (round, roundIndex, knockoutRounds) => {
 	return (
@@ -237,7 +238,9 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 													'regular'
 												)
 											}
-											data-testid={`submit-regular-${match.team1.name}`}
+											data-testid={`submit-regular-${safe(
+												match.team1.name
+											)}`}
 										>
 											Submit Regular Time
 										</button>
@@ -253,7 +256,9 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 													'extra'
 												);
 											}}
-											data-testid={`submit-extra-${match.team1.name}`}
+											data-testid={`submit-extra-${safe(
+												match.team1.name
+											)}`}
 										>
 											Submit Extra Time
 										</button>
@@ -269,7 +274,9 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 													'penalties'
 												)
 											}
-											data-testid={`submit-penalties-${match.team1.name}`}
+											data-testid={`submit-penalties-${safe(
+												match.team1.name
+											)}`}
 										>
 											Submit Penalties
 										</button>
