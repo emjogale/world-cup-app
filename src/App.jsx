@@ -1,41 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { shuffleTeams } from './tournament/shuffleTeams';
 import Qualifiers from './components/Qualifiers/Qualifiers';
 import GroupStage from './components/GroupStage/GroupStage';
 import KnockoutStage from './components/KnockoutStage/KnockoutStage';
-import { generateMockTeams } from './utils/teamFactories';
 import './index.css';
 import RegionalQualifiers from './components/RegionalQualifiers/RegionalQualifiers';
+import { useTeams } from './context/TeamsContext';
 
 const App = () => {
 	const [stage, setStage] = useState('qualifiers');
-	const [teams, setTeams] = useState([]);
 	const [seed, setSeed] = useState(
 		() => localStorage.getItem('tdd-seed') || ''
 	);
 	const [shuffledTeams, setShuffledTeams] = useState([]);
 	const [winners, setWinners] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [error, setError] = useState(null);
-
-	const mockAsiaTeams = generateMockTeams(42, 'Asia');
-
-	useEffect(() => {
-		fetch('/teams.json')
-			.then((res) => {
-				if (!res.ok) throw new Error('Failed to load teams');
-				return res.json();
-			})
-			.then((data) => {
-				setTeams(data);
-				setLoading(false);
-			})
-			.catch((err) => {
-				console.error('Error loading teams', err);
-				setError(err.message);
-				setLoading(false);
-			});
-	}, []);
+	const { teams, loading, error } = useTeams();
+	const asiaTeams =
+		!loading && error ? teams.filter((t) => t.region === 'Asia') : [];
 
 	return (
 		<div className="app-container">
@@ -43,7 +24,13 @@ const App = () => {
 
 			{loading && <p>Loading teams...</p>}
 			{error && <p style={{ color: 'red' }}>{error}</p>}
-			<RegionalQualifiers region="Asia" teams={mockAsiaTeams} spots={8} />
+
+			{asiaTeams.length > 0 ? (
+				<RegionalQualifiers region="Asia" teams={asiaTeams} spots={8} />
+			) : (
+				!loading && error && <p>No teams found for Asia yet</p>
+			)}
+
 			{stage !== 'qualifiers' && seed && (
 				<>
 					{console.log('Seed is:', seed)}

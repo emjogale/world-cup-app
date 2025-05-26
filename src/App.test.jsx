@@ -4,6 +4,7 @@ import App from '../src/App';
 import { mockFetchTeams } from './test-utils/mockFetchTeams';
 
 import userEvent from '@testing-library/user-event';
+import { TeamsProvider } from './context/TeamsProvider';
 
 // 👇 Mock fetch before each test
 beforeEach(() => {
@@ -18,21 +19,33 @@ afterEach(() => {
 
 describe('App component', () => {
 	it('shows loading state initially', () => {
-		render(<App />);
+		render(
+			<TeamsProvider>
+				<App />
+			</TeamsProvider>
+		);
 		expect(screen.getByText(/loading teams/i)).toBeInTheDocument();
 	});
 
 	it('shows error message if fetch fails', async () => {
 		fetch.mockRejectedValueOnce(new Error('Network error'));
 
-		render(<App />);
+		render(
+			<TeamsProvider>
+				<App />
+			</TeamsProvider>
+		);
 		expect(
 			await screen.findByText(/error loading teams/i)
 		).toBeInTheDocument();
 	});
 
 	it('shows qualifiers before the tournament starts', async () => {
-		render(<App />);
+		render(
+			<TeamsProvider>
+				<App />
+			</TeamsProvider>
+		);
 
 		expect(
 			await screen.findByRole('button', { name: /start tournament/i })
@@ -40,7 +53,11 @@ describe('App component', () => {
 	});
 
 	it('shows the group stage after clicking start', async () => {
-		render(<App />);
+		render(
+			<TeamsProvider>
+				<App />
+			</TeamsProvider>
+		);
 		const startBtn = await screen.findByRole('button', {
 			name: /start tournament/i
 		});
@@ -65,7 +82,11 @@ describe('App component', () => {
 
 		mockFetchTeams(); // ensure data loads
 
-		render(<App />);
+		render(
+			<TeamsProvider>
+				<App />
+			</TeamsProvider>
+		);
 
 		const startBtn = await screen.findByRole('button', {
 			name: /start tournament/i
