@@ -27,3 +27,5 @@ dist-ssr
 coverage/
 # temporary things
 scratch.js
+
+codemods/

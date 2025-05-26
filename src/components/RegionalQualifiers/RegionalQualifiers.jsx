@@ -40,22 +40,20 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 	}, [teams]);
 
 	return (
-		<div
+        <div
 			data-testid={`regional-qualifiers-${region.toLowerCase()}`}
 			className="regional-stage"
 		>
-			<h2>{region} Qualifiers</h2>
-
-			{Object.entries(matches).map(([groupName, groupMatches]) => {
+            <h2>{region} Qualifiers</h2>
+            {Object.entries(matches).map(([groupName, groupMatches]) => {
 				const groupStats = regionalStats[groupName];
 				if (!groupStats) return null;
 
 				return (
-					<div key={groupName} className="group-card">
-						<h3>{groupName}</h3>
-
-						{/* Standings Table */}
-						<div className="group-table-wrapper">
+                    <div key={groupName} className="group-card">
+                        <h3>{groupName}</h3>
+                        {/* Standings Table */}
+                        <div className="group-table-wrapper">
 							<table className="group-table">
 								<thead>
 									<tr>
@@ -99,12 +97,11 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 								</tbody>
 							</table>
 						</div>
-
-						{/* Match Fixtures */}
-						<ul className="regional-fixtures">
+                        {/* Match Fixtures */}
+                        <ul className="regional-fixtures">
 							{groupMatches.map((match) => (
 								<li
-									key={`${match.team1.name}-vs-${match.team2.name}`}
+									key={`${safe(match.team1.name)}-vs-${safe(match.team2.name)}`}
 								>
 									<span className="team-name">
 										{match.team1.name}
@@ -162,7 +159,7 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 								</li>
 							))}
 						</ul>
-						<button
+                        <button
 							onClick={() => {
 								const { newStats, updatedMatches, nextScores } =
 									handleGroupSubmitHelper({
@@ -187,11 +184,10 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 						>
 							Submit
 						</button>
-					</div>
-				);
+                    </div>
+                );
 			})}
-
-			{qualifiedTeams.length > 0 && (
+            {qualifiedTeams.length > 0 && (
 				<div>
 					<h3>Qualified Teams</h3>
 					<div className="qualified-grid">
@@ -207,8 +203,7 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 					</div>
 				</div>
 			)}
-
-			<button
+            <button
 				onClick={() => {
 					const { updatedMatches, updatedStats } =
 						autoCompleteGroupStage(matches, regionalStats);
@@ -230,8 +225,8 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 			>
 				Dev Autofill Regional Matches
 			</button>
-		</div>
-	);
+        </div>
+    );
 };
 
 export default RegionalQualifiers;
