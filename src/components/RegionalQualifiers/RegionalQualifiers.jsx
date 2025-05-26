@@ -72,7 +72,7 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 									{Object.values(regionalStats[groupName])
 										.sort(sortByGroupRanking)
 										.map((team, index) => (
-											<tr key={`${team.name}-${index}`}>
+											<tr key={`${safe(team.name)}-${index}`}>
 												<td className="team-cell">
 													<div className="team-info">
 														<img
@@ -193,7 +193,7 @@ const RegionalQualifiers = ({ region, teams, spots }) => {
 					<div className="qualified-grid">
 						{qualifiedTeams.map((team, index) => (
 							<div
-								key={`${team.name}-${index}`}
+								key={`${safe(team.name)}-${index}`}
 								className="qualified-team"
 							>
 								<img src={team.flag} alt={team.name} />

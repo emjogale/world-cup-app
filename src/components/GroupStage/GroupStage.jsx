@@ -133,7 +133,7 @@ const GroupStage = ({ teams }) => {
 												);
 
 											return (
-												<tr
+                                                <tr
 													key={team.name}
 													className={
 														isTopTwo ||
@@ -141,9 +141,9 @@ const GroupStage = ({ teams }) => {
 															? 'group__top-team'
 															: ''
 													}
-													data-testid={`row-${team.name}`}
+													data-testid={`row-${safe(team.name)}`}
 												>
-													<td className="team-cell">
+                                                    <td className="team-cell">
 														<div className="team-info">
 															<img
 																src={team.flag}
@@ -156,16 +156,16 @@ const GroupStage = ({ teams }) => {
 															</span>
 														</div>
 													</td>
-													<td>{team.played}</td>
-													<td>{team.won}</td>
-													<td>{team.drawn}</td>
-													<td>{team.lost}</td>
-													<td>{team.for}</td>
-													<td>{team.against}</td>
-													<td>{team.gd}</td>
-													<td>{team.points}</td>
-												</tr>
-											);
+                                                    <td>{team.played}</td>
+                                                    <td>{team.won}</td>
+                                                    <td>{team.drawn}</td>
+                                                    <td>{team.lost}</td>
+                                                    <td>{team.for}</td>
+                                                    <td>{team.against}</td>
+                                                    <td>{team.gd}</td>
+                                                    <td>{team.points}</td>
+                                                </tr>
+                                            );
 										})}
 								</tbody>
 							</table>
