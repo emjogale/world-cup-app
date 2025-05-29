@@ -190,5 +190,45 @@
 	{
 		"name": "Wales",
 		"flag": "https://flagpedia.net/data/flags/w320/gb-wls.png"
+	},
+	{
+		"name": "Japan",
+		"flag": "https://flagcdn.com/w320/jp.png",
+		"region": "Asia"
+	},
+	{
+		"name": "South Korea",
+		"flag": "https://flagcdn.com/w320/kr.png",
+		"region": "Asia"
+	},
+	{
+		"name": "Australia",
+		"flag": "https://flagcdn.com/w320/au.png",
+		"region": "Asia"
+	},
+	{
+		"name": "Iran",
+		"flag": "https://flagcdn.com/w320/ir.png",
+		"region": "Asia"
+	},
+	{
+		"name": "Uzbekistan",
+		"flag": "https://flagcdn.com/w320/uz.png",
+		"region": "Asia"
+	},
+	{
+		"name": "Iraq",
+		"flag": "https://flagcdn.com/w320/iq.png",
+		"region": "Asia"
+	},
+	{
+		"name": "Saudi Arabia",
+		"flag": "https://flagcdn.com/w320/sa.png",
+		"region": "Asia"
+	},
+	{
+		"name": "Qatar",
+		"flag": "https://flagcdn.com/w320/qa.png",
+		"region": "Asia"
 	}
 ]

@@ -1,31 +1,11 @@
 // This view shows all qualified teams before the tournament begins.
 // Useful for previewing entries or editing before grouping.
 
-import React, { useEffect, useState } from 'react';
 import './Qualifiers.css';
+import { useTeams } from '../../context/TeamsContext';
 
-const Teams = () => {
-	const [teams, setTeams] = useState([]);
-	const [error, setError] = useState(false); // state for errors
-
-	useEffect(() => {
-		const fetchTeams = async () => {
-			try {
-				const res = await fetch('/teams.json');
-				if (!res.ok) {
-					throw new Error('Network response was not ok');
-				}
-				const data = await res.json();
-
-				setTeams(data);
-			} catch (error) {
-				console.error('Fetch error:', error);
-				setError(true); // mark error state
-			}
-		};
-
-		fetchTeams();
-	}, []);
+const Qualifiers = () => {
+	const { teams, error } = useTeams();
 
 	return (
 		<div className="teams-container">
@@ -48,4 +28,4 @@ const Teams = () => {
 	);
 };
 
-export default Teams;
+export default Qualifiers;

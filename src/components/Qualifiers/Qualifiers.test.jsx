@@ -4,6 +4,7 @@ import Qualifiers from './Qualifiers';
 import { beforeEach, afterEach } from 'vitest';
 import { mockFetchTeams } from '../../test-utils/mockFetchTeams';
 import { mockTeams } from '../../test-utils/mockTeams';
+import { TeamsProvider } from '../../context/TeamsProvider';
 
 beforeEach(() => {
 	mockFetchTeams();
@@ -22,7 +23,11 @@ describe('Qualifiers component - fetch scenarios', () => {
 				json: () => Promise.resolve(mockTeams)
 			})
 		);
-		render(<Qualifiers />);
+		render(
+			<TeamsProvider>
+				<Qualifiers />
+			</TeamsProvider>
+		);
 
 		expect(globalThis.fetch).toHaveBeenCalled();
 		expect(globalThis.fetch).toHaveBeenCalledWith('/teams.json');
