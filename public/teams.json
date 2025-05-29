@@ -87,22 +87,12 @@
 		"name": "India",
 		"flag": "https://flagpedia.net/data/flags/w320/in.png"
 	},
-	{
-		"name": "Iran",
-		"flag": "https://flagpedia.net/data/flags/w320/ir.png"
-	},
-	{
-		"name": "Iraq",
-		"flag": "https://flagcdn.com/w320/iq.png"
-	},
+
 	{
 		"name": "Italy",
 		"flag": "https://flagpedia.net/data/flags/w320/it.png"
 	},
-	{
-		"name": "Japan",
-		"flag": "https://flagpedia.net/data/flags/w320/jp.png"
-	},
+
 	{
 		"name": "Mexico",
 		"flag": "https://flagpedia.net/data/flags/w320/mx.png"
@@ -139,14 +129,7 @@
 		"name": "Portugal",
 		"flag": "https://flagpedia.net/data/flags/w320/pt.png"
 	},
-	{
-		"name": "Qatar",
-		"flag": "https://flagpedia.net/data/flags/w320/ru.png"
-	},
-	{
-		"name": "Saudi Arabia",
-		"flag": "https://flagpedia.net/data/flags/w320/sa.png"
-	},
+
 	{
 		"name": "Senegal",
 		"flag": "https://flagpedia.net/data/flags/w320/sn.png"
@@ -159,10 +142,7 @@
 		"name": "South Africa",
 		"flag": "https://flagpedia.net/data/flags/w320/za.png"
 	},
-	{
-		"name": "South Korea",
-		"flag": "https://flagpedia.net/data/flags/w320/kr.png"
-	},
+
 	{
 		"name": "Spain",
 		"flag": "https://flagpedia.net/data/flags/w320/es.png"
@@ -183,10 +163,7 @@
 		"name": "Uruguay",
 		"flag": "https://flagpedia.net/data/flags/w320/uy.png"
 	},
-	{
-		"name": "Uzbekistan",
-		"flag": "https://flagcdn.com/w320/uz.png"
-	},
+
 	{
 		"name": "Wales",
 		"flag": "https://flagpedia.net/data/flags/w320/gb-wls.png"
@@ -201,11 +178,7 @@
 		"flag": "https://flagcdn.com/w320/kr.png",
 		"region": "Asia"
 	},
-	{
-		"name": "Australia",
-		"flag": "https://flagcdn.com/w320/au.png",
-		"region": "Asia"
-	},
+
 	{
 		"name": "Iran",
 		"flag": "https://flagcdn.com/w320/ir.png",

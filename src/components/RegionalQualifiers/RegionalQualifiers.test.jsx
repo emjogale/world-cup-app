@@ -18,7 +18,7 @@ const mockTeams = [
 describe('RegionalQualifiers component', () => {
 	it('dev autofill renders regional qualifiers and autofills matches', () => {
 		const mockTeams = generateMockTeams(42, 'Asia');
-
+		//TODO: update to use TeamProvider!
 		render(
 			<RegionalQualifiers region="Asia" teams={mockTeams} spots={8} />
 		);

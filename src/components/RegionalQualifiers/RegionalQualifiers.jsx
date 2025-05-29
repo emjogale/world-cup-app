@@ -16,32 +16,35 @@ import { useTeams } from '../../context/TeamsContext';
 const RegionalQualifiers = ({ region, spots }) => {
 	const { teams, loading, error } = useTeams();
 	// use only the teams from the correct region
-	const regionTeams = teams.filter((t) => t.region === region);
+	console.log('All regional teams from context:', teams);
 	const [matches, setMatches] = useState([]);
 	const [qualifiedTeams, setQualifiedTeams] = useState([]);
 	const [regionalStats, setRegionalStats] = useState({});
 	const [scores, setScores] = useState({});
 
 	useEffect(() => {
-		if (regionTeams && regionTeams.length > 0) {
-			const groupCount = Math.floor(regionTeams.length / 6);
-			const groups = Array.from({ length: groupCount }, (_, i) => ({
-				name: `Group ${String.fromCharCode(65 + i)}`,
-				regionTeams: regionTeams.slice(i * 6, i * 6 + 6)
-			}));
+		if (!teams || teams.length === 0) return;
 
-			const newMatches = {};
-			const newStats = {};
+		const regionTeams = teams.filter((t) => t.region === region);
+		if (regionTeams.length === 0) return;
 
-			groups.forEach((group) => {
-				newMatches[group.name] = createGroupMatches(group.regionTeams);
-				newStats[group.name] = initializeGroupStats(group.regionTeams);
-			});
+		const groupCount = Math.floor(regionTeams.length / 6);
+		const groups = Array.from({ length: groupCount }, (_, i) => ({
+			name: `Group ${String.fromCharCode(65 + i)}`,
+			teams: regionTeams.slice(i * 6, i * 6 + 6)
+		}));
 
-			setMatches(newMatches);
-			setRegionalStats(newStats);
-		}
-	}, [regionTeams]);
+		const newMatches = {};
+		const newStats = {};
+
+		groups.forEach((group) => {
+			newMatches[group.name] = createGroupMatches(group.teams);
+			newStats[group.name] = initializeGroupStats(group.teams);
+		});
+
+		setMatches(newMatches);
+		setRegionalStats(newStats);
+	}, [teams, region]);
 
 	// while data is loading or errored, give quick feedback
 	if (loading) return <p>Loading {region} teams...</p>;

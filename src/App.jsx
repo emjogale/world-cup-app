@@ -16,7 +16,7 @@ const App = () => {
 	const [winners, setWinners] = useState([]);
 	const { teams, loading, error } = useTeams();
 	const asiaTeams =
-		!loading && error ? teams.filter((t) => t.region === 'Asia') : [];
+		!loading && !error ? teams.filter((t) => t.region === 'Asia') : [];
 
 	return (
 		<div className="app-container">
@@ -26,7 +26,7 @@ const App = () => {
 			{error && <p style={{ color: 'red' }}>{error}</p>}
 
 			{asiaTeams.length > 0 ? (
-				<RegionalQualifiers region="Asia" teams={asiaTeams} spots={8} />
+				<RegionalQualifiers region="Asia" spots={8} />
 			) : (
 				!loading && error && <p>No teams found for Asia yet</p>
 			)}

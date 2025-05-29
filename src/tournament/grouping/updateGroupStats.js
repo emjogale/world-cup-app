@@ -22,7 +22,11 @@ export const emptyStats = () => ({
 export const initializeGroupStats = (teams) => {
 	const stats = {};
 	for (const team of teams) {
-		stats[team.name] = emptyStats();
+		stats[team.name] = {
+			name: team.name,
+			flag: team.flag,
+			...emptyStats()
+		};
 	}
 	return stats;
 };
