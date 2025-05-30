@@ -59,3 +59,11 @@ export const handleGroupSubmitHelper = ({
 		nextScores
 	};
 };
+
+export const splitIntoGroups = (teams, groupSize = 6) => {
+	const groups = [];
+	for (let i = 0; i < teams.length; i += groupSize) {
+		groups.push(teams.slice(i, i + groupSize));
+	}
+	return groups;
+};

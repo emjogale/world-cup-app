@@ -1,27 +1,40 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import RegionalQualifiers from './RegionalQualifiers';
-import { generateMockTeams } from '../../utils/teamFactories';
-import { getScoreTestId } from '../../test-utils/getScoreTestId';
 
-const mockTeams = [
-	{ name: 'Japan', flag: '🇯🇵' },
-	{ name: 'South Korea', flag: '🇰🇷' },
-	{ name: 'Iran', flag: '🇮🇷' },
-	{ name: 'Saudi Arabia', flag: '🇸🇦' },
-	{ name: 'Australia', flag: '🇦🇺' },
-	{ name: 'Qatar', flag: '🇶🇦' }
-];
+import { getScoreTestId } from '../../test-utils/getScoreTestId';
+import { TeamsProvider } from '../../context/TeamsProvider';
+
+// const mockTeams = [
+// { name: 'Japan', flag: '🇯🇵' },
+// { name: 'South Korea', flag: '🇰🇷' },
+// { name: 'Iran', flag: '🇮🇷' },
+// { name: 'Saudi Arabia', flag: '🇸🇦' },
+// { name: 'Australia', flag: '🇦🇺' },
+// { name: 'Qatar', flag: '🇶🇦' }
+// ];
+
+vi.mock('../../context/TeamsContext', () => {
+	const mockTeams = [
+		{ name: 'Japan', region: 'Asia', flag: '🇯🇵' },
+		{ name: 'South Korea', region: 'Asia', flag: '🇰🇷' },
+		{ name: 'Iran', region: 'Asia', flag: '🇮🇷' },
+		{ name: 'Saudi Arabia', region: 'Asia', flag: '🇸🇦' },
+		{ name: 'Australia', region: 'Asia', flag: '🇦🇺' },
+		{ name: 'Qatar', region: 'Asia', flag: '🇶🇦' }
+	];
+	return {
+		/* 👇 the hook returns the usual shape */
+		useTeams: () => ({ teams: mockTeams, loading: false, error: null }),
+		TeamsProvider: ({ children }) => children
+	};
+});
 
 describe('RegionalQualifiers component', () => {
-	it('dev autofill renders regional qualifiers and autofills matches', () => {
-		const mockTeams = generateMockTeams(42, 'Asia');
-		//TODO: update to use TeamProvider!
-		render(
-			<RegionalQualifiers region="Asia" teams={mockTeams} spots={8} />
-		);
+	it('renders Asia Qualifiers and dev-autofills matches', () => {
+		render(<RegionalQualifiers region="Asia" spots={8} />);
 
 		// Check the heading
 		expect(screen.getByText(/Asia Qualifiers/i)).toBeInTheDocument();
@@ -30,16 +43,12 @@ describe('RegionalQualifiers component', () => {
 		const button = screen.getByText(/Dev Autofill Regional Matches/i);
 		fireEvent.click(button);
 
-		// Check that some match results appeared (e.g., Team Asia 1 vs Team Asia 2)
-		expect(screen.getAllByText(/Team Asia/i)).not.toHaveLength(0);
+		// after autofill at least one table cell should contain "Japan" or any team
+		expect(screen.getAllByText('Japan')).not.toHaveLength(0);
 	});
-});
 
-describe('RegionalQualifiers input isolation', () => {
 	it('only updates the score for the targeted match input', async () => {
-		render(
-			<RegionalQualifiers region="Asia" teams={mockTeams} spots={4} />
-		);
+		render(<RegionalQualifiers region="Asia" spots={4} />);
 
 		const japanInput = await screen.findByTestId(
 			getScoreTestId('Japan', 'South Korea', 1)

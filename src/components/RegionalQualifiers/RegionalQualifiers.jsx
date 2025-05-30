@@ -10,6 +10,7 @@ import {
 import './RegionalQualifiers.css';
 import { getMatchKey } from '../../utils/matchHelpers';
 import { handleScoreChangeHelper } from '../../utils/scoreHelpers';
+import { splitIntoGroups } from '../../utils/groupHelpers';
 import { safe } from '../../utils/stringUtils';
 import { useTeams } from '../../context/TeamsContext';
 
@@ -28,10 +29,10 @@ const RegionalQualifiers = ({ region, spots }) => {
 		const regionTeams = teams.filter((t) => t.region === region);
 		if (regionTeams.length === 0) return;
 
-		const groupCount = Math.floor(regionTeams.length / 6);
-		const groups = Array.from({ length: groupCount }, (_, i) => ({
+		const splitGroups = splitIntoGroups(regionTeams, 6);
+		const groups = splitGroups.map((groupTeams, i) => ({
 			name: `Group ${String.fromCharCode(65 + i)}`,
-			teams: regionTeams.slice(i * 6, i * 6 + 6)
+			teams: groupTeams
 		}));
 
 		const newMatches = {};
