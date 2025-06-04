@@ -5,7 +5,6 @@ import { describe, it, expect, vi } from 'vitest';
 import RegionalQualifiers from './RegionalQualifiers';
 
 import { getScoreTestId } from '../../test-utils/getScoreTestId';
-import { TeamsProvider } from '../../context/TeamsProvider';
 
 // const mockTeams = [
 // { name: 'Japan', flag: '🇯🇵' },
@@ -59,5 +58,33 @@ describe('RegionalQualifiers component', () => {
 			getScoreTestId('Australia', 'Qatar', 1)
 		);
 		expect(unrelatedInput.value).toBe('');
+	});
+
+	it('does not update Japan/South Korea input when Australia/Qatar is changed', async () => {
+		render(<RegionalQualifiers region="Asia" spots={4} />);
+
+		const qatarInput = await screen.findByTestId(
+			getScoreTestId('Australia', 'Qatar', 1)
+		);
+		await userEvent.type(qatarInput, '3');
+
+		const japanInput = screen.getByTestId(
+			getScoreTestId('Japan', 'South Korea', 1)
+		);
+		expect(japanInput.value).toBe('');
+	});
+
+	it('only updates ther score for the Australia vs Qatar input', async () => {
+		render(<RegionalQualifiers region="Asia" spots={4} />);
+
+		const qatarInput = await screen.findByTestId(
+			getScoreTestId('Australia', 'Qatar', 1)
+		);
+		await userEvent.type(qatarInput, '3');
+
+		const japanInput = screen.getByTestId(
+			getScoreTestId('Japan', 'South Korea', 1)
+		);
+		expect(japanInput.value).toBe('');
 	});
 });

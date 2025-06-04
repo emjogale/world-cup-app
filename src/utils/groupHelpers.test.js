@@ -1,4 +1,8 @@
-import { handleGroupSubmitHelper, sortByGroupRanking } from './groupHelpers';
+import {
+	handleGroupSubmitHelper,
+	sortByGroupRanking,
+	splitIntoGroups
+} from './groupHelpers';
 import { describe, it, expect } from 'vitest';
 
 describe('sortByGroupRanking', () => {
@@ -109,5 +113,33 @@ describe('handleGroupSubmitHelper', () => {
 				score2: ''
 			}
 		});
+	});
+});
+
+describe('splitIntoGroups', () => {
+	it('splits an array of teams into groups of a given size', () => {
+		const teams = Array.from({ length: 14 }, (_, i) => ({
+			name: `Team ${i + 1}`
+		}));
+		const groups = splitIntoGroups(teams, 5);
+
+		// should result in 3 groups: 5 + 5 + 4
+		expect(groups.length).toBe(3);
+		expect(groups[0].length).toBe(5);
+		expect(groups[1].length).toBe(5);
+		expect(groups[2].length).toBe(4);
+	});
+
+	it('returns one group if total teams <= groupSize', () => {
+		const teams = [
+			{ name: 'Team A' },
+			{ name: 'Team B' },
+			{ name: 'Team C' }
+		];
+
+		const groups = splitIntoGroups(teams, 6);
+
+		expect(groups.length).toBe(1);
+		expect(groups).toEqual([teams]);
 	});
 });

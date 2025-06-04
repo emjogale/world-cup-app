@@ -13,6 +13,9 @@ import { handleScoreChangeHelper } from '../../utils/scoreHelpers';
 import { splitIntoGroups } from '../../utils/groupHelpers';
 import { safe } from '../../utils/stringUtils';
 import { useTeams } from '../../context/TeamsContext';
+import { shuffleTeams } from '../../tournament/shuffleTeams';
+
+const isTest = import.meta.env.MODE === 'test';
 
 const RegionalQualifiers = ({ region, spots }) => {
 	const { teams, loading, error } = useTeams();
@@ -29,7 +32,8 @@ const RegionalQualifiers = ({ region, spots }) => {
 		const regionTeams = teams.filter((t) => t.region === region);
 		if (regionTeams.length === 0) return;
 
-		const splitGroups = splitIntoGroups(regionTeams, 6);
+		const shuffled = shuffleTeams(regionTeams, isTest ? 'test-seed' : null);
+		const splitGroups = splitIntoGroups(shuffled, 6);
 		const groups = splitGroups.map((groupTeams, i) => ({
 			name: `Group ${String.fromCharCode(65 + i)}`,
 			teams: groupTeams
