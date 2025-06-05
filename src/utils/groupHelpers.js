@@ -1,4 +1,5 @@
 import { updateGroupStats } from '../tournament/grouping/updateGroupStats';
+import { shuffleTeams } from '../tournament/shuffleTeams';
 import { getMatchKey } from './matchHelpers';
 
 // sorts teams by points, then goal difference, then goals for
@@ -60,10 +61,19 @@ export const handleGroupSubmitHelper = ({
 	};
 };
 
-export const splitIntoGroups = (teams, groupSize = 6) => {
+export const splitIntoGroups = (teams, groupSize, seed = null) => {
+	const shuffled = shuffleTeams(teams, seed);
+	const totalTeams = shuffled.length;
+
+	// Auto-determine group size if not provided
+	if (!groupSize) {
+		if (totalTeams <= 24) groupSize = 4;
+		else if (totalTeams <= 36) groupSize = 5;
+		else groupSize = 6;
+	}
 	const groups = [];
 	for (let i = 0; i < teams.length; i += groupSize) {
-		groups.push(teams.slice(i, i + groupSize));
+		groups.push(shuffled.slice(i, i + groupSize));
 	}
 	return groups;
 };

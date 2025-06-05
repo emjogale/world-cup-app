@@ -6,14 +6,7 @@ import RegionalQualifiers from './RegionalQualifiers';
 
 import { getScoreTestId } from '../../test-utils/getScoreTestId';
 
-// const mockTeams = [
-// { name: 'Japan', flag: '🇯🇵' },
-// { name: 'South Korea', flag: '🇰🇷' },
-// { name: 'Iran', flag: '🇮🇷' },
-// { name: 'Saudi Arabia', flag: '🇸🇦' },
-// { name: 'Australia', flag: '🇦🇺' },
-// { name: 'Qatar', flag: '🇶🇦' }
-// ];
+const defaultSeed = 'test-seed';
 
 vi.mock('../../context/TeamsContext', () => {
 	const mockTeams = [
@@ -33,7 +26,9 @@ vi.mock('../../context/TeamsContext', () => {
 
 describe('RegionalQualifiers component', () => {
 	it('renders Asia Qualifiers and dev-autofills matches', () => {
-		render(<RegionalQualifiers region="Asia" spots={8} />);
+		render(
+			<RegionalQualifiers region="Asia" spots={8} seed={defaultSeed} />
+		);
 
 		// Check the heading
 		expect(screen.getByText(/Asia Qualifiers/i)).toBeInTheDocument();
@@ -47,43 +42,49 @@ describe('RegionalQualifiers component', () => {
 	});
 
 	it('only updates the score for the targeted match input', async () => {
-		render(<RegionalQualifiers region="Asia" spots={4} />);
+		render(
+			<RegionalQualifiers region="Asia" spots={4} seed={defaultSeed} />
+		);
 
 		const japanInput = await screen.findByTestId(
-			getScoreTestId('Japan', 'South Korea', 1)
+			getScoreTestId('South Korea', 'Japan', 1)
 		);
 		await userEvent.type(japanInput, '2');
 
 		const unrelatedInput = screen.getByTestId(
-			getScoreTestId('Australia', 'Qatar', 1)
+			getScoreTestId('Qatar', 'Australia', 1)
 		);
 		expect(unrelatedInput.value).toBe('');
 	});
 
 	it('does not update Japan/South Korea input when Australia/Qatar is changed', async () => {
-		render(<RegionalQualifiers region="Asia" spots={4} />);
+		render(
+			<RegionalQualifiers region="Asia" spots={4} seed={defaultSeed} />
+		);
 
 		const qatarInput = await screen.findByTestId(
-			getScoreTestId('Australia', 'Qatar', 1)
+			getScoreTestId('Australia', 'Qatar', 2)
 		);
 		await userEvent.type(qatarInput, '3');
 
 		const japanInput = screen.getByTestId(
-			getScoreTestId('Japan', 'South Korea', 1)
+			getScoreTestId('Japan', 'South Korea', 2)
 		);
 		expect(japanInput.value).toBe('');
 	});
 
 	it('only updates ther score for the Australia vs Qatar input', async () => {
-		render(<RegionalQualifiers region="Asia" spots={4} />);
+		render(
+			<RegionalQualifiers region="Asia" spots={4} seed={defaultSeed} />
+		);
 
 		const qatarInput = await screen.findByTestId(
-			getScoreTestId('Australia', 'Qatar', 1)
+			getScoreTestId('Australia', 'Qatar', 2)
 		);
 		await userEvent.type(qatarInput, '3');
 
 		const japanInput = screen.getByTestId(
-			getScoreTestId('Japan', 'South Korea', 1)
+			getScoreTestId('Japan', 'South Korea', 2)
 		);
 		expect(japanInput.value).toBe('');
 	});

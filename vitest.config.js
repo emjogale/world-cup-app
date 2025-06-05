@@ -4,6 +4,15 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
 	plugins: [react()],
 	test: {
+		silent: true,
+		reporters: [
+			[
+				'default',
+				{
+					summary: false
+				}
+			]
+		],
 		globals: true,
 		environment: 'jsdom',
 		setupFiles: ['tests/setup.js'],
@@ -28,7 +37,6 @@ export default defineConfig({
 				'src/main.jsx'
 			]
 		},
-		logHeapUsage: false,
-		silent: true // 🔕 disables noisy output like full DOM dumps
+		logHeapUsage: false
 	}
 });

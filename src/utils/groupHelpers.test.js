@@ -121,7 +121,7 @@ describe('splitIntoGroups', () => {
 		const teams = Array.from({ length: 14 }, (_, i) => ({
 			name: `Team ${i + 1}`
 		}));
-		const groups = splitIntoGroups(teams, 5);
+		const groups = splitIntoGroups(teams, 5, 'test-seed');
 
 		// should result in 3 groups: 5 + 5 + 4
 		expect(groups.length).toBe(3);
@@ -137,9 +137,14 @@ describe('splitIntoGroups', () => {
 			{ name: 'Team C' }
 		];
 
-		const groups = splitIntoGroups(teams, 6);
+		const groups = splitIntoGroups(teams, 6, 'test-seed');
 
 		expect(groups.length).toBe(1);
-		expect(groups).toEqual([teams]);
+
+		// extract the only group
+		const [group] = groups;
+		// Check it contains the same teams (order-independent)
+		const teamNames = group.map((t) => t.name).sort();
+		expect(teamNames).toEqual(['Team A', 'Team B', 'Team C'].sort());
 	});
 });

@@ -13,11 +13,8 @@ import { handleScoreChangeHelper } from '../../utils/scoreHelpers';
 import { splitIntoGroups } from '../../utils/groupHelpers';
 import { safe } from '../../utils/stringUtils';
 import { useTeams } from '../../context/TeamsContext';
-import { shuffleTeams } from '../../tournament/shuffleTeams';
 
-const isTest = import.meta.env.MODE === 'test';
-
-const RegionalQualifiers = ({ region, spots }) => {
+const RegionalQualifiers = ({ region, spots, seed = null }) => {
 	const { teams, loading, error } = useTeams();
 	// use only the teams from the correct region
 	console.log('All regional teams from context:', teams);
@@ -32,8 +29,11 @@ const RegionalQualifiers = ({ region, spots }) => {
 		const regionTeams = teams.filter((t) => t.region === region);
 		if (regionTeams.length === 0) return;
 
-		const shuffled = shuffleTeams(regionTeams, isTest ? 'test-seed' : null);
-		const splitGroups = splitIntoGroups(shuffled, 6);
+		// use seed for predetermined shuffling
+		const seed = `${region}-qualifiers`;
+		const groupSize = 6;
+
+		const splitGroups = splitIntoGroups(regionTeams, groupSize, seed);
 		const groups = splitGroups.map((groupTeams, i) => ({
 			name: `Group ${String.fromCharCode(65 + i)}`,
 			teams: groupTeams
@@ -50,6 +50,25 @@ const RegionalQualifiers = ({ region, spots }) => {
 		setMatches(newMatches);
 		setRegionalStats(newStats);
 	}, [teams, region]);
+
+	const handleDevAutofill = (seed = null) => {
+		const { updatedMatches, updatedStats } = autoCompleteGroupStage(
+			matches,
+			regionalStats,
+			seed
+		);
+
+		setMatches(updatedMatches);
+		setRegionalStats(updatedStats);
+
+		const qualifiers = selectRegionalQualifiers(updatedStats, spots);
+		setQualifiedTeams(qualifiers);
+
+		console.log(
+			'Qualified:',
+			qualifiers.map((t) => t?.name)
+		);
+	};
 
 	// while data is loading or errored, give quick feedback
 	if (loading) return <p>Loading {region} teams...</p>;
@@ -227,26 +246,7 @@ const RegionalQualifiers = ({ region, spots }) => {
 					</div>
 				</div>
 			)}
-			<button
-				onClick={() => {
-					const { updatedMatches, updatedStats } =
-						autoCompleteGroupStage(matches, regionalStats);
-
-					setMatches(updatedMatches);
-					setRegionalStats(updatedStats);
-
-					const qualifiers = selectRegionalQualifiers(
-						updatedStats,
-						spots
-					);
-					setQualifiedTeams(qualifiers);
-					console.log(
-						'Qualified:',
-						qualifiers.map((t) => t?.name)
-					);
-				}}
-				className="dev-button"
-			>
+			<button onClick={handleDevAutofill} className="dev-button">
 				Dev Autofill Regional Matches
 			</button>
 		</div>

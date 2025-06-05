@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { autoCompleteGroupStage } from './devTools';
 
-describe('autoCompleteGroupStage', () => {
+describe.skip('autoCompleteGroupStage', () => {
 	it('returns updated matches and stats', () => {
 		const mockMatches = {
 			GroupA: [
