@@ -29,3 +29,4 @@ coverage/
 scratch.js
 
 codemods/
+src/__snapshots__/
