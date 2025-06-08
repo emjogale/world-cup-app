@@ -18,13 +18,14 @@ afterEach(() => {
 });
 
 describe('App component', () => {
-	it('shows loading state initially', () => {
+	it('shows loading state initially', async () => {
 		render(
 			<TeamsProvider>
 				<App />
 			</TeamsProvider>
 		);
-		expect(screen.getByText(/loading teams/i)).toBeInTheDocument();
+		const loading = await screen.getByText(/loading teams/i);
+		expect(loading).toBeInTheDocument();
 	});
 
 	it('shows error message if fetch fails', async () => {

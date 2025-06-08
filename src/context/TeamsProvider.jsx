@@ -23,7 +23,6 @@ export const TeamsProvider = ({ children }) => {
 		loadTeams();
 	}, []);
 
-	console.log('TeamsProvider running - teams:', teams);
 	return (
 		<TeamsContext.Provider value={{ teams, loading, error }}>
 			{children}
