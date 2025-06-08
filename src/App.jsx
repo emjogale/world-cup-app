@@ -12,12 +12,21 @@ const App = () => {
 	const [seed, setSeed] = useState(
 		() => localStorage.getItem('tdd-seed') || ''
 	);
+	const [copied, setCopied] = useState(false);
 	const [shuffledTeams, setShuffledTeams] = useState([]);
 	const [winners, setWinners] = useState([]);
+
 	const { teams, loading, error } = useTeams();
+
 	const asiaTeams =
 		!loading && !error ? teams.filter((t) => t.region === 'Asia') : [];
 
+	const handleCopy = () => {
+		console.log('clicking seed!');
+		navigator.clipboard.writeText(seed);
+		setCopied(true);
+		setTimeout(() => setCopied(false), 2000); // hide after 2s
+	};
 	return (
 		<div className="app-container">
 			<h1>🌍 World Cup</h1>
@@ -42,14 +51,10 @@ const App = () => {
 						data-testid="seed-line"
 					>
 						Using seed: <strong>{seed}</strong>
-						<button
-							onClick={() => {
-								navigator.clipboard.writeText(seed);
-							}}
-							className="seed-copy"
-						>
+						<button onClick={handleCopy} className="seed-copy">
 							Copy Seed
 						</button>
+						{copied && <span role="status">Copied!</span>}
 					</p>
 				</>
 			)}

@@ -126,4 +126,32 @@ describe('App component', () => {
 		const seedLine = screen.getByTestId('seed-line');
 		expect(seedLine).toMatchSnapshot();
 	});
+	it('shows "Copied!" message after clicking copy', async () => {
+		localStorage.setItem('tdd-seed', 'mock-seed-abc');
+
+		Object.assign(navigator, {
+			clipboard: {
+				writeText: vi.fn()
+			}
+		});
+
+		mockFetchTeams(); // ensure data loads
+
+		render(
+			<TeamsProvider>
+				<App />
+			</TeamsProvider>
+		);
+
+		const startBtn = await screen.findByRole('button', {
+			name: /start tournament/i
+		});
+		await userEvent.click(startBtn);
+
+		const copyBtn = await screen.findByRole('button', { name: /copy/i });
+		await userEvent.click(copyBtn);
+
+		const copiedMsg = await screen.findByText(/copied!/i);
+		expect(copiedMsg).toBeInTheDocument();
+	});
 });
