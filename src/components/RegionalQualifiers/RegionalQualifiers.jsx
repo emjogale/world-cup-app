@@ -14,10 +14,9 @@ import { splitIntoGroups } from '../../utils/groupHelpers';
 import { safe } from '../../utils/stringUtils';
 import { useTeams } from '../../context/TeamsContext';
 
-const RegionalQualifiers = ({ region, spots, seed = null }) => {
+const RegionalQualifiers = ({ region, spots }) => {
 	const { teams, loading, error } = useTeams();
 	// use only the teams from the correct region
-	console.log('All regional teams from context:', teams);
 	const [matches, setMatches] = useState([]);
 	const [qualifiedTeams, setQualifiedTeams] = useState([]);
 	const [regionalStats, setRegionalStats] = useState({});
@@ -64,10 +63,10 @@ const RegionalQualifiers = ({ region, spots, seed = null }) => {
 		const qualifiers = selectRegionalQualifiers(updatedStats, spots);
 		setQualifiedTeams(qualifiers);
 
-		console.log(
-			'Qualified:',
-			qualifiers.map((t) => t?.name)
-		);
+		// console.log(
+		// 	'Qualified:',
+		// 	qualifiers.map((t) => t?.name)
+		// );
 	};
 
 	// while data is loading or errored, give quick feedback

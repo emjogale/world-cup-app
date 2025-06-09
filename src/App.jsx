@@ -22,7 +22,6 @@ const App = () => {
 		!loading && !error ? teams.filter((t) => t.region === 'Asia') : [];
 
 	const handleCopy = () => {
-		console.log('clicking seed!');
 		navigator.clipboard.writeText(seed);
 		setCopied(true);
 		setTimeout(() => setCopied(false), 2000); // hide after 2s

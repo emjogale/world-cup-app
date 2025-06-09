@@ -56,7 +56,6 @@ describe('autoCompleteGroupStage', () => {
 			mockStats,
 			'test-seed'
 		);
-		console.log(updatedStats.GroupA.Brazil);
 		expect(updatedMatches.GroupA[0].played).toBe(true);
 		expect(updatedStats.GroupA.Brazil.won).toBe(0);
 		expect(updatedStats.GroupA.Germany.lost).toBe(0);

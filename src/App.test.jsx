@@ -2,13 +2,13 @@ import { render, screen, fireEvent, within } from '@testing-library/react';
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import App from '../src/App';
 import { mockFetchTeams } from './test-utils/mockFetchTeams';
-
 import userEvent from '@testing-library/user-event';
 import { TeamsProvider } from './context/TeamsProvider';
+import { MockTeamsProvider } from './test-utils/MockTeamsProvider';
+import { mockTeams } from './test-utils/mockTeams'; // assuming you have this
 
-// 👇 Mock fetch before each test
 beforeEach(() => {
-	mockFetchTeams(); // mock fetch with default mockTeams
+	mockFetchTeams(); // only relevant for real TeamsProvider tests
 	localStorage.setItem('tdd-seed', 'mock-seed-abc');
 });
 
@@ -17,15 +17,14 @@ afterEach(() => {
 	vi.restoreAllMocks();
 });
 
-describe('App component', () => {
-	it('shows loading state initially', async () => {
+describe('App component — using real TeamsProvider', () => {
+	it('shows loading state initially', () => {
 		render(
 			<TeamsProvider>
 				<App />
 			</TeamsProvider>
 		);
-		const loading = await screen.getByText(/loading teams/i);
-		expect(loading).toBeInTheDocument();
+		expect(screen.getByText(/loading teams/i)).toBeInTheDocument();
 	});
 
 	it('shows error message if fetch fails', async () => {
@@ -36,18 +35,20 @@ describe('App component', () => {
 				<App />
 			</TeamsProvider>
 		);
+
 		expect(
 			await screen.findByText(/error loading teams/i)
 		).toBeInTheDocument();
 	});
+});
 
+describe('App component — using MockTeamsProvider', () => {
 	it('shows qualifiers before the tournament starts', async () => {
 		render(
-			<TeamsProvider>
+			<MockTeamsProvider teams={mockTeams}>
 				<App />
-			</TeamsProvider>
+			</MockTeamsProvider>
 		);
-
 		expect(
 			await screen.findByRole('button', { name: /start tournament/i })
 		).toBeInTheDocument();
@@ -55,52 +56,42 @@ describe('App component', () => {
 
 	it('shows the group stage after clicking start', async () => {
 		render(
-			<TeamsProvider>
+			<MockTeamsProvider teams={mockTeams}>
 				<App />
-			</TeamsProvider>
+			</MockTeamsProvider>
 		);
 		const startBtn = await screen.findByRole('button', {
 			name: /start tournament/i
 		});
 		fireEvent.click(startBtn);
 
-		// ✅ Wait directly for the heading using findByText
 		const container = await screen.findByTestId('group-stage');
 		const groupHeading = within(container).getByText(/Group A/i);
 		expect(groupHeading).toBeInTheDocument();
 	});
 
 	it('shows seed if available and lets you copy it', async () => {
-		localStorage.setItem('tdd-seed', 'mock-seed-abc');
-
 		Object.assign(navigator, {
 			clipboard: {
 				writeText: vi.fn()
 			}
 		});
 
-		mockFetchTeams(); // ensure data loads
-
 		render(
-			<TeamsProvider>
+			<MockTeamsProvider teams={mockTeams}>
 				<App />
-			</TeamsProvider>
+			</MockTeamsProvider>
 		);
 
-		const startBtn = await screen.findByRole('button', {
-			name: /start tournament/i
-		});
-		await userEvent.click(startBtn);
+		await userEvent.click(
+			await screen.findByRole('button', { name: /start tournament/i })
+		);
 
-		// Wait for Group A to confirm we're past qualifiers
 		await screen.findByText(/group a/i);
-
-		// Look for the seed line
 		expect(screen.getByTestId('seed-line')).toHaveTextContent(
 			/mock-seed-abc/
 		);
-		const copyButton = screen.getByRole('button', { name: /copy/i });
-		await userEvent.click(copyButton);
+		await userEvent.click(screen.getByRole('button', { name: /copy/i }));
 
 		expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
 			'mock-seed-abc'
@@ -108,50 +99,38 @@ describe('App component', () => {
 	});
 
 	it('renders the seed line consistently', async () => {
-		localStorage.setItem('tdd-seed', 'mock-seed-abc');
-		mockFetchTeams();
-
 		render(
-			<TeamsProvider>
+			<MockTeamsProvider teams={mockTeams}>
 				<App />
-			</TeamsProvider>
+			</MockTeamsProvider>
 		);
-		const startBtn = await screen.findByRole('button', {
-			name: /start tournament/i
-		});
-		await userEvent.click(startBtn);
-
-		await screen.findByTestId('seed-line');
-
-		const seedLine = screen.getByTestId('seed-line');
+		await userEvent.click(
+			await screen.findByRole('button', { name: /start tournament/i })
+		);
+		const seedLine = await screen.findByTestId('seed-line');
 		expect(seedLine).toMatchSnapshot();
 	});
-	it('shows "Copied!" message after clicking copy', async () => {
-		localStorage.setItem('tdd-seed', 'mock-seed-abc');
 
+	it('shows "Copied!" message after clicking copy', async () => {
 		Object.assign(navigator, {
 			clipboard: {
 				writeText: vi.fn()
 			}
 		});
-
-		mockFetchTeams(); // ensure data loads
-
 		render(
-			<TeamsProvider>
+			<MockTeamsProvider teams={mockTeams}>
 				<App />
-			</TeamsProvider>
+			</MockTeamsProvider>
 		);
 
-		const startBtn = await screen.findByRole('button', {
-			name: /start tournament/i
-		});
-		await userEvent.click(startBtn);
+		await userEvent.click(
+			await screen.findByRole('button', { name: /start tournament/i })
+		);
 
-		const copyBtn = await screen.findByRole('button', { name: /copy/i });
-		await userEvent.click(copyBtn);
+		await userEvent.click(
+			await screen.findByRole('button', { name: /copy/i })
+		);
 
-		const copiedMsg = await screen.findByText(/copied!/i);
-		expect(copiedMsg).toBeInTheDocument();
+		expect(await screen.findByText(/copied!/i)).toBeInTheDocument();
 	});
 });
