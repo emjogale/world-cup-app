@@ -2,7 +2,7 @@ import {
 	handleGroupSubmitHelper,
 	sortByGroupRanking,
 	splitIntoGroups
-} from './groupHelpers';
+} from './../groupHelpers';
 import { describe, it, expect } from 'vitest';
 
 describe('sortByGroupRanking', () => {

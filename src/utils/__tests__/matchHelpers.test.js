@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { determineWinner } from './matchHelpers';
+import { determineWinner } from './../matchHelpers';
 
 const mockTeam = (name) => ({ name, flag: '🏳️' });
 

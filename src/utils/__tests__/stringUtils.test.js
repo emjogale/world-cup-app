@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { safe } from './stringUtils';
+import { safe } from './../stringUtils';
 
 describe('safe()', () => {
 	it('converts to all lowercase', () => {
