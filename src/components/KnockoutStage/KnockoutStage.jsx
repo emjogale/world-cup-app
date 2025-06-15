@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Match from '../Match/Match';
 import './KnockoutStage.css';
-import { createFirstKnockoutRound } from '../../tournament/matches/createFirstKnockoutRound';
-import { createNextKnockoutRound } from '../../tournament/matches/createNextKnockoutRound';
+import { createFirstKnockoutRound } from '../../tournament/bracket/createFirstKnockoutRound';
+import { createNextKnockoutRound } from '../../tournament/bracket/createNextKnockoutRound';
 import {
 	determineWinner,
 	isReadyToSubmitRegular,
@@ -11,7 +11,7 @@ import {
 	hasFinalWinner,
 	getTournamentWinner
 } from '../../utils/matchHelpers';
-import { devAutofillKnockoutRound } from '../../utils/devTools';
+import { devAutofillKnockoutRound } from '../../dev/devTools';
 import { getKnockoutRoundLabel } from '../../utils/roundLabels';
 import { safe } from '../../utils/stringUtils';
 

@@ -5,7 +5,7 @@ import Match from '../Match/Match';
 import { buildInitialGroupStats } from '../../tournament/grouping/updateGroupStats';
 
 import { getNextMatches } from '../../tournament/matches/createMatches';
-import { autoCompleteGroupStage } from '../../utils/devTools';
+import { autoCompleteGroupStage } from '../../dev/devTools';
 import KnockoutStage from '../KnockoutStage/KnockoutStage';
 import { selectQualifiedTeams } from '../../tournament/matches/selectQualifiedTeams';
 import { shuffleAndGroup } from '../../tournament/grouping/shuffleAndGroup';
@@ -70,8 +70,8 @@ const GroupStage = ({ teams }) => {
 	);
 
 	return (
-        <div className="group-stage" data-testid="group-stage">
-            {Object.entries(groupedTeams).map(([groupName]) => {
+		<div className="group-stage" data-testid="group-stage">
+			{Object.entries(groupedTeams).map(([groupName]) => {
 				const matchesToDisplay =
 					matchesToDisplayByGroup[groupName] || [];
 				// Dev-only check to ensure no team is scheduled more than once at the same time
@@ -103,9 +103,9 @@ const GroupStage = ({ teams }) => {
 				});
 
 				return (
-                    <div key={groupName} className="group-card">
-                        <h2>Group {groupName}</h2>
-                        <div className="group-table-wrapper">
+					<div key={groupName} className="group-card">
+						<h2>Group {groupName}</h2>
+						<div className="group-table-wrapper">
 							<table className="group-table">
 								<thead>
 									<tr>
@@ -133,7 +133,7 @@ const GroupStage = ({ teams }) => {
 												);
 
 											return (
-                                                <tr
+												<tr
 													key={team.name}
 													className={
 														isTopTwo ||
@@ -141,9 +141,11 @@ const GroupStage = ({ teams }) => {
 															? 'group__top-team'
 															: ''
 													}
-													data-testid={`row-${safe(team.name)}`}
+													data-testid={`row-${safe(
+														team.name
+													)}`}
 												>
-                                                    <td className="team-cell">
+													<td className="team-cell">
 														<div className="team-info">
 															<img
 																src={team.flag}
@@ -156,25 +158,25 @@ const GroupStage = ({ teams }) => {
 															</span>
 														</div>
 													</td>
-                                                    <td>{team.played}</td>
-                                                    <td>{team.won}</td>
-                                                    <td>{team.drawn}</td>
-                                                    <td>{team.lost}</td>
-                                                    <td>{team.for}</td>
-                                                    <td>{team.against}</td>
-                                                    <td>{team.gd}</td>
-                                                    <td>{team.points}</td>
-                                                </tr>
-                                            );
+													<td>{team.played}</td>
+													<td>{team.won}</td>
+													<td>{team.drawn}</td>
+													<td>{team.lost}</td>
+													<td>{team.for}</td>
+													<td>{team.against}</td>
+													<td>{team.gd}</td>
+													<td>{team.points}</td>
+												</tr>
+											);
 										})}
 								</tbody>
 							</table>
 						</div>
-                        {matchesToDisplay.map(({ team1, team2 }) => (
+						{matchesToDisplay.map(({ team1, team2 }) => (
 							<Match
-								key={`${safe(safe(team1.name))}-vs-${safe(safe(
-									team2.name
-								))}`}
+								key={`${safe(safe(team1.name))}-vs-${safe(
+									safe(team2.name)
+								)}`}
 								team1={team1.name}
 								team2={team2.name}
 								score1={
@@ -196,7 +198,7 @@ const GroupStage = ({ teams }) => {
 								}
 							/>
 						))}
-                        <button
+						<button
 							onClick={() => {
 								const { newStats, updatedMatches, nextScores } =
 									handleGroupSubmitHelper({
@@ -243,10 +245,10 @@ const GroupStage = ({ teams }) => {
 						>
 							Submit Results
 						</button>
-                    </div>
-                );
+					</div>
+				);
 			})}
-            {allGroupsComplete && !showKnockoutStage && (
+			{allGroupsComplete && !showKnockoutStage && (
 				<div className="knockout-button-wrapper">
 					<button
 						className="proceed-knockout-button"
@@ -276,7 +278,7 @@ const GroupStage = ({ teams }) => {
 					</button>
 				</div>
 			)}
-            {!allGroupsComplete && (
+			{!allGroupsComplete && (
 				<button
 					className="dev-fill-results"
 					onClick={() => {
@@ -289,13 +291,13 @@ const GroupStage = ({ teams }) => {
 					🔧 Dev: Auto-complete group stage
 				</button>
 			)}
-            {showKnockoutStage && (
+			{showKnockoutStage && (
 				<div ref={knockoutRef}>
 					<KnockoutStage qualifiedTeams={qualifiedTeams} />
 				</div>
 			)}
-        </div>
-    );
+		</div>
+	);
 };
 
 export default GroupStage;

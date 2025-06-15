@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createGroupMatches } from '../../tournament/matches/createMatches';
-import { autoCompleteGroupStage } from '../../utils/devTools';
+import { autoCompleteGroupStage } from '../../dev/devTools';
 import { initializeGroupStats } from '../../tournament/grouping/updateGroupStats';
 import { selectRegionalQualifiers } from '../../tournament/grouping/selectRegionalQualifiers';
 import {
