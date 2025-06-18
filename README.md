@@ -135,7 +135,7 @@ _A React-based simulation of a full World Cup — from regional qualifiers to th
 -   Qualifiers: fetch test, display test, error fallback test
 -   GroupStage: test group logic, test match rendering, submissions
 -   KnockoutStage: test match results, advancing rounds, penalties and extra time
--                                         Match: score input, phase transition
+-                                           Match: score input, phase transition
 -   Utility Functions: pure unit tests for shuffle, group, match creation
 
 ---
@@ -172,7 +172,7 @@ npm run test
 
 🧠 Learnings
 
-Although this project is far from finished yet....
+Although this project is far from finished yet (I've only got Asian teams in the Regional Qualifiers so far!! Where are all the other regions?! 😨)....
 
 I'd like to be able to say that it was built using TDD methods, but that wouldn't be completely true. However I spent a lot of time (no blood, but definitely sweat and tears!) in testing every function at least as soon as it was written if not using the test to drive the development. I have come to realise that testing React apps (specifically the front end) is quite difficult. But I am getting used to what you can and can't test successfully and have (mostly) enjoyed the process. Seeing those test pass is very satisfying.
 
