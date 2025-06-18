@@ -1,15 +1,36 @@
-# 🧭 World Cup App Overview
+# 🏆 World Cup Tournament App
+
+<!-- ## 📚 Table of Contents
+
+-   [Overview](#-overview)
+-   [UI Flow](#-ui-flow)
+-   [Logic Flow](#-logic-flow)
+-   [Component Structure](#-component-structure)
+-   [Data Models](#-data-models)
+-   [Testing Strategy](#-testing-strategy)
+-   [Dev Tools](#-dev-tools) -->
+
+## 🧭 Overview
+
+_A React-based simulation of a full World Cup — from regional qualifiers to the final!_
+
+## 🏗️ Tech Stack
+
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white)
+![CSS Modules](https://img.shields.io/badge/CSS%20Modules-blue?style=for-the-badge)
 
 ## 🎮 1. UI Flow
 
 ```
-[Qualifiers View]
+[Regional Qualifiers]
    ↓ Start Tournament
-[Group Stage View]
+[Group Stage]
    ↓ Advance winners
-[Knockout Stage View]
-   ↓ Repeat
-[Final Winner]
+[Knockout Stage]
+   ↓ Play through Rounds
+[Champion Announced 🎉]
 ```
 
 ---
@@ -18,39 +39,54 @@
 
 ```jsx
 <App>
-├── <Qualifiers />        // shows all teams with flags
-├── <GroupStage />        // shows grouped teams in tables
-├── <KnockoutStage />        // knockout stage matches
-│   └── <Match />         // 1 vs 1 match with score input
+├── <RegionalQualifiers>   // Region-specific qualification rules
+├── <Qualifiers />         // Displays all teams with flags
+├── <GroupStage />         // Group tables and match inputs
+├── <KnockoutStage />      // Bracket UI, mathc progression
+│   └── <Match />          // Score input, extra time, penalties
+      │   └── <TeamWithFlag /> // Shared component for team + flag
 ```
 
 ---
 
-## ⚙️ 3. Logic Flow
+## ⚙️ 3. Logic Flow Summary
 
 ```
-1. App fetches /teams.json
-2. Shuffle teams → save in state
+1. Fetch /teams.json on load
+2. Shuffle teams → save in context
 
-3. QUALIFIERS STAGE
-   • Show all teams
-   • Button: Start Tournament
+3. REGIONAL QUALIFIERS
+   • Divide teams by region
+   • Select regional winners
 
-4. GROUP STAGE
-   • Use shuffled teams → groupTeams()
-   • Generate group fixtures
-   • User enters results
-   • Call getWinners() for each group
+4. QUALIFIERS
+   • Show winning teams (with flags)
+   • "Start Tournament" button
 
-5. KNOCKOUT STAGE
-   - createFirstKnockoutRound() avoids same-group rematches in R16
-   - createRoundMatches() used for later rounds
-   - User enters results (regular, extra time, penalties)
-   - Repeat until 1 team left
-   - Display Champion 🎉
+5. GROUP STAGE
+   • Assign to groups
+   • Generate matches
+   • Submit results
+   • Update standings
+   • Select top 2 + best third-placed teams
+
+6. KNOCKOUT STAGE
+   • createFirstKnockoutRound() avoids same-group clashes
+   • Later rounds via createNextKnockoutRound()
+   • Play matches: Regular → Extra Time (if draw)→ Penalties (if still draw)
+   • Ends with 1 winner
+
+8. Repeat until one champion remains
+
+9. Display tournament winner 🎉
+
 ```
 
----
+<!-- TODO:  keep updating readme
+
+-->
+
+## <!-- have updated to here  -->
 
 ## 🧾 4. Data Shapes
 
@@ -97,6 +133,58 @@
 ## ✅ Testing Strategy Per Stage
 
 -   Qualifiers: fetch test, display test, error fallback test
--   GroupStage: test group logic, test match rendering
+-   GroupStage: test group logic, test match rendering, submissions
 -   KnockoutStage: test match results, advancing rounds, penalties and extra time
+-                                         Match: score input, phase transition
 -   Utility Functions: pure unit tests for shuffle, group, match creation
+
+---
+
+## 🚀 Getting Started
+
+## 1. Install dependencies
+
+npm install
+
+## 2. Start local dev server
+
+npm run dev
+
+## 3. Run tests
+
+npm run test
+
+---
+
+# 🎯 Future Ideas
+
+⚽ Add player stats per match
+
+👕 Add kit images
+
+🌐 Real-world team data from API
+
+📱 Responsive styling improvements
+
+☁️ Deploy on Vercel / Netlify
+
+---
+
+🧠 Learnings
+
+Although this project is far from finished yet....
+
+I'd like to be able to say that it was built using TDD methods, but that wouldn't be completely true. However I spent a lot of time (no blood, but definitely sweat and tears!) in testing every function at least as soon as it was written if not using the test to drive the development. I have come to realise that testing React apps (specifically the front end) is quite difficult. But I am getting used to what you can and can't test successfully and have (mostly) enjoyed the process. Seeing those test pass is very satisfying.
+
+The project uses React component tests with Vitest + Testing Library, and follows clear logic separation between:
+
+-   UI components (inputs, visuals)
+-   Pure logic (fixtures, group stats, knockout logic)
+-   Helper utilities (score handling, group sorting)
+
+---
+
+🏁 Author
+
+Made with ⚽, ❤️ and ☕ by Emma Gale  
+Feel free to fork, star, or open an issue!
