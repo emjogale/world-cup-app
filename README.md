@@ -6,7 +6,7 @@
 -   [Tech Stack](#tech-stack)
 -   [UI Flow](#-1-ui-flow)
 -   [Component Structure](#-2-component-structure)
--   [Logic Flow](#-3-logic-flow)
+-   [Logic Flow](#3-logic-flow)
 -   [Data Shapes](#-4-data-shapes)
 -   [Testing Strategy](#-testing-strategy)
 -   [Preview](#-preview)
@@ -53,7 +53,7 @@ _A React-based simulation of a full World Cup — from regional qualifiers to th
 
 ---
 
-## ➡️ 3. Logic Flow
+## 3. Logic Flow
 
 ```
 1. Fetch /teams.json on load
