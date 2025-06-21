@@ -6,9 +6,10 @@
 -   [Tech Stack](#-tech-stack)
 -   [UI Flow](#-1-ui-flow)
 -   [Component Structure](#-2-component-structure)
--   [Logic Flow](#-3-logic-flow)
+-   [Logic Flow](#-3-logic-flow-summary)
 -   [Data Shapes](#-4-data-shapes)
 -   [Testing Strategy](#-testing-strategy)
+-   [Preview](#-preview)
 -   [Getting Started](#-getting-started)
 -   [Future Ideas](#-future-ideas)
 -   [Learnings](#-learnings)
@@ -17,7 +18,7 @@
 
 _A React-based simulation of a full World Cup — from regional qualifiers to the final!_
 
-## 🏗️ Tech Stack
+## Tech Stack
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react)
 ![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
