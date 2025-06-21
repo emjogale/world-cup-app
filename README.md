@@ -3,10 +3,10 @@
 ## 📚 Table of Contents
 
 -   [Overview](#-overview)
--   [Tech Stack](#-tech-stack)
+-   [Tech Stack](#tech-stack)
 -   [UI Flow](#-1-ui-flow)
 -   [Component Structure](#-2-component-structure)
--   [Logic Flow](#-3-logic-flow)
+-   [Logic Flow](#ß%EF%B8%8F-3-logic-flow)
 -   [Data Shapes](#-4-data-shapes)
 -   [Testing Strategy](#-testing-strategy)
 -   [Preview](#-preview)
