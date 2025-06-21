@@ -10,8 +10,8 @@
 -   [Data Shapes](#-4-data-shapes)
 -   [Testing Strategy](#-testing-strategy)
 -   [Getting Started](#-getting-started)
--   [Future Ideas](#future-ideas)
--   [Learnings](#learnings)
+-   [Future Ideas](#-future-ideas)
+-   [Learnings](#-learnings)
 
 ## 🧭 Overview
 
