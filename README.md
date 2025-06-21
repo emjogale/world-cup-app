@@ -1,14 +1,14 @@
 # 🏆 World Cup Tournament App
 
-<!-- ## 📚 Table of Contents
+## 📚 Table of Contents
 
 -   [Overview](#-overview)
 -   [UI Flow](#-ui-flow)
 -   [Logic Flow](#-logic-flow)
 -   [Component Structure](#-component-structure)
--   [Data Models](#-data-models)
+-   [Data Shapes](#-data-shapes)
 -   [Testing Strategy](#-testing-strategy)
--   [Dev Tools](#-dev-tools) -->
+-   [Dev Tools](#-dev-tools)
 
 ## 🧭 Overview
 
@@ -23,7 +23,7 @@ _A React-based simulation of a full World Cup — from regional qualifiers to th
 
 ## 🎮 1. UI Flow
 
-```
+```↓ Regional
 [Regional Qualifiers]
    ↓ Start Tournament
 [Group Stage]
@@ -39,10 +39,10 @@ _A React-based simulation of a full World Cup — from regional qualifiers to th
 
 ```jsx
 <App>
-├── <RegionalQualifiers>   // Region-specific qualification rules
-├── <Qualifiers />         // Displays all teams with flags
+├── <RegionalQualifiers>   // Region-specific group tables
+├── <Qualifiers />         // Displays all regional qualifier teams with flags
 ├── <GroupStage />         // Group tables and match inputs
-├── <KnockoutStage />      // Bracket UI, mathc progression
+├── <KnockoutStage />      // Bracket UI, match progression
 │   └── <Match />          // Score input, extra time, penalties
       │   └── <TeamWithFlag /> // Shared component for team + flag
 ```
@@ -81,12 +81,6 @@ _A React-based simulation of a full World Cup — from regional qualifiers to th
 9. Display tournament winner 🎉
 
 ```
-
-<!-- TODO:  keep updating readme
-
--->
-
-## <!-- have updated to here  -->
 
 ## 🧾 4. Data Shapes
 
@@ -130,33 +124,37 @@ _A React-based simulation of a full World Cup — from regional qualifiers to th
 
 ---
 
-## ✅ Testing Strategy Per Stage
+## ✅ Testing Strategy
 
 -   Qualifiers: fetch test, display test, error fallback test
 -   GroupStage: test group logic, test match rendering, submissions
 -   KnockoutStage: test match results, advancing rounds, penalties and extra time
--                                           Match: score input, phase transition
+-   Match: score input, phase transition
 -   Utility Functions: pure unit tests for shuffle, group, match creation
 
 ---
 
 ## 🚀 Getting Started
 
-## 1. Install dependencies
+### 1. Install dependencies
 
 npm install
 
-## 2. Start local dev server
+### 2. Start local dev server
 
 npm run dev
 
-## 3. Run tests
+### 3. Run tests
 
 npm run test
 
 ---
 
-# 🎯 Future Ideas
+## 📸 Preview
+
+![Screenshot of Group Stage](./screenshots/group-stage.png)
+
+## 🎯 Future Ideas
 
 ⚽ Add player stats per match
 
@@ -166,11 +164,9 @@ npm run test
 
 📱 Responsive styling improvements
 
-☁️ Deploy on Vercel / Netlify
-
 ---
 
-🧠 Learnings
+## 🧠 Learnings
 
 Although this project is far from finished yet (I've only got Asian teams in the Regional Qualifiers so far!! Where are all the other regions?! 😨)....
 
@@ -184,7 +180,7 @@ The project uses React component tests with Vitest + Testing Library, and follow
 
 ---
 
-🏁 Author
+### 🏁 Author
 
-Made with ⚽, ❤️ and ☕ by Emma Gale  
+Made with ❤️, 😅 and ☕ by [Emma](https://github.com/emjogale)  
 Feel free to fork, star, or open an issue!
