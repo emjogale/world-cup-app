@@ -3,12 +3,15 @@
 ## 📚 Table of Contents
 
 -   [Overview](#-overview)
--   [UI Flow](#-ui-flow)
--   [Logic Flow](#-logic-flow)
--   [Component Structure](#-component-structure)
--   [Data Shapes](#-data-shapes)
+-   [Tech Stack](#-tech-stack)
+-   [UI Flow](#1-ui-flow)
+-   [Component Structure](#2-component-structure)
+-   [Logic Flow](#3-logic-flow)
+-   [Data Shapes](#4-data-shapes)
 -   [Testing Strategy](#-testing-strategy)
--   [Dev Tools](#-dev-tools)
+-   [Getting Started](#-getting-started)
+-   [Future Ideas](#future-ideas)
+-   [Learnings](#learnings)
 
 ## 🧭 Overview
 
