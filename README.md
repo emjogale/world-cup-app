@@ -14,6 +14,8 @@
 -   [Future Ideas](#-future-ideas)
 -   [Learnings](#-learnings)
 
+[![Live Preview](https://img.shields.io/badge/Live_Preview-Click_Here-green?style=for-the-badge)](https://world-cup-app-orpin.vercel.app/)
+
 ## 🧭 Overview
 
 _A React-based simulation of a full World Cup — from regional qualifiers to the final!_
@@ -27,7 +29,7 @@ _A React-based simulation of a full World Cup — from regional qualifiers to th
 
 ## 🎮 1. UI Flow
 
-```↓ Regional
+```
 [Regional Qualifiers]
    ↓ Start Tournament
 [Group Stage]
@@ -53,7 +55,7 @@ _A React-based simulation of a full World Cup — from regional qualifiers to th
 
 ---
 
-## 3. Logic Flow
+## 3. Logic Flow ⚙️
 
 ```
 1. Fetch /teams.json on load
@@ -80,9 +82,7 @@ _A React-based simulation of a full World Cup — from regional qualifiers to th
    • Play matches: Regular → Extra Time (if draw)→ Penalties (if still draw)
    • Ends with 1 winner
 
-8. Repeat until one champion remains
-
-9. Display tournament winner 🎉
+8. Repeat until one champion remains → Display tournament winner 🎉
 
 ```
 
@@ -158,6 +158,11 @@ npm run test
 
 ![Screenshot of Group Stage](./screenshots/group-stage.png)
 
+[![Live on Vercel](https://img.shields.io/badge/Live--on--Vercel-000?style=for-the-badge&logo=vercel&logoColor=white)](https://world-cup-app-orpin.vercel.app/)
+
+Check out the live app hosted on [Vercel](https://vercel.com).  
+It simulates a full World Cup from regional qualifiers to the final 🏆
+
 ## 🎯 Future Ideas
 
 ⚽ Add player stats per match
@@ -172,9 +177,9 @@ npm run test
 
 ## 🧠 Learnings
 
-Although this project is far from finished yet (I've only got Asian teams in the Regional Qualifiers so far!! Where are all the other regions?! 😨)....
+Although this project is still a work in progress (currently, only Asian teams are included in the Regional Qualifiers), the transition from Regionals to the full list of Qualifiers hasn't been implemented yet. However, the Group Stage and Knockout Rounds are fully playable using a fixed set of qualified teams, and you can simulate the tournament through to the final winner. 🏆
 
-I'd like to be able to say that it was built using TDD methods, but that wouldn't be completely true. However I spent a lot of time (no blood, but definitely sweat and tears!) in testing every function at least as soon as it was written if not using the test to drive the development. I have come to realise that testing React apps (specifically the front end) is quite difficult. But I am getting used to what you can and can't test successfully and have (mostly) enjoyed the process. Seeing those test pass is very satisfying.
+While it wasn’t built entirely using strict TDD principles, testing was an integral part of development. However I spent a lot of time (no blood, but definitely sweat and tears!) in testing every function at least as soon as it was written if not using the test to drive the development. I’ve learned that testing frontend React apps can be tricky — especially when simulating complex UI flows. But I am getting used to what you can and can't test successfully and have (mostly) enjoyed the process. Seeing those test pass is very satisfying.
 
 The project uses React component tests with Vitest + Testing Library, and follows clear logic separation between:
 
