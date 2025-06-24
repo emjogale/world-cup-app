@@ -27,7 +27,12 @@ vi.mock('../../context/TeamsContext', () => {
 describe('RegionalQualifiers component', () => {
 	it('renders Asia Qualifiers and dev-autofills matches', () => {
 		render(
-			<RegionalQualifiers region="Asia" spots={8} seed={defaultSeed} />
+			<RegionalQualifiers
+				region="Asia"
+				spots={8}
+				seed={defaultSeed}
+				onRegionComplete={() => {}}
+			/>
 		);
 
 		// Check the heading

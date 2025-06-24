@@ -19,7 +19,7 @@ const App = () => {
 	const { teams, loading, error } = useTeams();
 
 	const asiaTeams =
-		!loading && !error ? teams.filter((t) => t.region === 'Asia') : [];
+		!loading && !error ? teams.filter((t) => t.region === 'AFC') : [];
 
 	const handleCopy = () => {
 		navigator.clipboard.writeText(seed);
@@ -34,11 +34,10 @@ const App = () => {
 			{error && <p style={{ color: 'red' }}>{error}</p>}
 
 			{asiaTeams.length > 0 ? (
-				<RegionalQualifiers region="Asia" spots={8} />
+				<RegionalQualifiers region="AFC" spots={8} />
 			) : (
 				!loading && error && <p>No teams found for Asia yet</p>
 			)}
-
 			{stage !== 'qualifiers' && seed && (
 				<>
 					<p
@@ -57,7 +56,6 @@ const App = () => {
 					</p>
 				</>
 			)}
-
 			{stage === 'qualifiers' && (
 				<>
 					<Qualifiers />
@@ -92,7 +90,6 @@ const App = () => {
 					</button>
 				</>
 			)}
-
 			{stage === 'groups' && (
 				<GroupStage
 					teams={shuffledTeams}

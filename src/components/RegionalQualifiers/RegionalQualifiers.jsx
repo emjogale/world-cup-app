@@ -14,7 +14,7 @@ import { splitIntoGroups } from '../../utils/groupHelpers';
 import { safe } from '../../utils/stringUtils';
 import { useTeams } from '../../context/TeamsContext';
 
-const RegionalQualifiers = ({ region, spots }) => {
+const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 	const { teams, loading, error } = useTeams();
 	// use only the teams from the correct region
 	const [matches, setMatches] = useState([]);
@@ -50,6 +50,12 @@ const RegionalQualifiers = ({ region, spots }) => {
 		setRegionalStats(newStats);
 	}, [teams, region]);
 
+	useEffect(() => {
+		if (qualifiedTeams.length > 0) {
+			onRegionComplete(region, qualifiedTeams);
+		}
+	}, [qualifiedTeams, onRegionComplete, region]);
+
 	const handleDevAutofill = (seed = null) => {
 		const { updatedMatches, updatedStats } = autoCompleteGroupStage(
 			matches,
@@ -63,10 +69,7 @@ const RegionalQualifiers = ({ region, spots }) => {
 		const qualifiers = selectRegionalQualifiers(updatedStats, spots);
 		setQualifiedTeams(qualifiers);
 
-		// console.log(
-		// 	'Qualified:',
-		// 	qualifiers.map((t) => t?.name)
-		// );
+		onRegionComplete(region, qualifiers);
 	};
 
 	// while data is loading or errored, give quick feedback
@@ -78,7 +81,7 @@ const RegionalQualifiers = ({ region, spots }) => {
 			data-testid={`regional-qualifiers-${region.toLowerCase()}`}
 			className="regional-stage"
 		>
-			<h2>{region} Qualifiers</h2>
+			here are the regionals?<h2>{region} Qualifiers</h2>
 			{Object.entries(matches).map(([groupName, groupMatches]) => {
 				const groupStats = regionalStats[groupName];
 				if (!groupStats) return null;
