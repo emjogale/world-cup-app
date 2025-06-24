@@ -81,7 +81,7 @@ const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 			data-testid={`regional-qualifiers-${region.toLowerCase()}`}
 			className="regional-stage"
 		>
-			here are the regionals?<h2>{region} Qualifiers</h2>
+			<h2>{region} Qualifiers</h2>
 			{Object.entries(matches).map(([groupName, groupMatches]) => {
 				const groupStats = regionalStats[groupName];
 				if (!groupStats) return null;

@@ -34,7 +34,7 @@ const App = () => {
 			{error && <p style={{ color: 'red' }}>{error}</p>}
 
 			{asiaTeams.length > 0 ? (
-				<RegionalQualifiers region="AFC" spots={8} />
+				<RegionalQualifiers region="Asia" spots={8} />
 			) : (
 				!loading && error && <p>No teams found for Asia yet</p>
 			)}
