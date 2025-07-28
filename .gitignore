@@ -28,5 +28,9 @@ coverage/
 # temporary things
 scratch.js
 
+# cheat-sheets
+tdd-workflow-cheatsheet.md
+testing-cheatsheet.md
+
 codemods/
 src/__snapshots__/

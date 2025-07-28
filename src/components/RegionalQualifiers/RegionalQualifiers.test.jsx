@@ -70,8 +70,10 @@ describe('RegionalQualifiers component', () => {
 		const qatarInput = await screen.findByTestId(
 			getScoreTestId('Australia', 'Qatar', 2)
 		);
-		await userEvent.type(qatarInput, '3');
 
+		console.log('qatar input is', qatarInput.value);
+		await userEvent.type(qatarInput, '3');
+		console.log('qatar input now is', qatarInput.value);
 		const japanInput = screen.getByTestId(
 			getScoreTestId('Japan', 'South Korea', 2)
 		);

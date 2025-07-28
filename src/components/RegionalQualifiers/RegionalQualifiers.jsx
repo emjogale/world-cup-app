@@ -51,10 +51,10 @@ const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 	}, [teams, region]);
 
 	useEffect(() => {
-		if (qualifiedTeams.length > 0) {
+		if (qualifiedTeams.length === spots) {
 			onRegionComplete(region, qualifiedTeams);
 		}
-	}, [qualifiedTeams, onRegionComplete, region]);
+	}, [qualifiedTeams, onRegionComplete, region, spots]);
 
 	const handleDevAutofill = (seed = null) => {
 		const { updatedMatches, updatedStats } = autoCompleteGroupStage(

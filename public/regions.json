@@ -1,0 +1,9 @@
+[
+	{ "region": "UEFA", "spots": 16 },
+	{ "region": "CAF", "spots": 9 },
+	{ "region": "AFC", "spots": 8 },
+	{ "region": "CONMEBOL", "spots": 6 },
+	{ "region": "CONCACAF", "spots": 6 },
+	{ "region": "OFC", "spots": 1 },
+	{ "region": "Intercontinental", "spots": 2 }
+]
