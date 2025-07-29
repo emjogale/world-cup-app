@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import RegionalQualifiers from '../RegionalQualifiers/RegionalQualifiers';
 
-const AllRegionalQualifiers = () => {
+const AllRegionalQualifiers = ({ onAllQualified }) => {
 	const [regions, setRegions] = useState([]);
 	const [qualifiedTeams, setQualifiedTeams] = useState({});
 
 	useEffect(() => {
-		fetch('/data/regions.json')
+		fetch('/regions.json')
 			.then((res) => res.json())
 			.then((data) => setRegions(data))
 			.catch((err) => console.error('Failed to load regions:', err));
@@ -15,10 +15,19 @@ const AllRegionalQualifiers = () => {
 	const handleRegionComplete = (regionName, teams) => {
 		setQualifiedTeams((prev) => {
 			if (prev[regionName]) return prev; // already handled
-			return {
+			const updated = {
 				...prev,
 				[regionName]: teams
 			};
+
+			// if all regions are done, notify parent
+			if (
+				regions.length > 0 &&
+				Object.keys(updated).length === regions.length
+			) {
+				onAllQualified?.(updated);
+			}
+			return updated;
 		});
 	};
 

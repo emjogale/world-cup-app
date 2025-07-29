@@ -6,9 +6,10 @@ import KnockoutStage from './components/KnockoutStage/KnockoutStage';
 import './index.css';
 import RegionalQualifiers from './components/RegionalQualifiers/RegionalQualifiers';
 import { useTeams } from './context/TeamsContext';
+import AllRegionalQualifiers from './components/AllRegionalQualifiers/AllRegionalQualifiers';
 
 const App = () => {
-	const [stage, setStage] = useState('qualifiers');
+	const [stage, setStage] = useState('regional');
 	const [seed, setSeed] = useState(
 		() => localStorage.getItem('tdd-seed') || ''
 	);
@@ -18,8 +19,8 @@ const App = () => {
 
 	const { teams, loading, error } = useTeams();
 
-	const asiaTeams =
-		!loading && !error ? teams.filter((t) => t.region === 'AFC') : [];
+	// const asiaTeams =
+	// 	!loading && !error ? teams.filter((t) => t.region === 'AFC') : [];
 
 	const handleCopy = () => {
 		navigator.clipboard.writeText(seed);
@@ -33,10 +34,28 @@ const App = () => {
 			{loading && <p>Loading teams...</p>}
 			{error && <p style={{ color: 'red' }}>{error}</p>}
 
-			{asiaTeams.length > 0 ? (
+			{/* {asiaTeams.length > 0 ? (
 				<RegionalQualifiers region="AFC" spots={8} />
 			) : (
 				!loading && error && <p>No teams found for Asia yet</p>
+			)} */}
+
+			{stage === 'regional' && (
+				<AllRegionalQualifiers
+					onComplete={(qualifiedTeamsByRegion) => {
+						// flatten and shuffle the qualified teams from all regions
+						const allTeams = Object.values(
+							qualifiedTeamsByRegion
+						).flat();
+						const shuffled = shuffleTeams(
+							allTeams,
+							seed || undefined
+						);
+
+						setShuffledTeams(shuffled);
+						setStage('qualifiers');
+					}}
+				/>
 			)}
 			{stage !== 'qualifiers' && seed && (
 				<>
@@ -55,6 +74,11 @@ const App = () => {
 						{copied && <span role="status">Copied!</span>}
 					</p>
 				</>
+			)}
+			{stage === 'regional' && (
+				<button onClick={() => setStage('qualifiers')}>
+					Skip Regional Qualifiers
+				</button>
 			)}
 			{stage === 'qualifiers' && (
 				<>
