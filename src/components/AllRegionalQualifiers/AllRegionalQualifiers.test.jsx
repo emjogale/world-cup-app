@@ -25,22 +25,23 @@ afterEach(() => {
 	vi.resetAllMocks();
 });
 describe('AllRegionalQualifiers', () => {
+	console.log('DEBUG: regions =', mockRegions);
 	it('renders a regional qualifier for each region', async () => {
 		render(
 			<MockTeamsProvider teams={mockTeams}>
 				<AllRegionalQualifiers
+					regions={mockRegions}
 					allTeams={mockTeams}
 					onComplete={vi.fn()}
 				/>
 			</MockTeamsProvider>
 		);
-
-		// should see one heading per region
+		//should see one heading per region
 		for (const region of mockRegions) {
 			await waitFor(() => {
 				expect(
 					screen.getByText(
-						new RegExp(`${region.name}\\s*qualifiers`, 'i')
+						new RegExp(`${region.region}\\s*qualifiers`, 'i')
 					)
 				).toBeInTheDocument();
 			});
