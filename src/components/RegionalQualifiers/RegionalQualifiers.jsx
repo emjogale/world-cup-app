@@ -78,7 +78,7 @@ const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 
 	return (
 		<div
-			data-testid={`regional-qualifiers-${region.toLowerCase()}`}
+			data-testid={`regional-qualifiers-${region?.toLowerCase()}`}
 			className="regional-stage"
 		>
 			<h2>{region} Qualifiers</h2>

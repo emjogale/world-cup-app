@@ -1,78 +1,49 @@
-import { render, screen, waitFor, global } from '@testing-library/react';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import AllRegionalQualifiers from './AllRegionalQualifiers';
+import { mockTeams } from '../../test-utils/mockTeams';
+import { mockRegions } from '../../test-utils/mockRegions';
+import { TeamsProvider } from '../../context/TeamsProvider';
+import { MockTeamsProvider } from '../../test-utils/MockTeamsProvider';
 
-// Mock fetch and RegionalQualifiers
-// const mockRegions = [
-// 	{ region: 'Europe', spots: 2 },
-// 	{ region: 'Asia', spots: 1 }
-// ];
-
-// vi.mock('../RegionalQualifiers/RegionalQualifiers', () => ({
-// 	default: ({ region, spots, onRegionComplete }) => (
-// 		<div data-testid={`qualifier-${region}`}>
-// 			<span>{region}</span>
-// 			<button onClick={() => onRegionComplete(region, [`Team${region}`])}>
-// 				Complete {region}
-// 			</button>
-// 		</div>
-// 	)
-// }));
-
-// beforeEach(() => {
-// 	global.fetch = vi.fn(() =>
-// 		Promise.resolve({
-// 			json: () => Promise.resolve(mockRegions)
-// 		})
-// 	);
-// });
-
-// afterEach(() => {
-// 	vi.clearAllMocks();
-// });
-
-describe('AllRegionalQualifiers', () => {
-	it('renders qualifiers for each region from fetched data', async () => {
-		render(<AllRegionalQualifiers />);
-		// await waitFor(() => {
-		// 	expect(screen.getByTestId('qualifier-Europe')).toBeInTheDocument();
-		// 	expect(screen.getByTestId('qualifier-Asia')).toBeInTheDocument();
-		// });
+// mock global fetch
+beforeEach(() => {
+	globalThis.fetch = vi.fn((url) => {
+		if (url.includes('regions.json')) {
+			return Promise.resolve({
+				json: () => Promise.resolve(mockRegions)
+			});
+		}
+		if (url.includes('teams.json')) {
+			return Promise.resolve({ json: () => Promise.resolve(mockTeams) });
+		}
+		return Promise.reject(new Error('unknown fetch url'));
 	});
+});
 
-	// it('shows Next Stage button only after all regions are completed', async () => {
-	// 	render(<AllRegionalQualifiers />);
-	// 	await waitFor(() => {
-	// 		expect(screen.queryByText('Next Stage')).not.toBeInTheDocument();
-	// 	});
+afterEach(() => {
+	vi.resetAllMocks();
+});
+describe('AllRegionalQualifiers', () => {
+	it('renders a regional qualifier for each region', async () => {
+		render(
+			<MockTeamsProvider teams={mockTeams}>
+				<AllRegionalQualifiers
+					allTeams={mockTeams}
+					onComplete={vi.fn()}
+				/>
+			</MockTeamsProvider>
+		);
 
-	// 	// Complete Europe
-	// 	screen.getByText('Complete Europe').click();
-	// 	await waitFor(() => {
-	// 		expect(screen.queryByText('Next Stage')).not.toBeInTheDocument();
-	// 	});
-
-	// 	// Complete Asia
-	// 	screen.getByText('Complete Asia').click();
-	// 	await waitFor(() => {
-	// 		expect(screen.getByText('Next Stage')).toBeInTheDocument();
-	// 	});
-	// });
-
-	// it('calls handleNextStage when Next Stage button is clicked', async () => {
-	// 	const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
-	// 	render(<AllRegionalQualifiers />);
-	// 	await waitFor(() => {
-	// 		screen.getByText('Complete Europe').click();
-	// 		screen.getByText('Complete Asia').click();
-	// 	});
-
-	// 	const nextStageBtn = screen.getByText('Next Stage');
-	// 	nextStageBtn.click();
-	// 	expect(logSpy).toHaveBeenCalledWith('Qualified teams', [
-	// 		'TeamEurope',
-	// 		'TeamAsia'
-	// 	]);
-	// 	logSpy.mockRestore();
-	// });
+		// should see one heading per region
+		for (const region of mockRegions) {
+			await waitFor(() => {
+				expect(
+					screen.getByText(
+						new RegExp(`${region.name}\\s*qualifiers`, 'i')
+					)
+				).toBeInTheDocument();
+			});
+		}
+	});
 });

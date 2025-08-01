@@ -5,10 +5,22 @@ import { mockFetchTeams } from './test-utils/mockFetchTeams';
 import userEvent from '@testing-library/user-event';
 import { TeamsProvider } from './context/TeamsProvider';
 import { MockTeamsProvider } from './test-utils/MockTeamsProvider';
-import { mockTeams } from './test-utils/mockTeams'; // assuming you have this
+import { mockTeams } from './test-utils/mockTeams';
+import { mockRegions } from './test-utils/mockTeams';
 
+// mock global fetch
 beforeEach(() => {
-	mockFetchTeams(); // only relevant for real TeamsProvider tests
+	globalThis.fetch = vi.fn((url) => {
+		if (url.includes('regions.json')) {
+			return Promise.resolve({
+				json: () => Promise.resolve(mockRegions)
+			});
+		}
+		if (url.includes('teams.json')) {
+			return Promise.resolve({ json: () => Promise.resolve(mockTeams) });
+		}
+		return Promise.reject(new Error('unknown fetch url'));
+	});
 	localStorage.setItem('tdd-seed', 'mock-seed-abc');
 });
 
@@ -43,17 +55,6 @@ describe('App component — using real TeamsProvider', () => {
 });
 
 describe('App component — using MockTeamsProvider', () => {
-	it('shows qualifiers before the tournament starts', async () => {
-		render(
-			<MockTeamsProvider teams={mockTeams}>
-				<App />
-			</MockTeamsProvider>
-		);
-		expect(
-			await screen.findByRole('button', { name: /start tournament/i })
-		).toBeInTheDocument();
-	});
-
 	it('shows the group stage after clicking start', async () => {
 		render(
 			<MockTeamsProvider teams={mockTeams}>
@@ -76,23 +77,19 @@ describe('App component — using MockTeamsProvider', () => {
 				writeText: vi.fn()
 			}
 		});
-
 		render(
 			<MockTeamsProvider teams={mockTeams}>
 				<App />
 			</MockTeamsProvider>
 		);
-
 		await userEvent.click(
 			await screen.findByRole('button', { name: /start tournament/i })
 		);
-
 		await screen.findByText(/group a/i);
 		expect(screen.getByTestId('seed-line')).toHaveTextContent(
 			/mock-seed-abc/
 		);
 		await userEvent.click(screen.getByRole('button', { name: /copy/i }));
-
 		expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
 			'mock-seed-abc'
 		);
@@ -122,15 +119,12 @@ describe('App component — using MockTeamsProvider', () => {
 				<App />
 			</MockTeamsProvider>
 		);
-
 		await userEvent.click(
 			await screen.findByRole('button', { name: /start tournament/i })
 		);
-
 		await userEvent.click(
 			await screen.findByRole('button', { name: /copy/i })
 		);
-
 		expect(await screen.findByText(/copied!/i)).toBeInTheDocument();
 	});
 });
