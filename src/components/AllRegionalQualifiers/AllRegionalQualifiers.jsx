@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import RegionalQualifiers from '../RegionalQualifiers/RegionalQualifiers';
+import { useTeams } from '../../context/TeamsContext';
 
 const AllRegionalQualifiers = ({ onAllQualified }) => {
-	const [regions, setRegions] = useState([]);
+	const { regions } = useTeams(); // from context
 	const [qualifiedTeams, setQualifiedTeams] = useState({});
-
-	useEffect(() => {
-		fetch('/regions.json')
-			.then((res) => res.json())
-			.then((data) => setRegions(data))
-			.catch((err) => console.error('Failed to load regions:', err));
-	}, []);
 
 	const handleRegionComplete = (regionName, teams) => {
 		setQualifiedTeams((prev) => {

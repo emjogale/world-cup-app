@@ -3,7 +3,6 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import AllRegionalQualifiers from './AllRegionalQualifiers';
 import { mockTeams } from '../../test-utils/mockTeams';
 import { mockRegions } from '../../test-utils/mockRegions';
-import { TeamsProvider } from '../../context/TeamsProvider';
 import { MockTeamsProvider } from '../../test-utils/MockTeamsProvider';
 
 // mock global fetch
@@ -28,7 +27,7 @@ describe('AllRegionalQualifiers', () => {
 	console.log('DEBUG: regions =', mockRegions);
 	it('renders a regional qualifier for each region', async () => {
 		render(
-			<MockTeamsProvider teams={mockTeams}>
+			<MockTeamsProvider teams={mockTeams} regions={mockRegions}>
 				<AllRegionalQualifiers
 					regions={mockRegions}
 					allTeams={mockTeams}

@@ -8,28 +8,17 @@ import { MockTeamsProvider } from './test-utils/MockTeamsProvider';
 import { mockTeams } from './test-utils/mockTeams';
 import { mockRegions } from './test-utils/mockTeams';
 
-// mock global fetch
-beforeEach(() => {
-	globalThis.fetch = vi.fn((url) => {
-		if (url.includes('regions.json')) {
-			return Promise.resolve({
-				json: () => Promise.resolve(mockRegions)
-			});
-		}
-		if (url.includes('teams.json')) {
-			return Promise.resolve({ json: () => Promise.resolve(mockTeams) });
-		}
-		return Promise.reject(new Error('unknown fetch url'));
+describe('App component — using real TeamsProvider (integration', () => {
+	beforeEach(() => {
+		mockFetchTeams();
+		localStorage.setItem('tdd-seed', 'mock-seed-abc');
 	});
-	localStorage.setItem('tdd-seed', 'mock-seed-abc');
-});
 
-afterEach(() => {
-	localStorage.clear();
-	vi.restoreAllMocks();
-});
+	afterEach(() => {
+		localStorage.clear();
+		vi.restoreAllMocks();
+	});
 
-describe('App component — using real TeamsProvider', () => {
 	it('shows loading state initially', () => {
 		render(
 			<TeamsProvider>
@@ -39,7 +28,7 @@ describe('App component — using real TeamsProvider', () => {
 		expect(screen.getByText(/loading teams/i)).toBeInTheDocument();
 	});
 
-	it.skip('shows error message if fetch fails', async () => {
+	it('shows error message if fetch fails', async () => {
 		fetch.mockRejectedValueOnce(new Error('Network error'));
 
 		render(
@@ -48,16 +37,25 @@ describe('App component — using real TeamsProvider', () => {
 			</TeamsProvider>
 		);
 
-		expect(
-			await screen.findByText(/error loading teams/i)
-		).toBeInTheDocument();
+		expect(await screen.findByText(/Network error/i)).toBeInTheDocument();
 	});
 });
 
-describe.skip('App component — using MockTeamsProvider', () => {
-	it('shows the group stage after clicking start', async () => {
+// This test assumes the old app flow before regional qualifiers
+// TODO: rewrite once new flow is finalized
+
+describe('App component — using MockTeamsProvider (unit)', () => {
+	beforeEach(() => {
+		localStorage.setItem('tdd-seed', 'mock-seed-abc');
+	});
+	afterEach(() => {
+		localStorage.clear();
+		vi.restoreAllMocks();
+	});
+
+	it.skip('shows the group stage after clicking start', async () => {
 		render(
-			<MockTeamsProvider teams={mockTeams}>
+			<MockTeamsProvider teams={mockTeams} regions={mockRegions}>
 				<App />
 			</MockTeamsProvider>
 		);
@@ -71,14 +69,14 @@ describe.skip('App component — using MockTeamsProvider', () => {
 		expect(groupHeading).toBeInTheDocument();
 	});
 
-	it('shows seed if available and lets you copy it', async () => {
+	it.skip('shows seed if available and lets you copy it', async () => {
 		Object.assign(navigator, {
 			clipboard: {
 				writeText: vi.fn()
 			}
 		});
 		render(
-			<MockTeamsProvider teams={mockTeams}>
+			<MockTeamsProvider teams={mockTeams} regions={mockRegions}>
 				<App />
 			</MockTeamsProvider>
 		);
@@ -95,9 +93,9 @@ describe.skip('App component — using MockTeamsProvider', () => {
 		);
 	});
 
-	it('renders the seed line consistently', async () => {
+	it.skip('renders the seed line consistently', async () => {
 		render(
-			<MockTeamsProvider teams={mockTeams}>
+			<MockTeamsProvider teams={mockTeams} regions={mockRegions}>
 				<App />
 			</MockTeamsProvider>
 		);
@@ -105,17 +103,17 @@ describe.skip('App component — using MockTeamsProvider', () => {
 			await screen.findByRole('button', { name: /start tournament/i })
 		);
 		const seedLine = await screen.findByTestId('seed-line');
-		expect(seedLine).toMatchSnapshot();
+		expect(seedLine.textContent).toMatch(/mock-seed-abc/);
 	});
 
-	it('shows "Copied!" message after clicking copy', async () => {
+	it.skip('shows "Copied!" message after clicking copy', async () => {
 		Object.assign(navigator, {
 			clipboard: {
 				writeText: vi.fn()
 			}
 		});
 		render(
-			<MockTeamsProvider teams={mockTeams}>
+			<MockTeamsProvider teams={mockTeams} regions={mockRegions}>
 				<App />
 			</MockTeamsProvider>
 		);

@@ -4,7 +4,7 @@ import Qualifiers from './components/Qualifiers/Qualifiers';
 import GroupStage from './components/GroupStage/GroupStage';
 import KnockoutStage from './components/KnockoutStage/KnockoutStage';
 import './index.css';
-import RegionalQualifiers from './components/RegionalQualifiers/RegionalQualifiers';
+
 import { useTeams } from './context/TeamsContext';
 import AllRegionalQualifiers from './components/AllRegionalQualifiers/AllRegionalQualifiers';
 
@@ -19,9 +19,6 @@ const App = () => {
 
 	const { teams, loading, error } = useTeams();
 
-	// const asiaTeams =
-	// 	!loading && !error ? teams.filter((t) => t.region === 'AFC') : [];
-
 	const handleCopy = () => {
 		navigator.clipboard.writeText(seed);
 		setCopied(true);
@@ -33,12 +30,6 @@ const App = () => {
 
 			{loading && <p>Loading teams...</p>}
 			{error && <p style={{ color: 'red' }}>{error}</p>}
-
-			{/* {asiaTeams.length > 0 ? (
-				<RegionalQualifiers region="AFC" spots={8} />
-			) : (
-				!loading && error && <p>No teams found for Asia yet</p>
-			)} */}
 
 			{stage === 'regional' && (
 				<AllRegionalQualifiers

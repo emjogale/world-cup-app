@@ -12,16 +12,3 @@ export const mockTeams = [
 	{ name: 'Australia', code: 'AUS', region: 'OFC' },
 	{ name: 'New Zealand', code: 'NZL', region: 'OFC' }
 ];
-
-export const mockRegions = [
-	{
-		name: 'AFC',
-		spots: 2,
-		groups: 1
-	},
-	{
-		name: 'UEFA',
-		spots: 2,
-		groups: 1
-	}
-];

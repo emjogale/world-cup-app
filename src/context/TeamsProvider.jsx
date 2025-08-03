@@ -3,16 +3,24 @@ import { TeamsContext } from './TeamsContext';
 
 export const TeamsProvider = ({ children }) => {
 	const [teams, setTeams] = useState([]);
+	const [regions, setRegions] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState(null);
 
 	useEffect(() => {
-		const loadTeams = async () => {
+		const loadData = async () => {
 			try {
-				const response = await fetch('/teams.json');
-				if (!response.ok) throw new Error('Failed to load teams.json');
-				const data = await response.json();
-				setTeams(data);
+				const teamsRes = await fetch('/teams.json');
+				if (!teamsRes.ok) throw new Error('Failed to load teams');
+
+				const regionsRes = await fetch('/regions.json');
+				if (!regionsRes.ok) throw new Error('Failed to load regions');
+
+				const teamsData = await teamsRes.json();
+				const regionsData = await regionsRes.json();
+
+				setTeams(teamsData);
+				setRegions(regionsData);
 			} catch (err) {
 				setError(err.message);
 			} finally {
@@ -20,11 +28,11 @@ export const TeamsProvider = ({ children }) => {
 			}
 		};
 
-		loadTeams();
+		loadData();
 	}, []);
 
 	return (
-		<TeamsContext.Provider value={{ teams, loading, error }}>
+		<TeamsContext.Provider value={{ teams, regions, loading, error }}>
 			{children}
 		</TeamsContext.Provider>
 	);

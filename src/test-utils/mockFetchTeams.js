@@ -3,12 +3,26 @@
 //TODO: update to include regions
 import { vi } from 'vitest';
 import { mockTeams } from './mockTeams';
+import { mockRegions } from './mockRegions';
 
-export const mockFetchTeams = (data = mockTeams) => {
-	globalThis.fetch = vi.fn(() =>
-		Promise.resolve({
-			ok: true,
-			json: () => Promise.resolve(data)
-		})
-	);
+export const mockFetchTeams = ({
+	teams = mockTeams,
+	regions = mockRegions
+} = {}) => {
+	globalThis.fetch = vi.fn((url) => {
+		if (url.includes('/teams.json')) {
+			return Promise.resolve({
+				ok: true,
+				json: () => Promise.resolve(teams)
+			});
+		}
+		if (url.includes('/regions.json')) {
+			return Promise.resolve({
+				ok: true,
+				json: () => Promise.resolve(regions)
+			});
+		}
+		// fallback if unrecognized URL
+		return Promise.reject(new Error(`Unhandled fetch URL: ${url}`));
+	});
 };
