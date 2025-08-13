@@ -6,66 +6,97 @@ import { getMatchKey } from './matchHelpers';
 export const sortByGroupRanking = (a, b) =>
 	b.points - a.points || b.gd - a.gd || b.for - a.for;
 
-/**
- * Take a list of matches and score input state
- * from this produce updated stats via updateGroupStats
- * mark matches as played
- * clear score inputs
- */
+const teamName = (t) => (typeof t === 'string' ? t : t?.name) || '';
+const uiKeyFor = (t1, t2) => `${teamName(t1)}-vs-${teamName(t2)}`;
 
 export const handleGroupSubmitHelper = ({
 	matchesToDisplay,
 	scores,
 	currentStats
 }) => {
-	// Build results array from score inputs
-	const results = matchesToDisplay.map(({ team1, team2 }) => {
-		const key = getMatchKey(team1, team2);
+	if (!Array.isArray(matchesToDisplay)) {
+		const fallback = currentStats || {};
 		return {
-			team1: team1.name,
-			score1: parseInt(scores[key]?.score1, 10),
-			team2: team2.name,
-			score2: parseInt(scores[key]?.score2, 10)
+			newStats: Array.isArray(fallback)
+				? fallback
+				: Object.values(fallback),
+			newStatsByName: Array.isArray(fallback)
+				? Object.fromEntries(fallback.map((s) => [s.name, s]))
+				: fallback,
+			updatedMatches: [],
+			nextScores: scores || {}
 		};
-	});
+	}
 
-	// Update stats with these match results
-	const newStats = updateGroupStats(currentStats, results);
+	const results = matchesToDisplay
+		.map(({ id, team1, team2 }) => {
+			const name1 = teamName(team1);
+			const name2 = teamName(team2);
 
-	// Create a Set of keys for submitted matches
-	const justPlayedKeys = new Set(
-		results.map((r) => getMatchKey({ name: r.team1 }, { name: r.team2 }))
-	);
+			const uiKey = id ?? uiKeyFor(team1, team2); // rendered order
+			const normKey = getMatchKey(team1, team2); // normalized storage
 
-	// Mark those matches as played
-	const updatedMatches = matchesToDisplay.map((match) => {
-		const matchKey = getMatchKey(match.team1, match.team2);
-		return justPlayedKeys.has(matchKey)
-			? { ...match, played: true }
-			: match;
-	});
+			const pairFromUi = scores?.[uiKey];
+			const pairFromNorm = scores?.[normKey];
 
-	// Clear only the submitted match scores
-	const keysToReset = matchesToDisplay.map((match) =>
-		getMatchKey(match.team1, match.team2)
-	);
-	const nextScores = { ...scores };
-	keysToReset.forEach((key) => {
-		nextScores[key] = { score1: '', score2: '' };
-	});
+			const usingUi =
+				!!pairFromUi &&
+				(pairFromUi.score1 ?? '') !== '' &&
+				(pairFromUi.score2 ?? '') !== '';
 
-	return {
-		newStats,
-		updatedMatches,
-		nextScores
-	};
+			// prefer UI; fallback to normalized
+			const pair = usingUi ? pairFromUi : pairFromNorm || {};
+			let a = parseInt(pair?.score1, 10);
+			let b = parseInt(pair?.score2, 10);
+
+			// if we fell back to normalized, and normalized first ≠ left name, swap
+			if (!usingUi && pairFromNorm) {
+				const [normFirst] = (normKey || '').split('-vs-');
+				if (normFirst && normFirst !== name1) {
+					const tmp = a;
+					a = b;
+					b = tmp;
+				}
+			}
+
+			return {
+				team1: name1,
+				score1: Number.isFinite(a) ? a : 0,
+				team2: name2,
+				score2: Number.isFinite(b) ? b : 0
+			};
+		})
+		.filter((r) => r.team1 && r.team2);
+
+	const updated = updateGroupStats(currentStats || {}, results);
+
+	const newStats = Array.isArray(updated) ? updated : Object.values(updated);
+	const newStatsByName = Array.isArray(updated)
+		? Object.fromEntries(updated.map((s) => [s.name, s]))
+		: updated || {};
+
+	const updatedMatches = matchesToDisplay.map((m) => ({
+		...m,
+		played: true
+	}));
+
+	// clear both potential keys (UI + normalized) for just-submitted matches
+	const nextScores = { ...(scores || {}) };
+	for (const m of matchesToDisplay) {
+		const uiKey = m.id ?? uiKeyFor(m.team1, m.team2);
+		const normKey = getMatchKey(m.team1, m.team2);
+		if (nextScores[uiKey]) nextScores[uiKey] = { score1: '', score2: '' };
+		if (nextScores[normKey])
+			nextScores[normKey] = { score1: '', score2: '' };
+	}
+
+	return { newStats, newStatsByName, updatedMatches, nextScores };
 };
 
 export const splitIntoGroups = (teams, groupSize, seed = null) => {
 	const shuffled = shuffleTeams(teams, seed);
 	const totalTeams = shuffled.length;
 
-	// Auto-determine group size if not provided
 	if (!groupSize) {
 		if (totalTeams <= 24) groupSize = 4;
 		else if (totalTeams <= 36) groupSize = 5;

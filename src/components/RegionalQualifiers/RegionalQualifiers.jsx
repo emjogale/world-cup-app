@@ -206,25 +206,41 @@ const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 						</ul>
 						<button
 							onClick={() => {
-								const { newStats, updatedMatches, nextScores } =
-									handleGroupSubmitHelper({
-										groupName,
-										groupMatches,
-										scores,
-										currentStats: regionalStats[groupName]
-									});
+								const result = handleGroupSubmitHelper({
+									matchesToDisplay: groupMatches, // IMPORTANT: name must be matchesToDisplay
+									scores,
+									currentStats: regionalStats[groupName]
+								});
 
-								setRegionalStats((prev) => ({
-									...prev,
-									[groupName]: newStats
-								}));
+								// Accept either shape; normalize to name-keyed object in state
+								const maybeByName =
+									result.newStatsByName ??
+									result.newStats ??
+									{};
+								const byName = Array.isArray(maybeByName)
+									? Object.fromEntries(
+											maybeByName.map((s) => [s.name, s])
+									  )
+									: maybeByName;
 
+								const updatedRegionalStats = {
+									...regionalStats,
+									[groupName]: byName
+								};
+
+								setRegionalStats(updatedRegionalStats);
 								setMatches((prev) => ({
 									...prev,
-									[groupName]: updatedMatches
+									[groupName]: result.updatedMatches
 								}));
+								setScores(result.nextScores);
 
-								setScores(nextScores);
+								// Compute qualifiers for this region NOW (selector expects object-of-objects)
+								const qualifiers = selectRegionalQualifiers(
+									updatedRegionalStats,
+									spots
+								);
+								setQualifiedTeams(qualifiers);
 							}}
 						>
 							Submit

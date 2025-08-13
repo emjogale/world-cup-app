@@ -86,7 +86,7 @@ describe('handleGroupSubmitHelper', () => {
 			}
 		};
 
-		const { newStats, updatedMatches, nextScores } =
+		const { newStatsByName, updatedMatches, nextScores } =
 			handleGroupSubmitHelper({
 				matchesToDisplay,
 				scores,
@@ -97,10 +97,10 @@ describe('handleGroupSubmitHelper', () => {
 		expect(updatedMatches.every((m) => m.played)).toBe(true);
 
 		// Check stats updated correctly
-		expect(newStats['Team A'].won).toBe(1);
-		expect(newStats['Team B'].lost).toBe(1);
-		expect(newStats['Team D'].won).toBe(1);
-		expect(newStats['Team C'].lost).toBe(1);
+		expect(newStatsByName['Team A'].won).toBe(1);
+		expect(newStatsByName['Team B'].lost).toBe(1);
+		expect(newStatsByName['Team D'].won).toBe(1);
+		expect(newStatsByName['Team C'].lost).toBe(1);
 
 		// Check scores cleared
 		expect(nextScores).toEqual({

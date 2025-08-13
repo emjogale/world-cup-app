@@ -71,7 +71,6 @@ describe('RegionalQualifiers component', () => {
 			getScoreTestId('Australia', 'Qatar', 2)
 		);
 
-		console.log('qatar input is', qatarInput.value);
 		await userEvent.type(qatarInput, '3');
 		console.log('qatar input now is', qatarInput.value);
 		const japanInput = screen.getByTestId(
