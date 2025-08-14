@@ -1,11 +1,11 @@
 // This view shows all qualified teams before the tournament begins.
-// Useful for previewing entries or editing before grouping.
 
 import './Qualifiers.css';
 import { useTeams } from '../../context/TeamsContext';
 
-const Qualifiers = () => {
-	const { teams, error } = useTeams();
+const Qualifiers = ({ teams: override }) => {
+	const { teams: contextTeams, error } = useTeams();
+	const teams = override?.length ? override : contextTeams;
 
 	return (
 		<div className="teams-container">
