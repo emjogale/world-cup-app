@@ -14,6 +14,9 @@ const App = () => {
 		() => localStorage.getItem('tdd-seed') || ''
 	);
 	const [copied, setCopied] = useState(false);
+
+	// pool of teams to show on the Qualifiers screen (either winners or full list if skipping)
+	const [teamsForQualifiers, setTeamsForQualifiers] = useState([]);
 	const [shuffledTeams, setShuffledTeams] = useState([]);
 	const [winners, setWinners] = useState([]);
 
@@ -22,8 +25,9 @@ const App = () => {
 	const handleCopy = () => {
 		navigator.clipboard.writeText(seed);
 		setCopied(true);
-		setTimeout(() => setCopied(false), 2000); // hide after 2s
+		setTimeout(() => setCopied(false), 2000);
 	};
+
 	return (
 		<div className="app-container">
 			<h1>🌍 World Cup</h1>
@@ -33,47 +37,50 @@ const App = () => {
 
 			{stage === 'regional' && (
 				<AllRegionalQualifiers
-					onComplete={(qualifiedTeamsByRegion) => {
-						// flatten and shuffle the qualified teams from all regions
-						const allTeams = Object.values(
-							qualifiedTeamsByRegion
-						).flat();
-						const shuffled = shuffleTeams(
-							allTeams,
-							seed || undefined
-						);
-
-						setShuffledTeams(shuffled);
+					onAllQualified={({ flat }) => {
+						// show the Qualifiers screen with the actual winners
+						setTeamsForQualifiers(flat);
 						setStage('qualifiers');
 					}}
 				/>
 			)}
-			{stage !== 'qualifiers' && seed && (
-				<>
-					<p
-						style={{
-							marginTop: '1rem',
-							fontStyle: 'italic',
-							color: '#666'
-						}}
-						data-testid="seed-line"
-					>
-						Using seed: <strong>{seed}</strong>
-						<button onClick={handleCopy} className="seed-copy">
-							Copy Seed
-						</button>
-						{copied && <span role="status">Copied!</span>}
-					</p>
-				</>
+
+			{/* Seed line is visible on quals/groups/knockout (your previous rule) */}
+			{stage !== 'regional' && seed && (
+				<p
+					style={{
+						marginTop: '1rem',
+						fontStyle: 'italic',
+						color: '#666'
+					}}
+					data-testid="seed-line"
+				>
+					Using seed: <strong>{seed}</strong>
+					<button onClick={handleCopy} className="seed-copy">
+						Copy Seed
+					</button>
+					{copied && <span role="status">Copied!</span>}
+				</p>
 			)}
+
+			{/* Keep your dev path to skip regionals entirely */}
 			{stage === 'regional' && (
-				<button onClick={() => setStage('qualifiers')}>
+				<button
+					onClick={() => {
+						// show all teams in the Qualifiers screen if skipping regionals
+						setTeamsForQualifiers(teams);
+						setStage('qualifiers');
+					}}
+				>
 					Skip Regional Qualifiers
 				</button>
 			)}
+
 			{stage === 'qualifiers' && (
 				<>
-					<Qualifiers />
+					{/* Show flags/list for the pool we’re about to seed */}
+					<Qualifiers teams={teamsForQualifiers} />
+
 					<small style={{ display: 'block', marginBottom: '0.5rem' }}>
 						Enter a seed to repeat a specific tournament layout
 					</small>
@@ -91,12 +98,11 @@ const App = () => {
 
 					<button
 						onClick={() => {
-							const shuffled = shuffleTeams(
-								teams,
+							const seeded = shuffleTeams(
+								teamsForQualifiers,
 								seed || undefined
 							);
-
-							setShuffledTeams(shuffled);
+							setShuffledTeams(seeded);
 							setStage('groups');
 						}}
 						className="start-button"
@@ -105,6 +111,7 @@ const App = () => {
 					</button>
 				</>
 			)}
+
 			{stage === 'groups' && (
 				<GroupStage
 					teams={shuffledTeams}
@@ -114,6 +121,7 @@ const App = () => {
 					}}
 				/>
 			)}
+
 			{stage === 'knockout' && <KnockoutStage teams={winners} />}
 		</div>
 	);
