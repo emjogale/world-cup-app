@@ -25,6 +25,7 @@ const AllRegionalQualifiers = ({ onAllQualified }) => {
 			if (prev[regionName]) return prev; // already set
 			const next = { ...prev, [regionName]: teams };
 
+			// if all regions are done, notify parent
 			if (
 				regions.length > 0 &&
 				Object.keys(next).length === regions.length

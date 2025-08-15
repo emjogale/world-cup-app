@@ -1,5 +1,3 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
 exports[`createNextKnockoutRound > generates next round with correct winners only > Next round after first knockout round 1`] = `
 [
   {
