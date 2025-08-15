@@ -71,213 +71,233 @@ const GroupStage = ({ teams }) => {
 
 	return (
 		<div className="group-stage" data-testid="group-stage">
-			{Object.entries(groupedTeams).map(([groupName]) => {
-				const matchesToDisplay =
-					matchesToDisplayByGroup[groupName] || [];
-				// Dev-only check to ensure no team is scheduled more than once at the same time
-				const playingTeams = new Set();
-				for (const match of matchesToDisplay) {
-					if (
-						playingTeams.has(match.team1.name) ||
-						playingTeams.has(match.team2.name)
-					) {
-						console.warn(
-							`⚠️ Duplicate team in simultaneous matches for group ${groupName}:`,
-							match
-						);
+			<div className="groups-grid">
+				{Object.entries(groupedTeams).map(([groupName]) => {
+					const matchesToDisplay =
+						matchesToDisplayByGroup[groupName] || [];
+					// Dev-only check to ensure no team is scheduled more than once at the same time
+					const playingTeams = new Set();
+					for (const match of matchesToDisplay) {
+						if (
+							playingTeams.has(match.team1.name) ||
+							playingTeams.has(match.team2.name)
+						) {
+							console.warn(
+								`⚠️ Duplicate team in simultaneous matches for group ${groupName}:`,
+								match
+							);
+						}
+						playingTeams.add(match.team1.name);
+						playingTeams.add(match.team2.name);
 					}
-					playingTeams.add(match.team1.name);
-					playingTeams.add(match.team2.name);
-				}
 
-				const allScored = matchesToDisplay.every((match) => {
-					const key = getMatchKey(match.team1, match.team2);
-					const entry = scores[key];
+					const allScored = matchesToDisplay.every((match) => {
+						const key = getMatchKey(match.team1, match.team2);
+						const entry = scores[key];
+						return (
+							entry &&
+							entry.score1 !== undefined &&
+							entry.score1 !== '' &&
+							entry.score2 !== undefined &&
+							entry.score2 !== ''
+						);
+					});
+
 					return (
-						entry &&
-						entry.score1 !== undefined &&
-						entry.score1 !== '' &&
-						entry.score2 !== undefined &&
-						entry.score2 !== ''
-					);
-				});
+						<div key={groupName} className="group-card">
+							<h2>Group {groupName}</h2>
+							<div className="group-table-wrapper">
+								<table className="group-table">
+									<thead>
+										<tr>
+											<th>Team</th>
+											<th>P</th>
+											<th>W</th>
+											<th>D</th>
+											<th>L</th>
+											<th>F</th>
+											<th>A</th>
+											<th>GD</th>
+											<th>Pts</th>
+										</tr>
+									</thead>
+									<tbody>
+										{Object.values(groupStats[groupName])
+											.sort(sortByGroupRanking)
+											.map((team, index) => {
+												const isTopTwo = index < 2;
+												const isQualifiedThird =
+													index === 2 &&
+													qualifiedTeams.some(
+														(qt) =>
+															qt.name ===
+															team.name
+													);
 
-				return (
-					<div key={groupName} className="group-card">
-						<h2>Group {groupName}</h2>
-						<div className="group-table-wrapper">
-							<table className="group-table">
-								<thead>
-									<tr>
-										<th>Team</th>
-										<th>P</th>
-										<th>W</th>
-										<th>D</th>
-										<th>L</th>
-										<th>F</th>
-										<th>A</th>
-										<th>GD</th>
-										<th>Pts</th>
-									</tr>
-								</thead>
-								<tbody>
-									{Object.values(groupStats[groupName])
-										.sort(sortByGroupRanking)
-										.map((team, index) => {
-											const isTopTwo = index < 2;
-											const isQualifiedThird =
-												index === 2 &&
-												qualifiedTeams.some(
-													(qt) =>
-														qt.name === team.name
+												return (
+													<tr
+														key={team.name}
+														className={
+															isTopTwo ||
+															isQualifiedThird
+																? 'group__top-team'
+																: ''
+														}
+														data-testid={`row-${safe(
+															team.name
+														)}`}
+													>
+														<td className="team-cell">
+															<div className="team-info">
+																<img
+																	src={
+																		team.flag
+																	}
+																	alt={
+																		team.name
+																	}
+																	width="24"
+																	height="16"
+																/>
+																<span>
+																	{team.name}
+																</span>
+															</div>
+														</td>
+														<td>{team.played}</td>
+														<td>{team.won}</td>
+														<td>{team.drawn}</td>
+														<td>{team.lost}</td>
+														<td>{team.for}</td>
+														<td>{team.against}</td>
+														<td>{team.gd}</td>
+														<td>{team.points}</td>
+													</tr>
 												);
-
-											return (
-												<tr
-													key={team.name}
-													className={
-														isTopTwo ||
-														isQualifiedThird
-															? 'group__top-team'
-															: ''
-													}
-													data-testid={`row-${safe(
-														team.name
-													)}`}
-												>
-													<td className="team-cell">
-														<div className="team-info">
-															<img
-																src={team.flag}
-																alt={team.name}
-																width="24"
-																height="16"
-															/>
-															<span>
-																{team.name}
-															</span>
-														</div>
-													</td>
-													<td>{team.played}</td>
-													<td>{team.won}</td>
-													<td>{team.drawn}</td>
-													<td>{team.lost}</td>
-													<td>{team.for}</td>
-													<td>{team.against}</td>
-													<td>{team.gd}</td>
-													<td>{team.points}</td>
-												</tr>
-											);
-										})}
-								</tbody>
-							</table>
-						</div>
-						{matchesToDisplay.map(({ team1, team2 }) => (
-							<Match
-								key={`${safe(safe(team1.name))}-vs-${safe(
-									safe(team2.name)
-								)}`}
-								team1={team1.name}
-								team2={team2.name}
-								score1={
-									scores[`${team1.name}-vs-${team2.name}`]
-										?.score1 || ''
-								}
-								score2={
-									scores[`${team1.name}-vs-${team2.name}`]
-										?.score2 || ''
-								}
-								onScoreChange={(team, value) =>
-									handleScoreChange(
-										{ team1, team2 },
-										team === team1.name
-											? 'score1'
-											: 'score2',
-										value
-									)
-								}
-							/>
-						))}
-						<button
-							onClick={() => {
-								const { newStats, updatedMatches, nextScores } =
-									handleGroupSubmitHelper({
+											})}
+									</tbody>
+								</table>
+							</div>
+							{matchesToDisplay.map(({ team1, team2 }) => (
+								<Match
+									key={`${safe(safe(team1.name))}-vs-${safe(
+										safe(team2.name)
+									)}`}
+									team1={team1.name}
+									team2={team2.name}
+									score1={
+										scores[`${team1.name}-vs-${team2.name}`]
+											?.score1 || ''
+									}
+									score2={
+										scores[`${team1.name}-vs-${team2.name}`]
+											?.score2 || ''
+									}
+									onScoreChange={(team, value) =>
+										handleScoreChange(
+											{ team1, team2 },
+											team === team1.name
+												? 'score1'
+												: 'score2',
+											value
+										)
+									}
+								/>
+							))}
+							<button
+								onClick={() => {
+									const {
+										newStats,
+										updatedMatches,
+										nextScores
+									} = handleGroupSubmitHelper({
 										matchesToDisplay,
 										scores,
 										currentStats: groupStats[groupName]
 									});
 
-								setGroupStats((prev) => ({
-									...prev,
-									[groupName]: newStats
-								}));
-
-								setGroupMatches((prev) => {
-									const group = prev[groupName]; // get all the matches for this group
-
-									// loop over every match in group to check which one was just played - then mark it as played
-									const updatedGroup = group.map((match) => {
-										const updated = updatedMatches.find(
-											(m) =>
-												(m.team1.name ===
-													match.team1.name &&
-													m.team2.name ===
-														match.team2.name) ||
-												(m.team1.name ===
-													match.team2.name &&
-													m.team2.name ===
-														match.team1.name)
-										);
-										return updated
-											? { ...match, played: true }
-											: match;
-									});
-									return {
+									setGroupStats((prev) => ({
 										...prev,
-										[groupName]: updatedGroup
-									};
-								});
+										[groupName]: newStats
+									}));
 
-								setScores(nextScores);
+									setGroupMatches((prev) => {
+										const group = prev[groupName]; // get all the matches for this group
+
+										// loop over every match in group to check which one was just played - then mark it as played
+										const updatedGroup = group.map(
+											(match) => {
+												const updated =
+													updatedMatches.find(
+														(m) =>
+															(m.team1.name ===
+																match.team1
+																	.name &&
+																m.team2.name ===
+																	match.team2
+																		.name) ||
+															(m.team1.name ===
+																match.team2
+																	.name &&
+																m.team2.name ===
+																	match.team1
+																		.name)
+													);
+												return updated
+													? { ...match, played: true }
+													: match;
+											}
+										);
+										return {
+											...prev,
+											[groupName]: updatedGroup
+										};
+									});
+
+									setScores(nextScores);
+								}}
+								disabled={!allScored}
+								data-testid={`submit-group-${groupName}`}
+							>
+								Submit Results
+							</button>
+						</div>
+					);
+				})}
+			</div>
+			<div className="knockout-section">
+				{allGroupsComplete && !showKnockoutStage && (
+					<div className="knockout-button-wrapper">
+						<button
+							className="proceed-knockout-button"
+							onClick={() => {
+								const qualified =
+									selectQualifiedTeams(groupStats);
+
+								setQualifiedTeams(qualified);
+
+								setShowKnockoutStage(true);
+								// Smooth scroll
+								setTimeout(() => {
+									knockoutRef.current?.scrollIntoView({
+										behavior: 'smooth',
+										block: 'start'
+									});
+								}, 50);
 							}}
-							disabled={!allScored}
-							data-testid={`submit-group-${groupName}`}
 						>
-							Submit Results
+							<span
+								role="img"
+								aria-label="Trophy"
+								style={{ marginRight: '0.5rem' }}
+							>
+								🏆
+							</span>
+							Proceed to Knockout Stage
 						</button>
 					</div>
-				);
-			})}
-			{allGroupsComplete && !showKnockoutStage && (
-				<div className="knockout-button-wrapper">
-					<button
-						className="proceed-knockout-button"
-						onClick={() => {
-							const qualified = selectQualifiedTeams(groupStats);
-
-							setQualifiedTeams(qualified);
-
-							setShowKnockoutStage(true);
-							// Smooth scroll
-							setTimeout(() => {
-								knockoutRef.current?.scrollIntoView({
-									behavior: 'smooth',
-									block: 'start'
-								});
-							}, 50);
-						}}
-					>
-						<span
-							role="img"
-							aria-label="Trophy"
-							style={{ marginRight: '0.5rem' }}
-						>
-							🏆
-						</span>
-						Proceed to Knockout Stage
-					</button>
-				</div>
-			)}
+				)}
+			</div>
 			{!allGroupsComplete && (
 				<button
 					className="dev-fill-results"
