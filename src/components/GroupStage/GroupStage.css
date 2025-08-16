@@ -132,10 +132,6 @@
 	transform: scale(1.2) rotate(-10deg);
 }
 
-.groups-grid > * {
-	outline: 1px dashed fuchsia;
-}
-
 /* force exactly 2 columns on wide screens */
 @media (min-width: 1100px) {
 	.group-grid {
