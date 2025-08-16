@@ -2,9 +2,10 @@ import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect } from 'vitest';
 
-import App from './App';
-import { MockTeamsProvider } from './test-utils/MockTeamsProvider';
-import { getMinimalMockRegion } from './test-utils/mockRegions';
+import App from '../App';
+
+import { getMinimalMockRegion } from '../test-utils/mockRegions';
+import { MockTeamsProvider } from '../test-utils/MockTeamsProvider';
 
 describe('App wiring — regionals → qualifiers → groups', () => {
 	it('flows winners from regionals into Qualifiers and then into GroupStage', async () => {

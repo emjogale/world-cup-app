@@ -7,7 +7,7 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 // --- M O C K S  (must be before importing App) ---
 
 // Let the test see the regional screen briefly, then advance the App flow
-vi.mock('./components/AllRegionalQualifiers/AllRegionalQualifiers', () => {
+vi.mock('../components/AllRegionalQualifiers/AllRegionalQualifiers', () => {
 	const StubRegional = ({ onComplete, onAllQualified }) => {
 		React.useEffect(() => {
 			const id = setTimeout(() => {
@@ -29,17 +29,17 @@ vi.mock('./components/AllRegionalQualifiers/AllRegionalQualifiers', () => {
 });
 
 // Keep Qualifiers light so it never blocks the Start button
-vi.mock('./components/Qualifiers/Qualifiers', () => ({
+vi.mock('../components/Qualifiers/Qualifiers', () => ({
 	default: () => <div data-testid="stub-qualifiers" />
 }));
 
 // --- real imports (AFTER mocks) ---
-import App from './App';
-import { TeamsProvider } from './context/TeamsProvider';
-import { MockTeamsProvider } from './test-utils/MockTeamsProvider';
-import { mockTeams } from './test-utils/mockTeams';
-import { mockRegions } from './test-utils/mockRegions';
-import { mockFetchTeams } from './test-utils/mockFetchTeams';
+import App from '../App';
+import { TeamsProvider } from '../context/TeamsProvider';
+import { MockTeamsProvider } from '../test-utils/MockTeamsProvider';
+import { mockTeams } from '../test-utils/mockTeams';
+import { mockRegions } from '../test-utils/mockRegions';
+import { mockFetchTeams } from '../test-utils/mockFetchTeams';
 
 // ========== Integration-ish: real TeamsProvider ==========
 describe('App component — using real TeamsProvider (integration', () => {

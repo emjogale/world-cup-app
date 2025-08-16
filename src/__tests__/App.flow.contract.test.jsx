@@ -3,7 +3,7 @@ import { describe, it, vi, expect } from 'vitest';
 import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 
 // Delay one tick so tests can assert the regional screen before it advances
-vi.mock('./components/AllRegionalQualifiers/AllRegionalQualifiers', () => {
+vi.mock('../components/AllRegionalQualifiers/AllRegionalQualifiers', () => {
 	const StubRegional = ({ onComplete, onAllQualified }) => {
 		React.useEffect(() => {
 			const id = setTimeout(() => {
@@ -22,11 +22,11 @@ vi.mock('./components/AllRegionalQualifiers/AllRegionalQualifiers', () => {
 	return { default: StubRegional };
 });
 
-vi.mock('./components/Qualifiers/Qualifiers', () => ({
+vi.mock('../components/Qualifiers/Qualifiers', () => ({
 	default: () => <div data-testid="stub-qualifiers" />
 }));
 
-import { renderApp } from './test-utils/renderApp';
+import { renderApp } from '../test-utils/renderApp';
 
 describe('App flow', () => {
 	it('moves to qualifiers after regional completes', async () => {
