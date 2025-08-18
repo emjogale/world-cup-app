@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { shuffleTeams } from './tournament/shuffleTeams';
 import Qualifiers from './components/Qualifiers/Qualifiers';
 import GroupStage from './components/GroupStage/GroupStage';
@@ -7,6 +7,7 @@ import './index.css';
 
 import { useTeams } from './context/TeamsContext';
 import AllRegionalQualifiers from './components/AllRegionalQualifiers/AllRegionalQualifiers';
+import { validateTournament } from './dev/validateTournament';
 
 const App = () => {
 	const [stage, setStage] = useState('regional');
@@ -20,7 +21,44 @@ const App = () => {
 	const [shuffledTeams, setShuffledTeams] = useState([]);
 	const [winners, setWinners] = useState([]);
 
-	const { teams, loading, error } = useTeams();
+	const { teams, regions, loading, error } = useTeams();
+
+	useEffect(() => {
+		// Don’t run while loading or on error
+		if (loading || error) return;
+		if (!Array.isArray(teams) || teams.length === 0) return;
+		if (!Array.isArray(regions) || regions.length === 0) return;
+
+		// Dev-only guard (works in Vite and falls back to NODE_ENV)
+		const isDev = import.meta.env.DEV;
+
+		if (!isDev) return;
+
+		try {
+			const report = validateTournament({
+				teams,
+				regions,
+				groupSize: 6,
+				targetKO: 32
+			});
+
+			if (report.errors.length || report.warnings.length) {
+				console.groupCollapsed(
+					'%c[validateTournament]',
+					'color:#b45309;font-weight:bold'
+				);
+				console.log('meta:', report.meta);
+				report.errors.forEach((e) => console.error('❌', e));
+				report.warnings.forEach((w) => console.warn('⚠️', w));
+				console.groupEnd();
+			} else {
+				console.info('[validateTournament] all good ✅', report.meta);
+			}
+		} catch (e) {
+			// Never crash the app in dev if the validator throws
+			console.warn('[validateTournament] failed:', e);
+		}
+	}, [teams, regions, loading, error]);
 
 	const handleCopy = () => {
 		navigator.clipboard.writeText(seed);
