@@ -277,4 +277,90 @@ describe('KnockoutStage sanity test', () => {
 			await screen.findByText('Brazil wins the World Cup! 🏆')
 		).toBeInTheDocument();
 	});
+
+	/**
+	 * Prelim UI: shows "Preliminary Round" and hides waiting entries.
+	 */
+	it('shows "Preliminary Round" when a prelim is needed and does not render waiting entries', () => {
+		// 6 teams → largest power-of-two = 4 → extra = 2
+		// Our createFirstKnockoutRound will put first 4 into prelims and last 2 as waiting.
+		const prelimTeams = [
+			{ name: 'A1' },
+			{ name: 'A2' }, // prelim match 1
+			{ name: 'B1' },
+			{ name: 'B2' }, // prelim match 2
+			{ name: 'W1' },
+			{ name: 'W2' } // waiting (should NOT render as matches)
+		];
+
+		render(<KnockoutStage qualifiedTeams={prelimTeams} />);
+
+		// First round should be labelled "Preliminary Round"
+		expect(
+			screen.getByRole('heading', {
+				level: 3,
+				name: /preliminary round/i
+			})
+		).toBeInTheDocument();
+
+		// Only prelim matches render (A1 v A2, B1 v B2)
+		expect(screen.getByText('A1')).toBeInTheDocument();
+		expect(screen.getByText('A2')).toBeInTheDocument();
+		expect(screen.getByText('B1')).toBeInTheDocument();
+		expect(screen.getByText('B2')).toBeInTheDocument();
+
+		// Waiting entries must NOT show as matches
+		expect(screen.queryByText('W1')).not.toBeInTheDocument();
+		expect(screen.queryByText('W2')).not.toBeInTheDocument();
+	});
+
+	/**
+	 * After completing prelims: advances to next round with correct label.
+	 */
+	it('after completing prelims, advances to the next round with the correct label', async () => {
+		const prelimTeams = [
+			{ name: 'A1' },
+			{ name: 'A2' }, // prelim 1
+			{ name: 'B1' },
+			{ name: 'B2' }, // prelim 2
+			{ name: 'W1' },
+			{ name: 'W2' } // waiting
+		];
+
+		render(<KnockoutStage qualifiedTeams={prelimTeams} />);
+
+		// Complete prelim match 1 (A1 vs A2) — give A1 a 1–0 win
+		await userEvent.clear(screen.getByTestId('score-a1'));
+		await userEvent.type(screen.getByTestId('score-a1'), '1');
+		await userEvent.clear(screen.getByTestId('score-a2'));
+		await userEvent.type(screen.getByTestId('score-a2'), '0');
+		await userEvent.click(screen.getByTestId('submit-regular-a1'));
+
+		// Complete prelim match 2 (B1 vs B2) — give B1 a 2–1 win
+		await userEvent.clear(screen.getByTestId('score-b1'));
+		await userEvent.type(screen.getByTestId('score-b1'), '2');
+		await userEvent.clear(screen.getByTestId('score-b2'));
+		await userEvent.type(screen.getByTestId('score-b2'), '1');
+		await userEvent.click(screen.getByTestId('submit-regular-b1'));
+
+		// Next round appears → 4 teams ⇒ "Semifinals"
+		const semiHeading = await screen.findByRole('heading', {
+			level: 3,
+			name: /semifinals/i
+		});
+		expect(semiHeading).toBeInTheDocument();
+
+		// 🔒 Scope to the Semifinals round container
+		const semiRound = semiHeading.closest('.knockout-round');
+		const { getByTestId, getByText } = within(semiRound);
+
+		// Assert the two semifinal fixtures by their match testids
+		expect(getByTestId('match-a1-vs-b1')).toBeInTheDocument();
+		expect(getByTestId('match-w1-vs-w2')).toBeInTheDocument();
+
+		expect(getByText('A1')).toBeInTheDocument();
+		expect(getByText('B1')).toBeInTheDocument();
+		expect(getByText('W1')).toBeInTheDocument();
+		expect(getByText('W2')).toBeInTheDocument();
+	});
 });
