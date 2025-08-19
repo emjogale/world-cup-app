@@ -15,25 +15,42 @@ import { devAutofillKnockoutRound } from '../../dev/devTools';
 import { getKnockoutRoundLabel } from '../../utils/roundLabels';
 import { safe } from '../../utils/stringUtils';
 
+// Helper: visible matches = real fixtures (skip waiting placeholders)
+const getVisibleMatches = (round) =>
+	(Array.isArray(round) ? round : []).filter(
+		(m) => !m?.waiting && m?.team1 && m?.team2
+	);
+
 const isFinalMatch = (round, roundIndex, knockoutRounds) => {
+	const visible = getVisibleMatches(round);
 	return (
 		Array.isArray(round) &&
-		round.length === 1 &&
+		visible.length === 1 &&
 		roundIndex === knockoutRounds.length - 1
 	);
 };
 
+// Title logic with prelim detection
 const getRoundTitle = (round, roundIndex, knockoutRounds, tournamentWinner) => {
-	if (
-		Array.isArray(round) &&
-		round.length === 1 &&
-		roundIndex === knockoutRounds.length - 1 &&
-		tournamentWinner
-	) {
+	const visible = getVisibleMatches(round);
+	const isLastRound = roundIndex === knockoutRounds.length - 1;
+
+	// Final banner (after winner decided)
+	if (isLastRound && visible.length === 1 && tournamentWinner) {
 		return `🏆 Winner: ${tournamentWinner}`;
 	}
 
-	return getKnockoutRoundLabel(round.length * 2);
+	// If this is the very first knockout round and it contains any waiting entries,
+	// we label it as a Preliminary Round.
+	const hasWaiting = Array.isArray(round) && round.some((m) => m.waiting);
+	if (roundIndex === 0 && hasWaiting) {
+		return 'Preliminary Round';
+	}
+
+	// Otherwise, use normal label based on the number of *visible* teams
+	// (e.g., 8 matches -> 16 teams => "Round of 16")
+	const teamsInThisVisibleRound = visible.length * 2;
+	return getKnockoutRoundLabel(teamsInThisVisibleRound);
 };
 
 const KnockoutStage = ({ qualifiedTeams }) => {
@@ -42,24 +59,47 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 	useEffect(() => {
 		if (qualifiedTeams.length > 0) {
 			const firstRound = createFirstKnockoutRound(qualifiedTeams);
-			setKnockoutRounds([firstRound]); // store full first round in an array
+			setKnockoutRounds([firstRound]);
 		}
 	}, [qualifiedTeams]);
 
+	// Autofill only *real* matches (skip waiting placeholders)
 	const handleDevAutofill = () => {
 		setKnockoutRounds((prev) => {
 			const updated = [...prev];
 			const roundIndex = updated.length - 1;
-			const autofilledRound = devAutofillKnockoutRound(
-				updated[roundIndex]
-			);
+			const round = updated[roundIndex];
 
-			updated[roundIndex] = autofilledRound;
+			// Split into visible (real) matches and placeholders
+			const visible = getVisibleMatches(round);
+			const placeholderIndices = [];
+			const visibleIndexMap = []; // map from visible-array index back to round index
 
-			// Optionally trigger next round if all matches are now played
-			const allPlayed = autofilledRound.every((m) => m.played);
+			round.forEach((m, idx) => {
+				if (!m?.waiting && m?.team1 && m?.team2) {
+					visibleIndexMap.push(idx);
+				} else {
+					placeholderIndices.push(idx);
+				}
+			});
+
+			// Autofill only the visible matches
+			const autofilledVisible = devAutofillKnockoutRound(visible);
+
+			// Merge back into the round
+			const mergedRound = [...round];
+			autofilledVisible.forEach((m, i) => {
+				const originalIdx = visibleIndexMap[i];
+				mergedRound[originalIdx] = m;
+			});
+
+			updated[roundIndex] = mergedRound;
+
+			// If *all* matches in this round are now played (including any already-played waiting entries),
+			// advance to the next round.
+			const allPlayed = mergedRound.every((m) => m.played);
 			if (allPlayed) {
-				const next = createNextKnockoutRound(autofilledRound);
+				const next = createNextKnockoutRound(mergedRound);
 				if (next.length > 0) updated.push(next);
 			}
 
@@ -77,32 +117,23 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 		setKnockoutRounds((prev) => {
 			const updated = [...prev];
 			const round = [...updated[roundIndex]];
-			const match = {
-				...round[matchIndex]
-			};
+			const match = { ...round[matchIndex] };
+
+			// Ignore changes to waiting placeholders (shouldn't render anyway)
+			if (match.waiting) return prev;
 
 			const parsedValue = parseInt(value, 10);
-			// Determine which score field to update based on the team name
 			const isTeam1 = teamName === match.team1.name;
 
 			if (phase === 'regular') {
-				if (isTeam1) {
-					match.score1 = parsedValue;
-				} else {
-					match.score2 = parsedValue;
-				}
+				if (isTeam1) match.score1 = parsedValue;
+				else match.score2 = parsedValue;
 			} else if (phase === 'extra') {
-				if (isTeam1) {
-					match.extraTimeScore1 = parsedValue;
-				} else {
-					match.extraTimeScore2 = parsedValue;
-				}
+				if (isTeam1) match.extraTimeScore1 = parsedValue;
+				else match.extraTimeScore2 = parsedValue;
 			} else if (phase === 'penalties') {
-				if (isTeam1) {
-					match.penaltyScore1 = parsedValue;
-				} else {
-					match.penaltyScore2 = parsedValue;
-				}
+				if (isTeam1) match.penaltyScore1 = parsedValue;
+				else match.penaltyScore2 = parsedValue;
 			}
 
 			round[matchIndex] = match;
@@ -117,7 +148,9 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 			const round = [...updated[roundIndex]];
 			const match = round[matchIndex];
 
-			// 🛠️ Construct an updated match immutably
+			// Skip submitting "waiting" placeholders
+			if (match.waiting) return prev;
+
 			const updatedMatch = {
 				...match,
 				regularTimePlayed:
@@ -128,7 +161,7 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 					phase === 'penalties' ? true : match.penaltiesPlayed
 			};
 
-			// Always determine the winner after a phase
+			// Recompute winner for the phase we just completed
 			if (
 				phase === 'regular' ||
 				phase === 'extra' ||
@@ -137,7 +170,6 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 				updatedMatch.winner = determineWinner(updatedMatch);
 			}
 
-			// ✅ Mark match as played if we have a winner
 			if (updatedMatch.winner) {
 				updatedMatch.played = true;
 			}
@@ -145,14 +177,13 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 			round[matchIndex] = updatedMatch;
 			updated[roundIndex] = round;
 
-			// 💡 Advance to next round only when match.played is true
-			if (updatedMatch.played) {
-				const allPlayed = round.every((m) => m.played);
-				if (allPlayed) {
-					const next = createNextKnockoutRound(round);
-					if (next.length > 0) {
-						updated.push(next);
-					}
+			// Advance once *every* item in this round is played.
+			// (waiting placeholders are already played: true)
+			const allPlayed = round.every((m) => m.played);
+			if (allPlayed) {
+				const next = createNextKnockoutRound(round);
+				if (next.length > 0) {
+					updated.push(next);
 				}
 			}
 
@@ -170,134 +201,147 @@ const KnockoutStage = ({ qualifiedTeams }) => {
 		<div className="knockout-stage">
 			<h2>Knockout Stage</h2>
 
-			{knockoutRounds.map((round, roundIndex) => (
-				<div key={roundIndex} className="knockout-round">
-					<h3>
-						{getRoundTitle(
-							round,
-							roundIndex,
-							knockoutRounds,
-							tournamentWinner
-						)}
-					</h3>
+			{knockoutRounds.map((round, roundIndex) => {
+				const visible = getVisibleMatches(round);
 
-					{round.map((match, matchIndex) => {
-						if (!match.team1 || !match.team2) return null;
+				return (
+					<div key={roundIndex} className="knockout-round">
+						<h3>
+							{getRoundTitle(
+								round,
+								roundIndex,
+								knockoutRounds,
+								tournamentWinner
+							)}
+						</h3>
 
-						const showExtraTime =
-							match.regularTimePlayed &&
-							match.score1 === match.score2;
+						{visible.map((match, matchIndex) => {
+							const showExtraTime =
+								match.regularTimePlayed &&
+								match.score1 === match.score2;
 
-						const showPenalties =
-							match.extraTimePlayed &&
-							Number.isInteger(match.extraTimeScore1) &&
-							Number.isInteger(match.extraTimeScore2) &&
-							match.extraTimeScore1 === match.extraTimeScore2;
+							const showPenalties =
+								match.extraTimePlayed &&
+								Number.isInteger(match.extraTimeScore1) &&
+								Number.isInteger(match.extraTimeScore2) &&
+								match.extraTimeScore1 === match.extraTimeScore2;
 
-						return (
-							<div key={matchIndex}>
-								<Match
-									team1={match.team1.name}
-									team2={match.team2.name}
-									score1={match.score1 ?? ''}
-									score2={match.score2 ?? ''}
-									extraTimeScore1={
-										match.extraTimeScore1 ?? ''
-									}
-									extraTimeScore2={
-										match.extraTimeScore2 ?? ''
-									}
-									penaltyScore1={match.penaltyScore1 ?? ''}
-									penaltyScore2={match.penaltyScore2 ?? ''}
-									regularTimePlayed={match.regularTimePlayed}
-									extraTimePlayed={match.extraTimePlayed}
-									penaltiesPlayed={match.penaltiesPlayed}
-									showExtraTime={showExtraTime}
-									showPenalties={showPenalties}
-									onScoreChange={(
-										team,
-										value,
-										phase = 'regular'
-									) =>
-										handleScoreChange(
-											roundIndex,
-											matchIndex,
+							return (
+								<div key={matchIndex}>
+									<Match
+										team1={match.team1.name}
+										team2={match.team2.name}
+										score1={match.score1 ?? ''}
+										score2={match.score2 ?? ''}
+										extraTimeScore1={
+											match.extraTimeScore1 ?? ''
+										}
+										extraTimeScore2={
+											match.extraTimeScore2 ?? ''
+										}
+										penaltyScore1={
+											match.penaltyScore1 ?? ''
+										}
+										penaltyScore2={
+											match.penaltyScore2 ?? ''
+										}
+										regularTimePlayed={
+											match.regularTimePlayed
+										}
+										extraTimePlayed={match.extraTimePlayed}
+										penaltiesPlayed={match.penaltiesPlayed}
+										showExtraTime={showExtraTime}
+										showPenalties={showPenalties}
+										onScoreChange={(
 											team,
 											value,
-											phase
-										)
-									}
-								/>
-								{!match.regularTimePlayed &&
-									isReadyToSubmitRegular(match) && (
-										<button
-											onClick={() =>
-												handleSubmitMatch(
-													roundIndex,
-													matchIndex,
-													'regular'
-												)
-											}
-											data-testid={`submit-regular-${safe(
-												match.team1.name
-											)}`}
-										>
-											Submit Regular Time
-										</button>
-									)}
-								{match.regularTimePlayed &&
-									!match.extraTimePlayed &&
-									isReadyToSubmitExtraTime(match) && (
-										<button
-											onClick={() => {
-												handleSubmitMatch(
-													roundIndex,
-													matchIndex,
-													'extra'
-												);
-											}}
-											data-testid={`submit-extra-${safe(
-												match.team1.name
-											)}`}
-										>
-											Submit Extra Time
-										</button>
-									)}
-								{match.extraTimePlayed &&
-									!match.penaltiesPlayed &&
-									isReadyToSubmitPenalties(match) && (
-										<button
-											onClick={() =>
-												handleSubmitMatch(
-													roundIndex,
-													matchIndex,
-													'penalties'
-												)
-											}
-											data-testid={`submit-penalties-${safe(
-												match.team1.name
-											)}`}
-										>
-											Submit Penalties
-										</button>
-									)}
+											phase = 'regular'
+										) =>
+											handleScoreChange(
+												roundIndex,
+												// map visible index back to the round index
+												round.indexOf(match),
+												team,
+												value,
+												phase
+											)
+										}
+									/>
 
-								{hasFinalWinner(match) && (
-									<p className="knockout-result">
-										{isFinalMatch(
-											round,
-											roundIndex,
-											knockoutRounds
-										)
-											? `${match.winner.name} wins the World Cup! 🏆`
-											: `${match.winner.name} advances!`}
-									</p>
-								)}
-							</div>
-						);
-					})}
-				</div>
-			))}
+									{!match.regularTimePlayed &&
+										isReadyToSubmitRegular(match) && (
+											<button
+												onClick={() =>
+													handleSubmitMatch(
+														roundIndex,
+														round.indexOf(match),
+														'regular'
+													)
+												}
+												data-testid={`submit-regular-${safe(
+													match.team1.name
+												)}`}
+											>
+												Submit Regular Time
+											</button>
+										)}
+
+									{match.regularTimePlayed &&
+										!match.extraTimePlayed &&
+										isReadyToSubmitExtraTime(match) && (
+											<button
+												onClick={() =>
+													handleSubmitMatch(
+														roundIndex,
+														round.indexOf(match),
+														'extra'
+													)
+												}
+												data-testid={`submit-extra-${safe(
+													match.team1.name
+												)}`}
+											>
+												Submit Extra Time
+											</button>
+										)}
+
+									{match.extraTimePlayed &&
+										!match.penaltiesPlayed &&
+										isReadyToSubmitPenalties(match) && (
+											<button
+												onClick={() =>
+													handleSubmitMatch(
+														roundIndex,
+														round.indexOf(match),
+														'penalties'
+													)
+												}
+												data-testid={`submit-penalties-${safe(
+													match.team1.name
+												)}`}
+											>
+												Submit Penalties
+											</button>
+										)}
+
+									{hasFinalWinner(match) && (
+										<p className="knockout-result">
+											{isFinalMatch(
+												round,
+												roundIndex,
+												knockoutRounds
+											)
+												? `${match.winner.name} wins the World Cup! 🏆`
+												: `${match.winner.name} advances!`}
+										</p>
+									)}
+								</div>
+							);
+						})}
+					</div>
+				);
+			})}
+
 			{tournamentWinner && (
 				<p className="champion-banner">
 					🏆 Champion: <strong>{tournamentWinner}</strong>
