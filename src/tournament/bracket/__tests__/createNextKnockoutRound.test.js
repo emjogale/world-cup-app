@@ -3,6 +3,8 @@ import { createNextKnockoutRound } from '../createNextKnockoutRound';
 import { createFirstKnockoutRound } from '../createFirstKnockoutRound';
 import { isBYE } from '../isBYE';
 
+const T = (name, group, position) => ({ name, group, position });
+
 describe('createNextKnockoutRound', () => {
 	it('generates next round with correct winners only', () => {
 		const currentRound = [
@@ -158,5 +160,41 @@ describe('Knockout prelims + next round handling (real-world)', () => {
 
 		// 16 teams → 8 matches
 		expect(r2.length).toBe(8);
+	});
+});
+
+describe('createNextKnockoutRound — seeding fairness', () => {
+	it('avoids pairing same-group winners when possible', () => {
+		// Imagine winners after prelims (already power-of-two):
+		// Naive order pairing 0v1,2v3 would create A1 vs A2 (same group) — we must avoid that.
+		const prevRound = [
+			{ winner: T('A1', 'A', 1), played: true },
+			{ winner: T('A2', 'A', 2), played: true },
+			{ winner: T('B1', 'B', 1), played: true },
+			{ winner: T('B2', 'B', 2), played: true }
+		];
+
+		const next = createNextKnockoutRound(prevRound);
+
+		// Expect pairings to be cross-group, e.g. A1 vs B1 and A2 vs B2 (or A1 vs B2, A2 vs B1)
+		next.forEach((m) => {
+			expect(m.team1.group).not.toBe(m.team2.group);
+		});
+	});
+
+	it('preserves order as much as possible while fixing group clashes', () => {
+		const prevRound = [
+			{ winner: T('A1', 'A', 1), played: true },
+			{ winner: T('A2', 'A', 2), played: true },
+			{ winner: T('B1', 'B', 1), played: true },
+			{ winner: T('C1', 'C', 1), played: true }
+		];
+		const next = createNextKnockoutRound(prevRound);
+
+		// A1 should NOT face A2; it should face the earliest later non-A team = B1.
+		expect([next[0].team1.name, next[0].team2.name].sort()).toEqual([
+			'A1',
+			'B1'
+		]);
 	});
 });
