@@ -22,12 +22,25 @@ const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 	const [regionalStats, setRegionalStats] = useState({});
 	const [scores, setScores] = useState({});
 
+	// 1) compute once per render
+	const regionTeams = React.useMemo(
+		() => (teams || []).filter((t) => t.region === region),
+		[teams, region]
+	);
+
+	// 2) empty region flag (only after loading finishes)
+	const isEmptyRegion = !loading && regionTeams.length === 0;
+
+	// 3) report empty region completion once
+	const [emptyReported, setEmptyReported] = useState(false);
 	useEffect(() => {
-		if (!teams || teams.length === 0) return;
+		if (isEmptyRegion && !emptyReported) {
+			onRegionComplete?.(region, []); // ✅ mark region complete with 0 qualifiers
+			setEmptyReported(true);
+		}
+	}, [isEmptyRegion, emptyReported, region, onRegionComplete]);
 
-		const regionTeams = teams.filter((t) => t.region === region);
-		if (regionTeams.length === 0) return;
-
+	useEffect(() => {
 		// use seed for predetermined shuffling
 		const seed = `${region}-qualifiers`;
 		const groupSize = 6;
@@ -48,7 +61,7 @@ const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 
 		setMatches(newMatches);
 		setRegionalStats(newStats);
-	}, [teams, region]);
+	}, [regionTeams, region]);
 
 	useEffect(() => {
 		if (qualifiedTeams.length === spots) {
@@ -57,24 +70,69 @@ const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 	}, [qualifiedTeams, onRegionComplete, region, spots]);
 
 	const handleDevAutofill = (seed = null) => {
-		const { updatedMatches, updatedStats } = autoCompleteGroupStage(
-			matches,
-			regionalStats,
-			seed
+		if (isEmptyRegion) return; // nothing to do for empty region
+		// If groups/stats aren’t ready yet, don’t run
+		if (!matches || Object.keys(matches).length === 0) return;
+		if (!regionalStats || Object.keys(regionalStats).length === 0) return;
+
+		// Run the dev tool, but guard against undefined results
+		const result =
+			autoCompleteGroupStage(matches, regionalStats, seed) || {};
+		const updatedMatches = result.updatedMatches ?? matches;
+		const updatedStatsRaw = result.updatedStats ?? regionalStats;
+
+		// Normalize one group (array -> object keyed by team name)
+		const normalizeGroup = (groupStats) =>
+			Array.isArray(groupStats)
+				? Object.fromEntries(
+						groupStats.map((team) => [team.name, team])
+				  )
+				: groupStats ?? {};
+
+		// Normalize the whole stats object safely
+		const updatedStatsObj =
+			updatedStatsRaw && typeof updatedStatsRaw === 'object'
+				? updatedStatsRaw
+				: {};
+
+		const normalisedUpdatedStats = Object.fromEntries(
+			Object.entries(updatedStatsObj).map(([groupName, groupStats]) => [
+				groupName,
+				normalizeGroup(groupStats)
+			])
 		);
 
+		// Apply state
 		setMatches(updatedMatches);
-		setRegionalStats(updatedStats);
+		setRegionalStats(normalisedUpdatedStats);
 
-		const qualifiers = selectRegionalQualifiers(updatedStats, spots);
+		// Compute qualifiers from normalized stats
+		const qualifiers =
+			selectRegionalQualifiers(normalisedUpdatedStats, spots) || [];
 		setQualifiedTeams(qualifiers);
 
+		// Notify parent
 		onRegionComplete(region, qualifiers);
 	};
 
 	// while data is loading or errored, give quick feedback
 	if (loading) return <p>Loading {region} teams...</p>;
 	if (error) return <p style={{ color: 'red' }}>Error: {error}</p>;
+
+	if (isEmptyRegion) {
+		return (
+			<div
+				className="group-card"
+				style={{ textAlign: 'center', opacity: 0.85 }}
+			>
+				<h3>{region} Qualifiers</h3>
+				<p>No teams in this region yet.</p>
+				<button className="dev-button" disabled>
+					Dev Autofill Regional Matches
+				</button>
+			</div>
+		);
+	}
 
 	return (
 		<div
@@ -207,7 +265,7 @@ const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 						<button
 							onClick={() => {
 								const result = handleGroupSubmitHelper({
-									matchesToDisplay: groupMatches, // IMPORTANT: name must be matchesToDisplay
+									matchesToDisplay: groupMatches,
 									scores,
 									currentStats: regionalStats[groupName]
 								});
@@ -264,7 +322,17 @@ const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 					</div>
 				</div>
 			)}
-			<button onClick={handleDevAutofill} className="dev-button">
+			<button
+				onClick={handleDevAutofill}
+				className="dev-button"
+				disabled={
+					isEmptyRegion ||
+					!matches ||
+					Object.keys(matches).length === 0 ||
+					!regionalStats ||
+					Object.keys(regionalStats).length === 0
+				}
+			>
 				Dev Autofill Regional Matches
 			</button>
 		</div>
