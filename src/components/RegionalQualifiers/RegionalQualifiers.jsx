@@ -8,6 +8,7 @@ import {
 	sortByGroupRanking
 } from '../../utils/groupHelpers';
 import './RegionalQualifiers.css';
+import '../Shared/TournamentShared.css';
 import { getMatchKey } from '../../utils/matchHelpers';
 import { handleScoreChangeHelper } from '../../utils/scoreHelpers';
 import { splitIntoGroups } from '../../utils/groupHelpers';
@@ -200,6 +201,7 @@ const RegionalQualifiers = ({ region, spots, onRegionComplete }) => {
 						<ul className="regional-fixtures">
 							{groupMatches.map((match) => (
 								<li
+									className="match-card horizontal"
 									key={`${safe(
 										safe(safe(match.team1.name))
 									)}-vs-${safe(

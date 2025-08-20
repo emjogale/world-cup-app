@@ -1,0 +1,87 @@
+/* ===== Shared match-card row look for BOTH stages ===== */
+
+.match-card.horizontal {
+	display: flex;
+	align-items: center; /* center along the row */
+	gap: 0.5rem;
+	padding: 1rem;
+	background-color: #efdada; /* your pale pink */
+	border-radius: 8px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	width: 100%; /* fill parent card */
+	min-width: 0; /* allow truncation */
+}
+
+/* Inner row that holds name+input, "v", etc. */
+.match-card.horizontal .team-row {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	flex-wrap: wrap; /* wrap on small screens */
+	width: 100%;
+}
+
+/* name + input pair */
+.match-card.horizontal .team-input {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	min-width: 0;
+}
+
+/* Names truncate nicely without wrapping */
+.match-card.horizontal .team-name {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Compact numeric inputs that don't shove content */
+.match-card.horizontal input[type='number'] {
+	width: 2.5rem;
+	flex-shrink: 0;
+	text-align: center;
+	-moz-appearance: textfield;
+}
+.match-card.horizontal input[type='number']::-webkit-outer-spin-button,
+.match-card.horizontal input[type='number']::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	margin: 0;
+}
+
+/* Small screens: stack gracefully */
+@media (max-width: 600px) {
+	.match-card.horizontal {
+		flex-direction: column;
+		align-items: stretch; /* stretch card to full width */
+		padding: 0.75rem;
+	}
+
+	.match-card.horizontal .team-row {
+		gap: 0.6rem;
+		flex-wrap: nowrap; /* your current choice */
+	}
+
+	.match-card.horizontal .team-name {
+		font-size: 0.9rem;
+	}
+
+	.match-card.horizontal input[type='number'] {
+		width: 2.5rem;
+		font-size: 1rem;
+	}
+
+	/* hide "v" if you use it in mobile */
+	.vs {
+		display: none;
+	}
+
+	.extra-time,
+	.penalties {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.5rem;
+	}
+}

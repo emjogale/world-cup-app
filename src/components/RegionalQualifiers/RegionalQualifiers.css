@@ -1,3 +1,5 @@
+@import '../Shared/TournamentShared.css';
+
 .qualified-grid {
 	display: flex;
 	flex-wrap: wrap;
@@ -27,28 +29,9 @@
 	list-style: none;
 	padding: 0;
 	margin-top: 1rem;
+	display: grid;
+	gap: 0.5rem;
 	border-top: 1px solid #ddd;
 }
 
-.regional-fixtures li {
-	padding: 0.5rem 0;
-	border-bottom: 1px solid #eee;
-	font-size: 0.95rem;
-	color: #444;
-	display: flex;
-	justify-content: space-between;
-	font-family: 'Segoe UI', sans-serif;
-}
-
-.regional-fixtures li:last-child {
-	border-bottom: none;
-}
-
-.regional-fixtures li span.team-name {
-	font-weight: 500;
-}
-
-.regional-fixtures li span.score {
-	font-weight: 600;
-	color: #1f8a70;
-}
+/* no li layout here — shared CSS handles .match-card.horizontal */
