@@ -31,6 +31,7 @@
 
 /* Names truncate nicely without wrapping */
 .match-card.horizontal .team-name {
+	flex: 1;
 	min-width: 0;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -42,7 +43,6 @@
 	width: 2.5rem;
 	flex-shrink: 0;
 	text-align: center;
-	-moz-appearance: textfield;
 }
 .match-card.horizontal input[type='number']::-webkit-outer-spin-button,
 .match-card.horizontal input[type='number']::-webkit-inner-spin-button {
@@ -51,7 +51,7 @@
 }
 
 /* Small screens: stack gracefully */
-@media (max-width: 600px) {
+@media (max-width: 360px) {
 	.match-card.horizontal {
 		flex-direction: column;
 		align-items: stretch; /* stretch card to full width */
