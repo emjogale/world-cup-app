@@ -1,5 +1,4 @@
 import React from 'react';
-import './Match.css';
 import { safe } from '../../utils/stringUtils';
 
 const Match = ({
